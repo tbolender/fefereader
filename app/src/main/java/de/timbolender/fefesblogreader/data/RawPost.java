@@ -8,17 +8,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class RawPost {
     private final String id;
     private final long fetchedTimestamp;
-    private final String content;
+    private final String contents;
     private final String date;
 
-    public RawPost(String id, long fetchedTimestamp, String content, String date) {
+    public RawPost(String id, long fetchedTimestamp, String contents, String date) {
         checkNotNull(id);
-        checkNotNull(content);
+        checkNotNull(contents);
         checkNotNull(date);
 
         this.id = id;
         this.fetchedTimestamp = fetchedTimestamp;
-        this.content = content;
+        this.contents = contents;
         this.date = date;
     }
 
@@ -30,8 +30,8 @@ public class RawPost {
         return fetchedTimestamp;
     }
 
-    public String getContent() {
-        return content;
+    public String getContents() {
+        return contents;
     }
 
     public String getDate() {

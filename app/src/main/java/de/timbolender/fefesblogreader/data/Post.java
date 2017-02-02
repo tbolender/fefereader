@@ -10,19 +10,19 @@ public class Post {
     private final long fetchedTimestamp;
     private final boolean isRead;
     private final boolean isUpdated;
-    private final String content;
+    private final String contents;
     private final String date;
 
-    public Post(String id, long fetchedTimestamp, boolean isRead, boolean isUpdated, String content, String date) {
+    public Post(String id, long fetchedTimestamp, boolean isRead, boolean isUpdated, String contents, String date) {
         checkNotNull(id);
-        checkNotNull(content);
+        checkNotNull(contents);
         checkNotNull(date);
 
         this.id = id;
         this.fetchedTimestamp = fetchedTimestamp;
         this.isRead = isRead;
         this.isUpdated = isUpdated;
-        this.content = content;
+        this.contents = contents;
         this.date = date;
     }
 
@@ -42,8 +42,8 @@ public class Post {
         return isUpdated;
     }
 
-    public String getContent() {
-        return content;
+    public String getContents() {
+        return contents;
     }
 
     public String getDate() {
