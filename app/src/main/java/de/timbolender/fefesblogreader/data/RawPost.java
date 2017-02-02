@@ -1,15 +1,21 @@
 package de.timbolender.fefesblogreader.data;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * The minimal data representing a post.
  */
 public class RawPost {
-    private String id;
-    private long fetchedTimestamp;
-    private String content;
-    private String date;
+    private final String id;
+    private final long fetchedTimestamp;
+    private final String content;
+    private final String date;
 
     public RawPost(String id, long fetchedTimestamp, String content, String date) {
+        checkNotNull(id);
+        checkNotNull(content);
+        checkNotNull(date);
+
         this.id = id;
         this.fetchedTimestamp = fetchedTimestamp;
         this.content = content;
