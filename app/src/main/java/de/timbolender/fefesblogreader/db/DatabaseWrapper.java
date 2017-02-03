@@ -44,4 +44,9 @@ public interface DatabaseWrapper {
      * @throws DatabaseException Thrown on database error.
      */
     Post markRead(Post post) throws DatabaseException;
+
+    /**
+     * Clear everything up.
+     */
+    void cleanUp();
 }

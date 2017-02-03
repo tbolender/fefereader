@@ -26,6 +26,17 @@ public class Post {
         this.date = date;
     }
 
+    public Post(RawPost rawPost) {
+        checkNotNull(rawPost);
+
+        this.id = rawPost.getId();
+        this.fetchedTimestamp = rawPost.getFetchedTimestamp();
+        this.isRead = false;
+        this.isUpdated = false;
+        this.contents = rawPost.getContents();
+        this.date = rawPost.getDate();
+    }
+
     public String getId() {
         return id;
     }

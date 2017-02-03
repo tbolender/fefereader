@@ -15,8 +15,8 @@ class SQLiteFefesBlogContract {
             PostEntry._ID + " INTEGER PRIMARY KEY," +
             PostEntry.COLUMN_NAME_ID + " TEXT UNIQUE," +
             PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP + " TEXT," +
-            PostEntry.COLUMN_NAME_IS_READ + " BOOLEAN," +
-            PostEntry.COLUMN_NAME_IS_UPDATED + " BOOLEAN," +
+            PostEntry.COLUMN_NAME_IS_READ + " BOOLEAN DEFAULT 0," +
+            PostEntry.COLUMN_NAME_IS_UPDATED + " BOOLEAN DEFAULT 0," +
             PostEntry.COLUMN_NAME_CONTENTS + " TEXT," +
             PostEntry.COLUMN_NAME_DATE + " TEXT)";
 

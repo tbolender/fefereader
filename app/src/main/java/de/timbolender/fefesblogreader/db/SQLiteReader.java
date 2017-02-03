@@ -1,6 +1,6 @@
 package de.timbolender.fefesblogreader.db;
 
-import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
 
 import java.util.List;
 
@@ -10,10 +10,10 @@ import de.timbolender.fefesblogreader.data.Post;
  * Reads posts from SQLite cursor.
  */
 public class SQLiteReader implements PostReader {
-    private final SQLiteDatabase database;
+    private final Cursor cursor;
 
-    public SQLiteReader(SQLiteDatabase database) {
-        this.database = database;
+    public SQLiteReader(Cursor cursor) {
+        this.cursor = cursor;
     }
 
     @Override

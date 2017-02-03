@@ -3,6 +3,8 @@ package de.timbolender.fefesblogreader.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import static de.timbolender.fefesblogreader.db.SQLiteFefesBlogContract.*;
+
 /**
  * Helper for initialising database.
  */
@@ -18,7 +20,7 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        database.execSQL(SQLiteFefesBlogContract.SQL_CREATE_POST_TABLE);
+        database.execSQL(SQL_CREATE_POST_TABLE);
     }
 
     @Override
