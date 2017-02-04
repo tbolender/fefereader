@@ -65,36 +65,41 @@ public class SQLiteWrapper implements DatabaseWrapper {
      */
     @Override
     public Post getPost(String id) throws DatabaseException {
-        String[] projection = {
-            PostEntry.COLUMN_NAME_ID,
-            PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP,
-            PostEntry.COLUMN_NAME_IS_READ,
-            PostEntry.COLUMN_NAME_IS_UPDATED,
-            PostEntry.COLUMN_NAME_CONTENTS,
-            PostEntry.COLUMN_NAME_DATE
-        };
+        try {
+            String[] projection = {
+                PostEntry.COLUMN_NAME_ID,
+                PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP,
+                PostEntry.COLUMN_NAME_IS_READ,
+                PostEntry.COLUMN_NAME_IS_UPDATED,
+                PostEntry.COLUMN_NAME_CONTENTS,
+                PostEntry.COLUMN_NAME_DATE
+            };
 
-        String selection = PostEntry.COLUMN_NAME_ID + " = ?";
-        String[] selectionArgs = { id };
+            String selection = PostEntry.COLUMN_NAME_ID + " = ?";
+            String[] selectionArgs = {id};
 
-        Cursor cursor = database.query(PostEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
-        if(!cursor.moveToNext()) {
+            Cursor cursor = database.query(PostEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
+            if(!cursor.moveToNext()) {
+                cursor.close();
+                throw new DatabaseException("No post found with given id");
+            }
+
+            Post post = new Post(
+                cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_ID)),
+                Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP))),
+                cursor.getInt(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_IS_READ)) == 1,
+                cursor.getInt(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_IS_UPDATED)) == 1,
+                cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_CONTENTS)),
+                cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_DATE))
+            );
+
             cursor.close();
-            throw new DatabaseException("No post found with given id");
+
+            return post;
         }
-
-        Post post = new Post(
-            cursor.getString(cursor.getColumnIndex(PostEntry.COLUMN_NAME_ID)),
-            Long.parseLong(cursor.getString(cursor.getColumnIndex(PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP))),
-            cursor.getInt(cursor.getColumnIndex(PostEntry.COLUMN_NAME_IS_READ)) == 1,
-            cursor.getInt(cursor.getColumnIndex(PostEntry.COLUMN_NAME_IS_UPDATED)) == 1,
-            cursor.getString(cursor.getColumnIndex(PostEntry.COLUMN_NAME_CONTENTS)),
-            cursor.getString(cursor.getColumnIndex(PostEntry.COLUMN_NAME_DATE))
-        );
-
-        cursor.close();
-
-        return post;
+        catch(SQLException e) {
+            throw new DatabaseException(e);
+        }
     }
 
     @Override

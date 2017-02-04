@@ -10,9 +10,11 @@ import de.timbolender.fefesblogreader.data.Post;
 public interface PostReader {
     Post getNextPost();
 
-    List<Post> getNextPosts(int num);
+    List<Post> getNextPosts(int num) throws DatabaseException;
 
-    boolean hasNextPost();
+    boolean hasNextPost() throws DatabaseException;
+
+    void close();
 
     boolean isClosed();
 }
