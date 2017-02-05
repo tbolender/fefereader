@@ -12,14 +12,24 @@ import java.util.regex.Pattern;
 
 import de.timbolender.fefesblogreader.data.RawPost;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * Parses a blog page for posts
+ * Parses a blog page for posts.
  */
 public class Parser {
     private static final Pattern SEARCH_PATTERN = Pattern.compile("<h3>(.+)<\\/h3>|<li><a href=\"\\?ts=([\\d\\w]+)\">\\[l\\]<\\/a> ?(.+?)\\n");
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM d yyyy", Locale.US);
 
-    public List<RawPost> parse(final String content) throws ParseException {
+    /**
+     * Parse blog posts from given text.
+     * @param content Text to parse.
+     * @return All parsed blog posts.
+     * @throws ParseException Error when parsing.
+     */
+    public List<RawPost> parse(String content) throws ParseException {
+        checkNotNull(content);
+
         Matcher matcher = SEARCH_PATTERN.matcher(content);
 
         Date currentDate = null;

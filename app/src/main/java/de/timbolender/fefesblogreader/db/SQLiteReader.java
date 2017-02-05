@@ -57,6 +57,11 @@ public class SQLiteReader implements PostReader {
     }
 
     @Override
+    public int getCount() {
+        return cursor.getCount();
+    }
+
+    @Override
     public void close() {
         cursor.close();
     }

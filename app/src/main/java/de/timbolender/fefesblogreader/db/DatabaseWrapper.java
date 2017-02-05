@@ -13,29 +13,29 @@ public interface DatabaseWrapper {
      * @return The post as it is stored in the database.
      * @throws DatabaseException Thrown on database error.
      */
-    Post addPost(RawPost rawPost);
+    Post addPost(RawPost rawPost) throws DatabaseException;
 
     /**
-     * Update post in database
+     * Update post in database.
      * @param updatedPost The updated post.
      * @return The post as it is stored in the database.
      * @throws DatabaseException Thrown on database error.
      */
-    Post updatePost(RawPost updatedPost);
+    Post updatePost(RawPost updatedPost) throws DatabaseException;
 
     /**
-     * Fetch post with given id
+     * Fetch post with given id.
      * @param id Id of post.
      * @return The post as it is stored in the database.
      * @throws DatabaseException
      */
-    Post getPost(String id);
+    Post getPost(String id) throws DatabaseException;
 
     /**
      * @return Reader providing access to all posts.
      * @throws DatabaseException Thrown on database error.
      */
-    PostReader getPostsReader();
+    PostReader getPostsReader() throws DatabaseException;
 
     /**
      * Mark a post as read. Also removed the updated flag.
@@ -43,7 +43,7 @@ public interface DatabaseWrapper {
      * @return The post as it is stored in the database.
      * @throws DatabaseException Thrown on database error.
      */
-    Post markRead(Post post);
+    Post markRead(Post post) throws DatabaseException;
 
     /**
      * Clear everything up.

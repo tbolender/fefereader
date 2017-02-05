@@ -26,6 +26,8 @@ public class SQLiteWrapper implements DatabaseWrapper {
     @Override
     public Post addPost(RawPost rawPost) throws DatabaseException {
         try {
+            checkNotNull(rawPost);
+
             ContentValues values = new ContentValues();
             values.put(PostEntry.COLUMN_NAME_ID, rawPost.getId());
             values.put(PostEntry.COLUMN_NAME_CONTENTS, rawPost.getContents());
@@ -43,6 +45,8 @@ public class SQLiteWrapper implements DatabaseWrapper {
 
     @Override
     public Post updatePost(RawPost updatedPost) throws DatabaseException {
+        checkNotNull(updatedPost);
+
         ContentValues values = new ContentValues();
         values.put(PostEntry.COLUMN_NAME_CONTENTS, updatedPost.getContents());
         values.put(PostEntry.COLUMN_NAME_DATE, updatedPost.getDate());
@@ -57,15 +61,11 @@ public class SQLiteWrapper implements DatabaseWrapper {
         return getPost(updatedPost.getId());
     }
 
-    /**
-     * Fetch post with given id
-     * @param id Id of post.
-     * @return The post as it is stored in the database.
-     * @throws DatabaseException
-     */
     @Override
     public Post getPost(String id) throws DatabaseException {
         try {
+            checkNotNull(id);
+
             String[] projection = {
                 PostEntry.COLUMN_NAME_ID,
                 PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP,
@@ -127,6 +127,8 @@ public class SQLiteWrapper implements DatabaseWrapper {
 
     @Override
     public Post markRead(Post post) throws DatabaseException {
+        checkNotNull(post);
+
         ContentValues values = new ContentValues();
         values.put(PostEntry.COLUMN_NAME_IS_READ, true);
         values.put(PostEntry.COLUMN_NAME_IS_UPDATED, false);

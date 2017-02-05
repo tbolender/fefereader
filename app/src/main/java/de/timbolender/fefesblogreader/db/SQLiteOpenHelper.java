@@ -3,6 +3,7 @@ package de.timbolender.fefesblogreader.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static de.timbolender.fefesblogreader.db.SQLiteFefesBlogContract.*;
 
 /**
@@ -16,6 +17,8 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
 
     public SQLiteOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
+        checkNotNull(context);
     }
 
     @Override
