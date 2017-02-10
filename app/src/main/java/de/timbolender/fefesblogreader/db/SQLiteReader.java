@@ -28,7 +28,7 @@ public class SQLiteReader implements PostReader {
         try {
             cursor.moveToNext();
 
-            String id = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteFefesBlogContract.PostEntry.COLUMN_NAME_ID));
+            String id = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteFefesBlogContract.PostEntry._ID));
             Long fetchedTimestamp = Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(SQLiteFefesBlogContract.PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP)));
             boolean isRead = cursor.getInt(cursor.getColumnIndexOrThrow(SQLiteFefesBlogContract.PostEntry.COLUMN_NAME_IS_READ)) == 1;
             boolean isUpdated = cursor.getInt(cursor.getColumnIndexOrThrow(SQLiteFefesBlogContract.PostEntry.COLUMN_NAME_IS_UPDATED)) == 1;

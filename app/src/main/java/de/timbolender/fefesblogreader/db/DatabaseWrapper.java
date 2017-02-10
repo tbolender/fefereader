@@ -8,20 +8,12 @@ import de.timbolender.fefesblogreader.data.RawPost;
  */
 public interface DatabaseWrapper {
     /**
-     * Add new post to database.
+     * Add new post to database or update existing.
      * @param rawPost New post to ad.
      * @return The post as it is stored in the database.
      * @throws DatabaseException Thrown on database error.
      */
-    Post addPost(RawPost rawPost) throws DatabaseException;
-
-    /**
-     * Update post in database.
-     * @param updatedPost The updated post.
-     * @return The post as it is stored in the database.
-     * @throws DatabaseException Thrown on database error.
-     */
-    Post updatePost(RawPost updatedPost) throws DatabaseException;
+    Post addOrUpdatePost(RawPost rawPost) throws DatabaseException;
 
     /**
      * Fetch post with given id.

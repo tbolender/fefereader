@@ -1,5 +1,6 @@
 package de.timbolender.fefesblogreader.db;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -24,41 +25,31 @@ public class SQLiteWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public Post addPost(RawPost rawPost) throws DatabaseException {
-        try {
-            checkNotNull(rawPost);
+    public Post addOrUpdatePost(RawPost rawPost) throws DatabaseException {
+        checkNotNull(rawPost);
 
-            ContentValues values = new ContentValues();
-            values.put(PostEntry.COLUMN_NAME_ID, rawPost.getId());
-            values.put(PostEntry.COLUMN_NAME_CONTENTS, rawPost.getContents());
-            values.put(PostEntry.COLUMN_NAME_DATE, rawPost.getDate());
-            values.put(PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP, Long.toString(rawPost.getFetchedTimestamp()));
+        ContentValues insertValues = new ContentValues();
+        insertValues.put(PostEntry._ID, rawPost.getId());
+        insertValues.put(PostEntry.COLUMN_NAME_CONTENTS, rawPost.getContents());
+        insertValues.put(PostEntry.COLUMN_NAME_DATE, rawPost.getDate());
+        insertValues.put(PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP, Long.toString(rawPost.getFetchedTimestamp()));
 
-            database.insertOrThrow(PostEntry.TABLE_NAME, null, values);
+        boolean success = database.insert(PostEntry.TABLE_NAME, null, insertValues) != -1;
 
-            return new Post(rawPost);
-        }
-        catch(SQLException e) {
-            throw new DatabaseException(e);
-        }
-    }
+        if(!success) {
+            ContentValues updateValues = new ContentValues();
+            updateValues.put(PostEntry.COLUMN_NAME_CONTENTS, rawPost.getContents());
+            updateValues.put(PostEntry.COLUMN_NAME_DATE, rawPost.getDate());
 
-    @Override
-    public Post updatePost(RawPost updatedPost) throws DatabaseException {
-        checkNotNull(updatedPost);
+            String selection = PostEntry._ID + " = ?";
+            String[] selectionArgs = { rawPost.getId() };
 
-        ContentValues values = new ContentValues();
-        values.put(PostEntry.COLUMN_NAME_CONTENTS, updatedPost.getContents());
-        values.put(PostEntry.COLUMN_NAME_DATE, updatedPost.getDate());
-
-        String selection = PostEntry.COLUMN_NAME_ID + " = ?";
-        String[] selectionArgs = { updatedPost.getId() };
-
-        if(database.update(PostEntry.TABLE_NAME, values, selection, selectionArgs) == 0) {
-            throw new DatabaseException("No post found with given id");
+            if(database.update(PostEntry.TABLE_NAME, updateValues, selection, selectionArgs) == 0) {
+                throw new DatabaseException("Could not add or update post with id " + rawPost.getId());
+            }
         }
 
-        return getPost(updatedPost.getId());
+        return new Post(rawPost);
     }
 
     @Override
@@ -67,7 +58,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
             checkNotNull(id);
 
             String[] projection = {
-                PostEntry.COLUMN_NAME_ID,
+                PostEntry._ID,
                 PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP,
                 PostEntry.COLUMN_NAME_IS_READ,
                 PostEntry.COLUMN_NAME_IS_UPDATED,
@@ -75,17 +66,17 @@ public class SQLiteWrapper implements DatabaseWrapper {
                 PostEntry.COLUMN_NAME_DATE
             };
 
-            String selection = PostEntry.COLUMN_NAME_ID + " = ?";
+            String selection = PostEntry._ID + " = ?";
             String[] selectionArgs = {id};
 
             Cursor cursor = database.query(PostEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
             if(!cursor.moveToNext()) {
                 cursor.close();
-                throw new DatabaseException("No post found with given id");
+                throw new DatabaseException("No post found with id " + id);
             }
 
             Post post = new Post(
-                cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(PostEntry._ID)),
                 Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP))),
                 cursor.getInt(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_IS_READ)) == 1,
                 cursor.getInt(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_IS_UPDATED)) == 1,
@@ -106,7 +97,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
     public PostReader getPostsReader() throws DatabaseException {
         try {
             String[] projection = {
-                PostEntry.COLUMN_NAME_ID,
+                PostEntry._ID,
                 PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP,
                 PostEntry.COLUMN_NAME_IS_READ,
                 PostEntry.COLUMN_NAME_IS_UPDATED,
@@ -116,6 +107,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
 
             String sortOrder = PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP + " DESC";
 
+            @SuppressLint("Recycle")
             Cursor cursor = database.query(PostEntry.TABLE_NAME, projection, null, null, null, null, sortOrder);
 
             return new SQLiteReader(cursor);
@@ -133,11 +125,11 @@ public class SQLiteWrapper implements DatabaseWrapper {
         values.put(PostEntry.COLUMN_NAME_IS_READ, true);
         values.put(PostEntry.COLUMN_NAME_IS_UPDATED, false);
 
-        String selection = PostEntry.COLUMN_NAME_ID + " = ?";
+        String selection = PostEntry._ID + " = ?";
         String[] selectionArgs = { post.getId() };
 
         if(database.update(PostEntry.TABLE_NAME, values, selection, selectionArgs) == 0) {
-            throw new DatabaseException("No post found with that id");
+            throw new DatabaseException("No post found with id " + post.getId());
         }
 
         return new Post(post.getId(), post.getFetchedTimestamp(), true, false, post.getContents(), post.getDate());
