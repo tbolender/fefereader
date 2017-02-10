@@ -2,6 +2,7 @@ package de.timbolender.fefesblogreader.ui.view;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
@@ -39,7 +40,15 @@ public class PostListItem extends LinearLayout {
 
         // Set text values
         TextView preview = ButterKnife.findById(this, R.id.contents_preview);
-        preview.setText(Html.fromHtml(post.getContents()));
+        String previewText;
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            //noinspection deprecation
+            previewText = Html.fromHtml(post.getContents()).toString();
+        }
+        else {
+            previewText = Html.fromHtml(post.getContents(), Html.FROM_HTML_MODE_COMPACT).toString();
+        }
+        preview.setText(previewText);
         preview.setTypeface((post.isRead() && !post.isUpdated()) ? Typeface.DEFAULT : Typeface.DEFAULT_BOLD);
 
         // Attach dispenser to view
