@@ -5,9 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.common.collect.ImmutableList;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -22,25 +19,41 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Enables displaying of post in a RecyclerView.
  */
-
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private final PostReader reader;
-    private final List<Post> buffer;
     private final OnPostSelectedListener listener;
 
-    public PostAdapter(List<Post> posts, OnPostSelectedListener listener) {
+    public PostAdapter(final List<Post> posts, OnPostSelectedListener listener) {
         checkNotNull(posts);
 
-        this.reader = null;
-        this.buffer = ImmutableList.copyOf(posts);
+        this.reader = new PostReader() {
+            @Override
+            public Post get(int index) {
+                return posts.get(index);
+            }
+
+            @Override
+            public int getCount() {
+                return posts.size();
+            }
+
+            @Override
+            public void close() {
+            }
+
+            @Override
+            public boolean isClosed() {
+                return false;
+            }
+        };
         this.listener = listener;
     }
+
     public PostAdapter(PostReader reader, OnPostSelectedListener listener) {
         checkNotNull(reader);
 
         this.reader = reader;
         this.listener = listener;
-        this.buffer = new ArrayList<>();
     }
 
     @Override
@@ -52,18 +65,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(PostAdapter.ViewHolder holder, int position) {
-        if(position >= buffer.size()) {
-            // Read enough from reader
-            int missing = position - buffer.size() + 1;
-            buffer.addAll(reader.getNextPosts(missing));
-        }
-        Post post = buffer.get(position);
+        Post post = reader.get(position);
         holder.bind(post);
     }
 
     @Override
     public int getItemCount() {
-        return (reader != null) ? reader.getCount() : buffer.size();
+        return reader.getCount();
     }
 
     /**

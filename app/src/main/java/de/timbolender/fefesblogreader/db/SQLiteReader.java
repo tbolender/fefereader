@@ -3,10 +3,6 @@ package de.timbolender.fefesblogreader.db;
 import android.database.Cursor;
 import android.database.SQLException;
 
-import com.google.common.collect.ImmutableList;
-
-import java.util.List;
-
 import de.timbolender.fefesblogreader.data.Post;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -23,10 +19,11 @@ public class SQLiteReader implements PostReader {
         this.cursor = cursor;
     }
 
-    @Override
-    public Post getNextPost() throws DatabaseException {
+    public Post get(int index) throws DatabaseException {
         try {
-            cursor.moveToNext();
+            if(!cursor.moveToPosition(index)) {
+                throw new DatabaseException("Could not move to position " + index + ", count is " + cursor.getCount());
+            }
 
             String id = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteFefesBlogContract.PostEntry._ID));
             Long fetchedTimestamp = Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(SQLiteFefesBlogContract.PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP)));
@@ -40,20 +37,6 @@ public class SQLiteReader implements PostReader {
         catch(SQLException e) {
             throw new DatabaseException(e);
         }
-    }
-
-    @Override
-    public List<Post> getNextPosts(int num) throws DatabaseException {
-        ImmutableList.Builder<Post> builder = new ImmutableList.Builder<>();
-        for(int i = 0; i < num && hasNextPost(); i++) {
-            builder.add(getNextPost());
-        }
-        return builder.build();
-    }
-
-    @Override
-    public boolean hasNextPost() {
-        return !cursor.isAfterLast();
     }
 
     @Override
