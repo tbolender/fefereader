@@ -1,5 +1,6 @@
 package de.timbolender.fefesblogreader.ui;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -10,20 +11,25 @@ import android.view.View;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.timbolender.fefesblogreader.R;
-import de.timbolender.fefesblogreader.data.Post;
 import de.timbolender.fefesblogreader.data.RawPost;
+import de.timbolender.fefesblogreader.db.DatabaseWrapper;
+import de.timbolender.fefesblogreader.db.PostReader;
+import de.timbolender.fefesblogreader.db.SQLiteOpenHelper;
+import de.timbolender.fefesblogreader.db.SQLiteWrapper;
 import de.timbolender.fefesblogreader.network.Fetcher;
 import de.timbolender.fefesblogreader.network.Parser;
 import okhttp3.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity{
+    SQLiteOpenHelper databaseHelper;
+    DatabaseWrapper databaseWrapper;
+
     @BindView(R.id.post_list) RecyclerView postList;
 
     @Override
@@ -33,14 +39,27 @@ public class MainActivity extends AppCompatActivity{
 
         ButterKnife.bind(this);
 
+        databaseHelper = new SQLiteOpenHelper(this);
+        SQLiteDatabase database = databaseHelper.getWritableDatabase();
+        databaseWrapper = new SQLiteWrapper(database);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         postList.setLayoutManager(layoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         postList.addItemDecoration(dividerItemDecoration);
 
+        updateAdapter();
+
         // Just for testing, allow retrieval in main thread
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+    }
+
+    @Override
+    protected void onDestroy() {
+        databaseWrapper.cleanUp();
+        databaseHelper.close();
+        super.onDestroy();
     }
 
     @OnClick(R.id.load_button)
@@ -51,16 +70,20 @@ public class MainActivity extends AppCompatActivity{
             Fetcher fetcher = new Fetcher(client, parser);
             List<RawPost> posts = fetcher.fetch();
 
-            List<Post> viewablePosts = new ArrayList<>();
             for(RawPost post : posts) {
-                viewablePosts.add(new Post(post));
+                databaseWrapper.addOrUpdatePost(post);
             }
 
-            PostAdapter postAdapter = new PostAdapter(viewablePosts, null);
-            postList.setAdapter(postAdapter);
+            updateAdapter();
         }
         catch(ParseException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateAdapter() {
+        PostReader reader = databaseWrapper.getPostsReader();
+        PostAdapter postAdapter = new PostAdapter(reader, null);
+        postList.setAdapter(postAdapter);
     }
 }
