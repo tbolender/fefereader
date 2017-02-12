@@ -1,5 +1,7 @@
 package de.timbolender.fefesblogreader.network;
 
+import android.util.Log;
+
 import com.google.common.collect.ImmutableList;
 
 import java.text.ParseException;
@@ -18,6 +20,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Parses a blog page for posts.
  */
 public class Parser {
+    private static final String TAG = Parser.class.getSimpleName();
+
     private static final Pattern SEARCH_PATTERN = Pattern.compile("<h3>(.+)<\\/h3>|<li><a href=\"\\?ts=([\\d\\w]+)\">\\[l\\]<\\/a> ?(.+?)\\n");
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM d yyyy", Locale.US);
 
@@ -47,6 +51,7 @@ public class Parser {
                 String id = matcher.group(2);
                 String postContent = matcher.group(3);
                 RawPost post = new RawPost(id, System.currentTimeMillis(), postContent, currentDate.toString());
+                Log.v(TAG, "Parsed " + post.toString());
                 postBuilder.add(post);
             }
         }

@@ -40,16 +40,16 @@ public class SQLiteWrapper implements DatabaseWrapper {
             ContentValues updateValues = new ContentValues();
             updateValues.put(PostEntry.COLUMN_NAME_CONTENTS, rawPost.getContents());
             updateValues.put(PostEntry.COLUMN_NAME_DATE, rawPost.getDate());
+            updateValues.put(PostEntry.COLUMN_NAME_IS_UPDATED, true);
 
-            String selection = PostEntry._ID + " = ?";
-            String[] selectionArgs = { rawPost.getId() };
+            String selection = PostEntry._ID + " = ? AND " + PostEntry.COLUMN_NAME_CONTENTS + " = ?";
+            String[] selectionArgs = { rawPost.getId(), rawPost.getContents() };
 
-            if(database.update(PostEntry.TABLE_NAME, updateValues, selection, selectionArgs) == 0) {
-                throw new DatabaseException("Could not add or update post with id " + rawPost.getId());
-            }
+            database.update(PostEntry.TABLE_NAME, updateValues, selection, selectionArgs);
         }
 
-        return new Post(rawPost);
+        // Return new unread post
+        return getPost(rawPost.getId());
     }
 
     @Override

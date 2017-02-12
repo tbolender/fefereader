@@ -60,4 +60,16 @@ public class Post {
     public String getDate() {
         return date;
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+            "id='" + id + '\'' +
+            ", fetchedTimestamp=" + fetchedTimestamp +
+            ", isRead=" + isRead +
+            ", isUpdated=" + isUpdated +
+            ", contents='" + contents + '\'' +
+            ", date='" + date + '\'' +
+            '}';
+    }
 }

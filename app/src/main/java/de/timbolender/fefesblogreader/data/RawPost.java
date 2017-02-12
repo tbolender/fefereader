@@ -37,4 +37,14 @@ public class RawPost {
     public String getDate() {
         return date;
     }
+
+    @Override
+    public String toString() {
+        return "RawPost{" +
+            "id='" + id + '\'' +
+            ", fetchedTimestamp=" + fetchedTimestamp +
+            ", contents='" + contents + '\'' +
+            ", date='" + date + '\'' +
+            '}';
+    }
 }
