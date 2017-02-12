@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.timbolender.fefesblogreader.R;
+import de.timbolender.fefesblogreader.data.Post;
 import de.timbolender.fefesblogreader.data.RawPost;
 import de.timbolender.fefesblogreader.db.DatabaseWrapper;
 import de.timbolender.fefesblogreader.db.PostReader;
@@ -26,8 +27,9 @@ import de.timbolender.fefesblogreader.network.Fetcher;
 import de.timbolender.fefesblogreader.network.Parser;
 import okhttp3.OkHttpClient;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements PostAdapter.OnPostSelectedListener {
     SQLiteOpenHelper databaseHelper;
+    PostAdapter postAdapter;
     DatabaseWrapper databaseWrapper;
 
     @BindView(R.id.post_list) RecyclerView postList;
@@ -48,7 +50,10 @@ public class MainActivity extends AppCompatActivity{
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         postList.addItemDecoration(dividerItemDecoration);
 
-        updateAdapter();
+        // Fill content
+        PostReader reader = databaseWrapper.getPostsReader();
+        postAdapter = new PostAdapter(reader, this);
+        postList.setAdapter(postAdapter);
 
         // Just for testing, allow retrieval in main thread
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -83,7 +88,12 @@ public class MainActivity extends AppCompatActivity{
 
     private void updateAdapter() {
         PostReader reader = databaseWrapper.getPostsReader();
-        PostAdapter postAdapter = new PostAdapter(reader, null);
-        postList.setAdapter(postAdapter);
+        postAdapter.setReader(reader);
+    }
+
+    @Override
+    public void OnPostSelected(Post post) {
+        databaseWrapper.markRead(post);
+        updateAdapter();
     }
 }

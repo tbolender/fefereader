@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.timbolender.fefesblogreader.R;
@@ -20,40 +18,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Enables displaying of post in a RecyclerView.
  */
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
-    private final PostReader reader;
+    private PostReader reader;
     private final OnPostSelectedListener listener;
-
-    public PostAdapter(final List<Post> posts, OnPostSelectedListener listener) {
-        checkNotNull(posts);
-
-        this.reader = new PostReader() {
-            @Override
-            public Post get(int index) {
-                return posts.get(index);
-            }
-
-            @Override
-            public int getCount() {
-                return posts.size();
-            }
-
-            @Override
-            public void close() {
-            }
-
-            @Override
-            public boolean isClosed() {
-                return false;
-            }
-        };
-        this.listener = listener;
-    }
 
     public PostAdapter(PostReader reader, OnPostSelectedListener listener) {
         checkNotNull(reader);
 
         this.reader = reader;
         this.listener = listener;
+    }
+
+    public void setReader(PostReader reader) {
+        this.reader = reader;
+        notifyDataSetChanged();
     }
 
     @Override

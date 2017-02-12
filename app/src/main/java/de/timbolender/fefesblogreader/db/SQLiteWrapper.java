@@ -42,7 +42,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
             updateValues.put(PostEntry.COLUMN_NAME_DATE, rawPost.getDate());
             updateValues.put(PostEntry.COLUMN_NAME_IS_UPDATED, true);
 
-            String selection = PostEntry._ID + " = ? AND " + PostEntry.COLUMN_NAME_CONTENTS + " = ?";
+            String selection = PostEntry._ID + " = ? AND " + PostEntry.COLUMN_NAME_CONTENTS + " <> ?";
             String[] selectionArgs = { rawPost.getId(), rawPost.getContents() };
 
             database.update(PostEntry.TABLE_NAME, updateValues, selection, selectionArgs);
