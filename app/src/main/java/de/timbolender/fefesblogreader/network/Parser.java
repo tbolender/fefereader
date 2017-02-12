@@ -39,6 +39,8 @@ public class Parser {
         Date currentDate = null;
         ImmutableList.Builder<RawPost> postBuilder = new ImmutableList.Builder<>();
 
+        long baseTime = System.currentTimeMillis() << 8;
+        long indexCounter = 255;
         while(matcher.find()) {
             if(matcher.group(2) == null) {
                 currentDate = DATE_FORMAT.parse(matcher.group(1));
@@ -50,9 +52,16 @@ public class Parser {
 
                 String id = matcher.group(2);
                 String postContent = matcher.group(3);
-                RawPost post = new RawPost(id, System.currentTimeMillis(), postContent, currentDate.toString());
+                RawPost post = new RawPost(id, baseTime + indexCounter, postContent, currentDate.toString());
                 Log.v(TAG, "Parsed " + post.toString());
                 postBuilder.add(post);
+
+                // Decrement index counter
+                if(indexCounter == 0) {
+                    throw new IllegalArgumentException("Parser supports only 255 posts per parsing");
+                }
+
+                indexCounter--;
             }
         }
 

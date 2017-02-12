@@ -32,7 +32,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
         insertValues.put(PostEntry._ID, rawPost.getId());
         insertValues.put(PostEntry.COLUMN_NAME_CONTENTS, rawPost.getContents());
         insertValues.put(PostEntry.COLUMN_NAME_DATE, rawPost.getDate());
-        insertValues.put(PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP, Long.toString(rawPost.getFetchedTimestamp()));
+        insertValues.put(PostEntry.COLUMN_NAME_TIMESTAMP_ID, Long.toString(rawPost.getTimestampId()));
 
         boolean success = database.insert(PostEntry.TABLE_NAME, null, insertValues) != -1;
 
@@ -59,7 +59,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
 
             String[] projection = {
                 PostEntry._ID,
-                PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP,
+                PostEntry.COLUMN_NAME_TIMESTAMP_ID,
                 PostEntry.COLUMN_NAME_IS_READ,
                 PostEntry.COLUMN_NAME_IS_UPDATED,
                 PostEntry.COLUMN_NAME_CONTENTS,
@@ -77,7 +77,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
 
             Post post = new Post(
                 cursor.getString(cursor.getColumnIndexOrThrow(PostEntry._ID)),
-                Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP))),
+                Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_TIMESTAMP_ID))),
                 cursor.getInt(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_IS_READ)) == 1,
                 cursor.getInt(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_IS_UPDATED)) == 1,
                 cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_CONTENTS)),
@@ -98,14 +98,14 @@ public class SQLiteWrapper implements DatabaseWrapper {
         try {
             String[] projection = {
                 PostEntry._ID,
-                PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP,
+                PostEntry.COLUMN_NAME_TIMESTAMP_ID,
                 PostEntry.COLUMN_NAME_IS_READ,
                 PostEntry.COLUMN_NAME_IS_UPDATED,
                 PostEntry.COLUMN_NAME_CONTENTS,
                 PostEntry.COLUMN_NAME_DATE
             };
 
-            String sortOrder = PostEntry.COLUMN_NAME_FETCHED_TIMESTAMP + " DESC";
+            String sortOrder = PostEntry.COLUMN_NAME_TIMESTAMP_ID + " DESC";
 
             @SuppressLint("Recycle")
             Cursor cursor = database.query(PostEntry.TABLE_NAME, projection, null, null, null, null, sortOrder);
@@ -132,7 +132,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
             throw new DatabaseException("No post found with id " + post.getId());
         }
 
-        return new Post(post.getId(), post.getFetchedTimestamp(), true, false, post.getContents(), post.getDate());
+        return new Post(post.getId(), post.getTimestampId(), true, false, post.getContents(), post.getDate());
     }
 
     @Override
