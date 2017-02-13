@@ -1,5 +1,6 @@
 package de.timbolender.fefesblogreader.ui;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -115,5 +116,9 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
     public void OnPostSelected(Post post) {
         databaseWrapper.markRead(post);
         updateAdapter();
+
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra(DetailsActivity.INTENT_EXTRA_POST_CONTENT, post.getContents());
+        startActivity(intent);
     }
 }
