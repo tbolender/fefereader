@@ -76,6 +76,10 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
             onRefreshClick();
             return true;
         }
+        else if(item.getItemId() == R.id.menu_mark_read) {
+            onMarkAllAsReadClick();
+            return true;
+        }
         else {
             return super.onOptionsItemSelected(item);
         }
@@ -105,6 +109,18 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
         catch(ParseException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void onMarkAllAsReadClick() {
+        PostReader reader = databaseWrapper.getPostsReader();
+        for(int i = 0; i < reader.getCount(); i++) {
+            Post post = reader.get(i);
+            if(!post.isRead() || post.isUpdated()) {
+                databaseWrapper.markRead(post);
+            }
+        }
+
+        updateAdapter();
     }
 
     private void updateAdapter() {
