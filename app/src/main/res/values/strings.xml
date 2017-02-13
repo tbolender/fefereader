@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FefesBlogReader</string>
+    <string name="menu_refresh">Refresh</string>
 </resources>

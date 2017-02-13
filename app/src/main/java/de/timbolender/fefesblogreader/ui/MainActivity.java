@@ -7,7 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -15,7 +18,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.timbolender.fefesblogreader.R;
 import de.timbolender.fefesblogreader.data.Post;
 import de.timbolender.fefesblogreader.data.RawPost;
@@ -61,14 +63,31 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_refresh) {
+            onRefreshClick();
+            return true;
+        }
+        else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         databaseWrapper.cleanUp();
         databaseHelper.close();
         super.onDestroy();
     }
 
-    @OnClick(R.id.load_button)
-    public void onClick(View view) {
+    public void onRefreshClick() {
         try {
             OkHttpClient client = new OkHttpClient();
             Parser parser = new Parser();
@@ -80,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
             }
 
             updateAdapter();
+            Toast.makeText(this, "Feed aktualisiert", Toast.LENGTH_SHORT).show();
         }
         catch(ParseException | IOException e) {
             e.printStackTrace();
