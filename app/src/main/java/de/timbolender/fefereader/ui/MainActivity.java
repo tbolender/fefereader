@@ -1,4 +1,4 @@
-package de.timbolender.fefesblogreader.ui;
+package de.timbolender.fefereader.ui;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,15 +19,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.timbolender.fefesblogreader.R;
-import de.timbolender.fefesblogreader.data.Post;
-import de.timbolender.fefesblogreader.data.RawPost;
-import de.timbolender.fefesblogreader.db.DatabaseWrapper;
-import de.timbolender.fefesblogreader.db.PostReader;
-import de.timbolender.fefesblogreader.db.SQLiteOpenHelper;
-import de.timbolender.fefesblogreader.db.SQLiteWrapper;
-import de.timbolender.fefesblogreader.network.Fetcher;
-import de.timbolender.fefesblogreader.network.Parser;
+import de.timbolender.fefereader.R;
+import de.timbolender.fefereader.data.Post;
+import de.timbolender.fefereader.data.RawPost;
+import de.timbolender.fefereader.db.DatabaseWrapper;
+import de.timbolender.fefereader.db.PostReader;
+import de.timbolender.fefereader.db.SQLiteOpenHelper;
+import de.timbolender.fefereader.db.SQLiteWrapper;
+import de.timbolender.fefereader.network.Fetcher;
+import de.timbolender.fefereader.network.Parser;
 import okhttp3.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity implements PostAdapter.OnPostSelectedListener {

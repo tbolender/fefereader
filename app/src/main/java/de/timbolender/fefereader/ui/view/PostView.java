@@ -1,4 +1,4 @@
-package de.timbolender.fefesblogreader.ui.view;
+package de.timbolender.fefereader.ui.view;
 
 import android.content.Context;
 import android.text.Spanned;
@@ -7,9 +7,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
-import de.timbolender.fefesblogreader.R;
-import de.timbolender.fefesblogreader.data.Post;
-import de.timbolender.fefesblogreader.util.Html;
+import de.timbolender.fefereader.R;
+import de.timbolender.fefereader.data.Post;
+import de.timbolender.fefereader.util.Html;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

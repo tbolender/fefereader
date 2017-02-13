@@ -1,4 +1,4 @@
-package de.timbolender.fefesblogreader;
+package de.timbolender.fefereader;
 
 import org.junit.Test;
 

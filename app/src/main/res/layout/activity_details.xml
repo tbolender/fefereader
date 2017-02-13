@@ -5,7 +5,7 @@
     android:id="@+id/activity_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.timbolender.fefesblogreader.ui.DetailsActivity">
+    tools:context="de.timbolender.fefereader.ui.DetailsActivity">
 
     <include
         layout="@layout/view_post"

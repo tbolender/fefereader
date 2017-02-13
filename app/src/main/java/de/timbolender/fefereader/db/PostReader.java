@@ -1,6 +1,6 @@
-package de.timbolender.fefesblogreader.db;
+package de.timbolender.fefereader.db;
 
-import de.timbolender.fefesblogreader.data.Post;
+import de.timbolender.fefereader.data.Post;
 
 /**
  * Provides access to all posts.

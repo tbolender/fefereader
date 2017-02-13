@@ -1,10 +1,10 @@
-package de.timbolender.fefesblogreader.db;
+package de.timbolender.fefereader.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static de.timbolender.fefesblogreader.db.SQLiteFefesBlogContract.*;
+import static de.timbolender.fefereader.db.SQLiteFefesBlogContract.*;
 
 /**
  * Helper for initialising database.

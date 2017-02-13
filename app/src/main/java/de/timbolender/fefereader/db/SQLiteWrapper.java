@@ -1,4 +1,4 @@
-package de.timbolender.fefesblogreader.db;
+package de.timbolender.fefereader.db;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -6,11 +6,11 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import de.timbolender.fefesblogreader.data.Post;
-import de.timbolender.fefesblogreader.data.RawPost;
+import de.timbolender.fefereader.data.Post;
+import de.timbolender.fefereader.data.RawPost;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static de.timbolender.fefesblogreader.db.SQLiteFefesBlogContract.PostEntry;
+import static de.timbolender.fefereader.db.SQLiteFefesBlogContract.PostEntry;
 
 /**
  * Allows loading of posts from SQLite database.

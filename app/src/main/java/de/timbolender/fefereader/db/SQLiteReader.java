@@ -1,9 +1,9 @@
-package de.timbolender.fefesblogreader.db;
+package de.timbolender.fefereader.db;
 
 import android.database.Cursor;
 import android.database.SQLException;
 
-import de.timbolender.fefesblogreader.data.Post;
+import de.timbolender.fefereader.data.Post;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

@@ -1,7 +1,7 @@
-package de.timbolender.fefesblogreader.db;
+package de.timbolender.fefereader.db;
 
-import de.timbolender.fefesblogreader.data.Post;
-import de.timbolender.fefesblogreader.data.RawPost;
+import de.timbolender.fefereader.data.Post;
+import de.timbolender.fefereader.data.RawPost;
 
 /**
  * Wrapper interface around a data source.

@@ -1,4 +1,4 @@
-package de.timbolender.fefesblogreader.network;
+package de.timbolender.fefereader.network;
 
 import android.util.Log;
 
@@ -12,7 +12,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.timbolender.fefesblogreader.data.RawPost;
+import de.timbolender.fefereader.data.RawPost;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

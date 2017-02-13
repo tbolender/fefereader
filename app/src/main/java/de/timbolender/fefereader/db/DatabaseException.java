@@ -1,4 +1,4 @@
-package de.timbolender.fefesblogreader.db;
+package de.timbolender.fefereader.db;
 
 /**
  * Exception about an error in the database.

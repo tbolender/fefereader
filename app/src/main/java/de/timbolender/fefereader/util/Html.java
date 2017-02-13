@@ -1,4 +1,4 @@
-package de.timbolender.fefesblogreader.util;
+package de.timbolender.fefereader.util;
 
 import android.os.Build;
 import android.text.Spanned;

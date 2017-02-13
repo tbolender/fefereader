@@ -1,4 +1,4 @@
-package de.timbolender.fefesblogreader.data;
+package de.timbolender.fefereader.data;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

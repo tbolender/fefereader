@@ -1,4 +1,4 @@
-package de.timbolender.fefesblogreader.ui;
+package de.timbolender.fefereader.ui;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.timbolender.fefesblogreader.R;
-import de.timbolender.fefesblogreader.data.Post;
-import de.timbolender.fefesblogreader.db.PostReader;
-import de.timbolender.fefesblogreader.ui.view.PostListItem;
+import de.timbolender.fefereader.R;
+import de.timbolender.fefereader.data.Post;
+import de.timbolender.fefereader.db.PostReader;
+import de.timbolender.fefereader.ui.view.PostListItem;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

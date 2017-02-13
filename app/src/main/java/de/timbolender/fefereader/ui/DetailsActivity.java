@@ -1,4 +1,4 @@
-package de.timbolender.fefesblogreader.ui;
+package de.timbolender.fefereader.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
-import de.timbolender.fefesblogreader.R;
-import de.timbolender.fefesblogreader.util.Html;
+import de.timbolender.fefereader.R;
+import de.timbolender.fefereader.util.Html;
 
 public class DetailsActivity extends AppCompatActivity {
     public static final String INTENT_EXTRA_POST_CONTENT = "post_content";

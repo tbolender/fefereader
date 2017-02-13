@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="de.timbolender.fefesblogreader"
+<manifest package="de.timbolender.fefereader"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.MainActivity">
+            android:name="de.timbolender.fefereader.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -21,8 +21,8 @@
         </activity>
 
         <activity
-            android:name=".ui.DetailsActivity"
-            android:parentActivityName=".ui.MainActivity">
+            android:name="de.timbolender.fefereader.ui.DetailsActivity"
+            android:parentActivityName="de.timbolender.fefereader.ui.MainActivity">
         </activity>
     </application>
 

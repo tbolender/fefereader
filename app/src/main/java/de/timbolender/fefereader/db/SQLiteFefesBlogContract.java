@@ -1,4 +1,4 @@
-package de.timbolender.fefesblogreader.db;
+package de.timbolender.fefereader.db;
 
 import android.provider.BaseColumns;
 
