@@ -2,4 +2,14 @@
     <string name="app_name">FefesBlogReader</string>
     <string name="menu_mark_read">Alle Gelesen Markieren</string>
     <string name="menu_refresh">Aktualisieren</string>
+
+    <plurals name="notification_new_posts">
+        <item quantity="one">%d neuer Post</item>
+        <item quantity="other">%d neue Posts</item>
+    </plurals>
+
+    <plurals name="notification_updated_posts">
+        <item quantity="one">%d Update</item>
+        <item quantity="other">%d Updates</item>
+    </plurals>
 </resources>

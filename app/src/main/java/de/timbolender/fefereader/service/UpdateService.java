@@ -1,5 +1,6 @@
 package de.timbolender.fefereader.service;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -37,6 +39,7 @@ public class UpdateService extends Service {
     static final String TAG = UpdateService.class.getSimpleName();
     static final String ACTION_UPDATE = "de.timbolender.fefereader.service.action.UPDATE";
     static final int NOTIFICATION_ID = 42; // What else?
+    static final long UPDATE_PERIOD = 30 * 60 * 1000; // Every 30min
 
     public static final String BROADCAST_UPDATE_FINISHED = "de.timbolender.fefereader.service.action.UPDATE_FINISHED";
     public static final String EXTRA_UPDATE_SUCCESS = "update_success";
@@ -46,12 +49,21 @@ public class UpdateService extends Service {
     public static final int BROADCAST_PRIORITY_SERVICE = 0;
 
     /**
+     * @param context  Context to use.
+     * @return Intent with which to start the update routine.
+     */
+    private static Intent createUpdateIntent(Context context) {
+        Intent updateIntent = new Intent(context, UpdateService.class);
+        updateIntent.setAction(ACTION_UPDATE);
+        return updateIntent;
+    }
+
+    /**
      * Trigger update in background service
      * @param context Context to use.
      */
     public static void startUpdate(Context context) {
-        Intent updateIntent = new Intent(context, UpdateService.class);
-        updateIntent.setAction(ACTION_UPDATE);
+        Intent updateIntent = createUpdateIntent(context);
         context.startService(updateIntent);
     }
 
@@ -72,7 +84,7 @@ public class UpdateService extends Service {
         updateReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "Received update broadcast, displaying notification");
+                Log.d(TAG, "Received update broadcast, no ui visible currently");
 
                 // Only show notification if there is something to report
                 boolean success = intent.getBooleanExtra(EXTRA_UPDATE_SUCCESS, false);
@@ -83,12 +95,15 @@ public class UpdateService extends Service {
                 }
 
                 // Show notification about update
-                String message = String.format(Locale.ENGLISH, "Es warten %d neue Posts und %d Updates auf dich.", numNew, numUpdated);
+                Log.d(TAG, "Showing notification");
+                String newString = getResources().getQuantityString(R.plurals.notification_new_posts, numNew);
+                String updatedString = getResources().getQuantityString(R.plurals.notification_updated_posts, numUpdated);
+                String message = String.format(Locale.ENGLISH, "Es warten %s und %s auf dich.", newString, updatedString);
                 if(numNew == 0) {
-                    message = String.format(Locale.ENGLISH, "Es warten %d Updates auf dich.", numUpdated);
+                    message = String.format(Locale.ENGLISH, "Es warten %s auf dich.", updatedString);
                 }
                 if(numUpdated == 0) {
-                    message = String.format(Locale.ENGLISH, "Es warten %d neue Posts auf dich.", numUpdated);
+                    message = String.format(Locale.ENGLISH, "Es warten %s auf dich.", newString);
                 }
 
                 Intent startIntent = new Intent(UpdateService.this, MainActivity.class);
@@ -109,14 +124,15 @@ public class UpdateService extends Service {
         intentFilter.setPriority(BROADCAST_PRIORITY_SERVICE);
         registerReceiver(updateReceiver, intentFilter);
 
-        // TODO: Register normal regular update behavior
+        // Register normal regular update behavior
+        registerRegularUpdates();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Trigger update
         if(intent.getAction().equals(ACTION_UPDATE)) {
-            Log.i(TAG, "Starting post update");
+            Log.i(TAG, "Starting update");
             performUpdate();
         }
 
@@ -167,6 +183,7 @@ public class UpdateService extends Service {
                     }
 
                     success = true;
+                    Log.d(TAG, String.format(Locale.ENGLISH, "Fetched %d new posts and %d updates", numCreated, numUpdated));
                 }
                 catch(ParseException | IOException e) {
                     e.printStackTrace();
@@ -185,6 +202,18 @@ public class UpdateService extends Service {
             }
         });
         updateThread.start();
+    }
+
+    /**
+     * Set alarm to regularly check for new updates.
+     */
+    private void registerRegularUpdates() {
+        Log.d(TAG, "Requesting alarm for regular updates with period of " + UPDATE_PERIOD + "ms");
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent updateIntent = createUpdateIntent(this);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, updateIntent, 0);
+        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + UPDATE_PERIOD, UPDATE_PERIOD, pendingIntent);
     }
 
 }

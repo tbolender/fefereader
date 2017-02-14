@@ -80,6 +80,9 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
                 abortBroadcast();
             }
         };
+
+        // Trigger update on beginning
+        onUpdateClick();
     }
 
     @Override
@@ -110,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
 
         // Make sure we have the latest content
         updateAdapter();
-        onUpdateClick();
 
         // Drop all user notifications
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
