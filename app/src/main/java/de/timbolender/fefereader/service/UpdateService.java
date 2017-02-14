@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -114,7 +115,9 @@ public class UpdateService extends Service {
                     .setSmallIcon(R.drawable.ic_notification)
                     .setContentTitle("Neues von Fefe!")
                     .setContentText(message)
-                    .setContentIntent(startPendingIntent);
+                    .setContentIntent(startPendingIntent)
+                    .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                    .setShowWhen(true);
 
                 NotificationManager manager = (NotificationManager) UpdateService.this.getSystemService(NOTIFICATION_SERVICE);
                 manager.notify(NOTIFICATION_ID, builder.build());
