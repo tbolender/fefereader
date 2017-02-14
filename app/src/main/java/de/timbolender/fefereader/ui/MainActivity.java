@@ -1,9 +1,11 @@
 package de.timbolender.fefereader.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,22 +15,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.data.Post;
-import de.timbolender.fefereader.data.RawPost;
 import de.timbolender.fefereader.db.DatabaseWrapper;
 import de.timbolender.fefereader.db.PostReader;
 import de.timbolender.fefereader.db.SQLiteOpenHelper;
 import de.timbolender.fefereader.db.SQLiteWrapper;
-import de.timbolender.fefereader.network.Fetcher;
-import de.timbolender.fefereader.network.Parser;
-import okhttp3.OkHttpClient;
+import de.timbolender.fefereader.service.UpdateService;
 
 public class MainActivity extends AppCompatActivity implements PostAdapter.OnPostSelectedListener {
     SQLiteOpenHelper databaseHelper;
@@ -36,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
     DatabaseWrapper databaseWrapper;
 
     @BindView(R.id.post_list) RecyclerView postList;
+
+    BroadcastReceiver updateReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +55,15 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
         postAdapter = new PostAdapter(reader, this);
         postList.setAdapter(postAdapter);
 
-        // Just for testing, allow retrieval in main thread
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+        // Create receiver for updates
+        updateReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                updateAdapter();
+                Toast.makeText(MainActivity.this, "Feed aktualisiert", Toast.LENGTH_SHORT).show();
+                abortBroadcast();
+            }
+        };
     }
 
     @Override
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menu_refresh) {
-            onRefreshClick();
+            UpdateService.startUpdate(this);
             return true;
         }
         else if(item.getItemId() == R.id.menu_mark_read) {
@@ -86,29 +89,27 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Register broadcast receiver for notifications
+        IntentFilter intentFilter = new IntentFilter(UpdateService.BROADCAST_UPDATE_FINISHED);
+        intentFilter.setPriority(UpdateService.BROADCAST_PRIORITY_UI);
+        registerReceiver(updateReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(updateReceiver);
+
+        super.onPause();
+    }
+
+    @Override
     protected void onDestroy() {
         databaseWrapper.cleanUp();
         databaseHelper.close();
         super.onDestroy();
-    }
-
-    public void onRefreshClick() {
-        try {
-            OkHttpClient client = new OkHttpClient();
-            Parser parser = new Parser();
-            Fetcher fetcher = new Fetcher(client, parser);
-            List<RawPost> posts = fetcher.fetch();
-
-            for(RawPost post : posts) {
-                databaseWrapper.addOrUpdatePost(post);
-            }
-
-            updateAdapter();
-            Toast.makeText(this, "Feed aktualisiert", Toast.LENGTH_SHORT).show();
-        }
-        catch(ParseException | IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void onMarkAllAsReadClick() {
