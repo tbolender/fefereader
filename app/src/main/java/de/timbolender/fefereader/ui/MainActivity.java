@@ -1,5 +1,6 @@
 package de.timbolender.fefereader.ui;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -107,6 +108,10 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Drop all user notifications
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
 
         // Register broadcast receiver for notifications
         IntentFilter intentFilter = new IntentFilter(UpdateService.BROADCAST_UPDATE_FINISHED);

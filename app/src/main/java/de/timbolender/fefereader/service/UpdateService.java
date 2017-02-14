@@ -1,5 +1,7 @@
 package de.timbolender.fefereader.service;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,18 +10,22 @@ import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Locale;
 
+import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.data.RawPost;
 import de.timbolender.fefereader.db.DatabaseWrapper;
 import de.timbolender.fefereader.db.SQLiteOpenHelper;
 import de.timbolender.fefereader.db.SQLiteWrapper;
 import de.timbolender.fefereader.network.Fetcher;
 import de.timbolender.fefereader.network.Parser;
+import de.timbolender.fefereader.ui.MainActivity;
 import okhttp3.OkHttpClient;
 
 /**
@@ -28,6 +34,7 @@ import okhttp3.OkHttpClient;
 public class UpdateService extends Service {
     static final String TAG = UpdateService.class.getSimpleName();
     static final String ACTION_UPDATE = "de.timbolender.fefereader.service.action.UPDATE";
+    static final int NOTIFICATION_ID = 42; // What else?
 
     public static final String BROADCAST_UPDATE_FINISHED = "de.timbolender.fefereader.service.action.UPDATE_FINISHED";
     public static final String EXTRA_UPDATE_SUCCESS = "update_success";
@@ -64,7 +71,36 @@ public class UpdateService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d(TAG, "Received update broadcast, displaying notification");
-                // TODO: Show notification about update
+
+                // Only show notification if there is something to report
+                boolean success = intent.getBooleanExtra(EXTRA_UPDATE_SUCCESS, false);
+                int numNew = intent.getIntExtra(EXTRA_NUM_NEW, 0);
+                int numUpdated = intent.getIntExtra(EXTRA_NUM_UPDATED, 0);
+                if(!success || (numNew == 0 && numUpdated == 0)) {
+                    return;
+                }
+
+                // Show notification about update
+                String message = String.format(Locale.ENGLISH, "Es warten %d neue Posts und %d Updates auf dich.", numNew, numUpdated);
+                if(numNew == 0) {
+                    message = String.format(Locale.ENGLISH, "Es warten %d Updates auf dich.", numUpdated);
+                }
+                if(numUpdated == 0) {
+                    message = String.format(Locale.ENGLISH, "Es warten %d neue Posts auf dich.", numUpdated);
+                }
+
+                Intent startIntent = new Intent(UpdateService.this, MainActivity.class);
+                PendingIntent startPendingIntent = PendingIntent.getActivity(
+                    UpdateService.this, 0, startIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(UpdateService.this)
+                    .setSmallIcon(R.drawable.ic_notification)
+                    .setContentTitle("Neues von Fefe!")
+                    .setContentText(message)
+                    .setContentIntent(startPendingIntent);
+
+                NotificationManager manager = (NotificationManager) UpdateService.this.getSystemService(NOTIFICATION_SERVICE);
+                manager.notify(NOTIFICATION_ID, builder.build());
             }
         };
         IntentFilter intentFilter = new IntentFilter(BROADCAST_UPDATE_FINISHED);
