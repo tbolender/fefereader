@@ -13,6 +13,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
@@ -151,7 +153,9 @@ public class UpdateService extends Service {
                 int numUpdated = 0;
 
                 try {
-                    OkHttpClient client = new OkHttpClient();
+                    OkHttpClient client = new OkHttpClient.Builder()
+                        .addNetworkInterceptor(new StethoInterceptor())
+                        .build();
                     Parser parser = new Parser();
                     Fetcher fetcher = new Fetcher(client, parser);
                     List<RawPost> posts = fetcher.fetch();

@@ -92,8 +92,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menu_refresh) {
-            refreshLayout.setRefreshing(true);
-            UpdateService.startUpdate(this);
+            onUpdateClick();
             return true;
         }
         else if(item.getItemId() == R.id.menu_mark_read) {
@@ -108,6 +107,10 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Make sure we have the latest content
+        updateAdapter();
+        onUpdateClick();
 
         // Drop all user notifications
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -133,7 +136,12 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
         super.onDestroy();
     }
 
-    public void onMarkAllAsReadClick() {
+    private void onUpdateClick() {
+        refreshLayout.setRefreshing(true);
+        UpdateService.startUpdate(this);
+    }
+
+    private void onMarkAllAsReadClick() {
         PostReader reader = databaseWrapper.getPostsReader();
         for(int i = 0; i < reader.getCount(); i++) {
             Post post = reader.get(i);
