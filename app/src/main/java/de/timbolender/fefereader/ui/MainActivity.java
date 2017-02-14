@@ -6,14 +6,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,11 +27,14 @@ import de.timbolender.fefereader.db.SQLiteWrapper;
 import de.timbolender.fefereader.service.UpdateService;
 
 public class MainActivity extends AppCompatActivity implements PostAdapter.OnPostSelectedListener {
+    static final String TAG = MainActivity.class.getSimpleName();
+
     SQLiteOpenHelper databaseHelper;
     PostAdapter postAdapter;
     DatabaseWrapper databaseWrapper;
 
     @BindView(R.id.post_list) RecyclerView postList;
+    @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
 
     BroadcastReceiver updateReceiver;
 
@@ -41,10 +45,12 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
 
         ButterKnife.bind(this);
 
+        // Set up data base
         databaseHelper = new SQLiteOpenHelper(this);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
         databaseWrapper = new SQLiteWrapper(database);
 
+        // Prepare list view
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         postList.setLayoutManager(layoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
@@ -55,12 +61,21 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
         postAdapter = new PostAdapter(reader, this);
         postList.setAdapter(postAdapter);
 
+        // Handle swipe update gesture
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                UpdateService.startUpdate(MainActivity.this);
+            }
+        });
+
         // Create receiver for updates
         updateReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "Received content update notification");
+                refreshLayout.setRefreshing(false);
                 updateAdapter();
-                Toast.makeText(MainActivity.this, "Feed aktualisiert", Toast.LENGTH_SHORT).show();
                 abortBroadcast();
             }
         };
@@ -76,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menu_refresh) {
+            refreshLayout.setRefreshing(true);
             UpdateService.startUpdate(this);
             return true;
         }

@@ -30,6 +30,7 @@ public class UpdateService extends Service {
     static final String ACTION_UPDATE = "de.timbolender.fefereader.service.action.UPDATE";
 
     public static final String BROADCAST_UPDATE_FINISHED = "de.timbolender.fefereader.service.action.UPDATE_FINISHED";
+    public static final String EXTRA_UPDATE_SUCCESS = "update_success";
     public static final int BROADCAST_PRIORITY_UI = 10;
     public static final int BROADCAST_PRIORITY_SERVICE = 0;
 
@@ -60,6 +61,7 @@ public class UpdateService extends Service {
         updateReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "Received update broadcast, displaying notification");
                 // TODO: Show notification about update
             }
         };
@@ -106,6 +108,7 @@ public class UpdateService extends Service {
         updateThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                boolean success = false;
                 try {
                     OkHttpClient client = new OkHttpClient();
                     Parser parser = new Parser();
@@ -116,13 +119,16 @@ public class UpdateService extends Service {
                         databaseWrapper.addOrUpdatePost(post);
                     }
 
-                    Intent finishedIntent = new Intent(BROADCAST_UPDATE_FINISHED);
-                    sendBroadcast(finishedIntent);
+                    success = true;
                 }
                 catch(ParseException | IOException e) {
                     e.printStackTrace();
                 }
                 finally {
+                    Intent finishedIntent = new Intent(BROADCAST_UPDATE_FINISHED);
+                    finishedIntent.putExtra(EXTRA_UPDATE_SUCCESS, success);
+                    sendOrderedBroadcast(finishedIntent, null);
+
                     updateThread = null;
                 }
             }
