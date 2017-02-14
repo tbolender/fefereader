@@ -3,6 +3,7 @@ package de.timbolender.fefereader.db;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -28,7 +29,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public DatabaseOperation addOrUpdatePost(RawPost rawPost) throws DatabaseException {
+    public void addOrUpdatePost(RawPost rawPost) throws DatabaseException {
         checkNotNull(rawPost);
 
         ContentValues insertValues = new ContentValues();
@@ -50,16 +51,13 @@ public class SQLiteWrapper implements DatabaseWrapper {
 
             if(database.update(PostEntry.TABLE_NAME, updateValues, selection, selectionArgs) == 1) {
                 Log.v(TAG, "Updated post " + rawPost.getId());
-                return DatabaseOperation.UPDATED;
             }
             else {
                 Log.v(TAG, "No update necessary for post " + rawPost.getId());
-                return DatabaseOperation.NONE;
             }
         }
         else {
             Log.v(TAG, "Inserted new post " + rawPost.getId());
-            return DatabaseOperation.CREATED;
         }
     }
 
@@ -98,6 +96,28 @@ public class SQLiteWrapper implements DatabaseWrapper {
             cursor.close();
 
             return post;
+        }
+        catch(SQLException e) {
+            throw new DatabaseException(e);
+        }
+    }
+
+    @Override
+    public long getUnreadPostCount() throws DatabaseException {
+        try {
+            String selection = PostEntry.COLUMN_NAME_IS_READ + " = 0 AND " + PostEntry.COLUMN_NAME_IS_UPDATED + " = 0";
+            return DatabaseUtils.queryNumEntries(database, PostEntry.TABLE_NAME, selection);
+        }
+        catch(SQLException e) {
+            throw new DatabaseException(e);
+        }
+    }
+
+    @Override
+    public long getUpdatedPostCount() throws DatabaseException {
+        try {
+            String selection = PostEntry.COLUMN_NAME_IS_UPDATED + " = 1";
+            return DatabaseUtils.queryNumEntries(database, PostEntry.TABLE_NAME, selection);
         }
         catch(SQLException e) {
             throw new DatabaseException(e);

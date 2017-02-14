@@ -44,8 +44,6 @@ public class UpdateService extends Service {
 
     public static final String BROADCAST_UPDATE_FINISHED = "de.timbolender.fefereader.service.action.UPDATE_FINISHED";
     public static final String EXTRA_UPDATE_SUCCESS = "update_success";
-    public static final String EXTRA_NUM_NEW = "num_new";
-    public static final String EXTRA_NUM_UPDATED = "num_updated";
     public static final int BROADCAST_PRIORITY_UI = 10;
     public static final int BROADCAST_PRIORITY_SERVICE = 0;
 
@@ -89,22 +87,24 @@ public class UpdateService extends Service {
 
                 // Only show notification if there is something to report
                 boolean success = intent.getBooleanExtra(EXTRA_UPDATE_SUCCESS, false);
-                int numNew = intent.getIntExtra(EXTRA_NUM_NEW, 0);
-                int numUpdated = intent.getIntExtra(EXTRA_NUM_UPDATED, 0);
+                long numNew = databaseWrapper.getUnreadPostCount();
+                long numUpdated = databaseWrapper.getUpdatedPostCount();
                 if(!success || (numNew == 0 && numUpdated == 0)) {
                     return;
                 }
 
                 // Show notification about update
                 Log.d(TAG, "Showing notification");
-                String newString = getResources().getQuantityString(R.plurals.notification_new_posts, numNew);
-                String updatedString = getResources().getQuantityString(R.plurals.notification_updated_posts, numUpdated);
-                String message = String.format(Locale.ENGLISH, "Es warten %s und %s auf dich.", newString, updatedString);
+                String newString = getResources()
+                    .getQuantityString(R.plurals.notification_new_posts, (int) numNew, (int) numNew);
+                String updatedString = getResources()
+                    .getQuantityString(R.plurals.notification_updated_posts, (int) numUpdated, (int) numUpdated);
+                String message = String.format(Locale.ENGLISH, "Es gibt %s und %s für dich.", newString, updatedString);
                 if(numNew == 0) {
-                    message = String.format(Locale.ENGLISH, "Es warten %s auf dich.", updatedString);
+                    message = String.format(Locale.ENGLISH, "Es gibt %s für dich.", updatedString);
                 }
                 if(numUpdated == 0) {
-                    message = String.format(Locale.ENGLISH, "Es warten %s auf dich.", newString);
+                    message = String.format(Locale.ENGLISH, "Es gibt %s für dich.", newString);
                 }
 
                 Intent startIntent = new Intent(UpdateService.this, MainActivity.class);
@@ -116,6 +116,7 @@ public class UpdateService extends Service {
                     .setContentTitle("Neues von Fefe!")
                     .setContentText(message)
                     .setContentIntent(startPendingIntent)
+                    .setOnlyAlertOnce(true)
                     .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                     .setShowWhen(true);
 
@@ -168,8 +169,6 @@ public class UpdateService extends Service {
             @Override
             public void run() {
                 boolean success = false;
-                int numCreated = 0;
-                int numUpdated = 0;
 
                 try {
                     OkHttpClient client = new OkHttpClient.Builder()
@@ -180,13 +179,11 @@ public class UpdateService extends Service {
                     List<RawPost> posts = fetcher.fetch();
 
                     for(RawPost post : posts) {
-                        DatabaseWrapper.DatabaseOperation result = databaseWrapper.addOrUpdatePost(post);
-                        numCreated += (result == DatabaseWrapper.DatabaseOperation.CREATED) ? 1 : 0;
-                        numUpdated += (result == DatabaseWrapper.DatabaseOperation.UPDATED) ? 1 : 0;
+                        databaseWrapper.addOrUpdatePost(post);
                     }
 
                     success = true;
-                    Log.d(TAG, String.format(Locale.ENGLISH, "Fetched %d new posts and %d updates", numCreated, numUpdated));
+                    Log.d(TAG, "Update finished");
                 }
                 catch(ParseException | IOException e) {
                     e.printStackTrace();
@@ -194,10 +191,6 @@ public class UpdateService extends Service {
                 finally {
                     Intent finishedIntent = new Intent(BROADCAST_UPDATE_FINISHED);
                     finishedIntent.putExtra(EXTRA_UPDATE_SUCCESS, success);
-                    if(success) {
-                        finishedIntent.putExtra(EXTRA_NUM_NEW, numCreated);
-                        finishedIntent.putExtra(EXTRA_NUM_UPDATED, numUpdated);
-                    }
                     sendOrderedBroadcast(finishedIntent, null);
 
                     updateThread = null;

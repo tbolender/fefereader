@@ -8,21 +8,11 @@ import de.timbolender.fefereader.data.RawPost;
  */
 public interface DatabaseWrapper {
     /**
-     * Possible operation with could be performed when adding an post to database.
-     */
-    enum DatabaseOperation {
-        CREATED,
-        UPDATED,
-        NONE
-    }
-
-    /**
      * Add new post to database or update existing.
      * @param rawPost New post to ad.
-     * @return The operation performed.
      * @throws DatabaseException Thrown on database error.
      */
-    DatabaseOperation addOrUpdatePost(RawPost rawPost) throws DatabaseException;
+    void addOrUpdatePost(RawPost rawPost) throws DatabaseException;
 
     /**
      * Fetch post with given id.
@@ -31,6 +21,16 @@ public interface DatabaseWrapper {
      * @throws DatabaseException
      */
     Post getPost(String id) throws DatabaseException;
+
+    /**
+     * @return Number of posts which are unread. Does not include updated ones.
+     */
+    long getUnreadPostCount();
+
+    /**
+     * @return Number of posts which are updated and not yet read.
+     */
+    long getUpdatedPostCount();
 
     /**
      * @return Reader providing access to all posts.

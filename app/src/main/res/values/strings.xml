@@ -4,7 +4,7 @@
     <string name="menu_refresh">Aktualisieren</string>
 
     <plurals name="notification_new_posts">
-        <item quantity="one">%d neuer Post</item>
+        <item quantity="one">%d neuen Post</item>
         <item quantity="other">%d neue Posts</item>
     </plurals>
 
