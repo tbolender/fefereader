@@ -45,9 +45,12 @@ public class UpdateService extends Service {
 
     DatabaseWrapper databaseWrapper;
     BroadcastReceiver updateReceiver;
+    Thread updateThread;
 
     @Override
     public void onCreate() {
+        updateThread = null;
+
         // Get access to database
         SQLiteOpenHelper databaseHelper = new SQLiteOpenHelper(this);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
@@ -72,7 +75,6 @@ public class UpdateService extends Service {
         // Trigger update
         if(intent.getAction().equals(ACTION_UPDATE)) {
             Log.i(TAG, "Starting post update.");
-            // TODO: Check whether update is running
             performUpdate();
         }
 
@@ -92,10 +94,16 @@ public class UpdateService extends Service {
     }
 
     /**
-     * Start update in a separate thread.
+     * Start update in a separate thread (if not already running).
      */
     private void performUpdate() {
-        new Thread(new Runnable() {
+        // Check whether update is running
+        if(updateThread != null) {
+            Log.e(TAG, "Ignoring update request due to running update");
+            return;
+        }
+
+        updateThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -114,8 +122,12 @@ public class UpdateService extends Service {
                 catch(ParseException | IOException e) {
                     e.printStackTrace();
                 }
+                finally {
+                    updateThread = null;
+                }
             }
-        }).start();
+        });
+        updateThread.start();
     }
 
 }
