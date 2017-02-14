@@ -76,7 +76,7 @@ public class UpdateService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Trigger update
         if(intent.getAction().equals(ACTION_UPDATE)) {
-            Log.i(TAG, "Starting post update.");
+            Log.i(TAG, "Starting post update");
             performUpdate();
         }
 

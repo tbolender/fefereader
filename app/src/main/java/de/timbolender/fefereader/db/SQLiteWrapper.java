@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import de.timbolender.fefereader.data.Post;
 import de.timbolender.fefereader.data.RawPost;
@@ -16,6 +17,8 @@ import static de.timbolender.fefereader.db.SQLiteFefesBlogContract.PostEntry;
  * Allows loading of posts from SQLite database.
  */
 public class SQLiteWrapper implements DatabaseWrapper {
+    private static final String TAG = SQLiteWrapper.class.getSimpleName();
+
     private final SQLiteDatabase database;
 
     public SQLiteWrapper(SQLiteDatabase database) {
@@ -34,7 +37,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
         insertValues.put(PostEntry.COLUMN_NAME_DATE, rawPost.getDate());
         insertValues.put(PostEntry.COLUMN_NAME_TIMESTAMP_ID, Long.toString(rawPost.getTimestampId()));
 
-        boolean success = database.insert(PostEntry.TABLE_NAME, null, insertValues) != -1;
+        boolean success = database.insertWithOnConflict(PostEntry.TABLE_NAME, null, insertValues, SQLiteDatabase.CONFLICT_IGNORE) != -1;
 
         if(!success) {
             ContentValues updateValues = new ContentValues();
@@ -45,7 +48,15 @@ public class SQLiteWrapper implements DatabaseWrapper {
             String selection = PostEntry._ID + " = ? AND " + PostEntry.COLUMN_NAME_CONTENTS + " <> ?";
             String[] selectionArgs = { rawPost.getId(), rawPost.getContents() };
 
-            database.update(PostEntry.TABLE_NAME, updateValues, selection, selectionArgs);
+            if(database.update(PostEntry.TABLE_NAME, updateValues, selection, selectionArgs) == 1) {
+                Log.v(TAG, "Updated post " + rawPost.getId());
+            }
+            else {
+                Log.v(TAG, "No update necessary for post " + rawPost.getId());
+            }
+        }
+        else {
+            Log.v(TAG, "Inserted new post " + rawPost.getId());
         }
 
         // Return new unread post
