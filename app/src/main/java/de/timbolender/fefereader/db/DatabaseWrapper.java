@@ -8,12 +8,21 @@ import de.timbolender.fefereader.data.RawPost;
  */
 public interface DatabaseWrapper {
     /**
+     * Possible operation with could be performed when adding an post to database.
+     */
+    enum DatabaseOperation {
+        CREATED,
+        UPDATED,
+        NONE
+    }
+
+    /**
      * Add new post to database or update existing.
      * @param rawPost New post to ad.
-     * @return The post as it is stored in the database.
+     * @return The operation performed.
      * @throws DatabaseException Thrown on database error.
      */
-    Post addOrUpdatePost(RawPost rawPost) throws DatabaseException;
+    DatabaseOperation addOrUpdatePost(RawPost rawPost) throws DatabaseException;
 
     /**
      * Fetch post with given id.
@@ -31,11 +40,10 @@ public interface DatabaseWrapper {
 
     /**
      * Mark a post as read. Also removed the updated flag.
-     * @param post Post to mar as read.
-     * @return The post as it is stored in the database.
+     * @param post Post to mark as read.
      * @throws DatabaseException Thrown on database error.
      */
-    Post markRead(Post post) throws DatabaseException;
+    void markRead(Post post) throws DatabaseException;
 
     /**
      * Clear everything up.

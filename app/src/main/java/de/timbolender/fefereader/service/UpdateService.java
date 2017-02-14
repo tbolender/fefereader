@@ -31,6 +31,8 @@ public class UpdateService extends Service {
 
     public static final String BROADCAST_UPDATE_FINISHED = "de.timbolender.fefereader.service.action.UPDATE_FINISHED";
     public static final String EXTRA_UPDATE_SUCCESS = "update_success";
+    public static final String EXTRA_NUM_NEW = "num_new";
+    public static final String EXTRA_NUM_UPDATED = "num_updated";
     public static final int BROADCAST_PRIORITY_UI = 10;
     public static final int BROADCAST_PRIORITY_SERVICE = 0;
 
@@ -109,6 +111,9 @@ public class UpdateService extends Service {
             @Override
             public void run() {
                 boolean success = false;
+                int numCreated = 0;
+                int numUpdated = 0;
+
                 try {
                     OkHttpClient client = new OkHttpClient();
                     Parser parser = new Parser();
@@ -116,7 +121,9 @@ public class UpdateService extends Service {
                     List<RawPost> posts = fetcher.fetch();
 
                     for(RawPost post : posts) {
-                        databaseWrapper.addOrUpdatePost(post);
+                        DatabaseWrapper.DatabaseOperation result = databaseWrapper.addOrUpdatePost(post);
+                        numCreated += (result == DatabaseWrapper.DatabaseOperation.CREATED) ? 1 : 0;
+                        numUpdated += (result == DatabaseWrapper.DatabaseOperation.UPDATED) ? 1 : 0;
                     }
 
                     success = true;
@@ -127,6 +134,10 @@ public class UpdateService extends Service {
                 finally {
                     Intent finishedIntent = new Intent(BROADCAST_UPDATE_FINISHED);
                     finishedIntent.putExtra(EXTRA_UPDATE_SUCCESS, success);
+                    if(success) {
+                        finishedIntent.putExtra(EXTRA_NUM_NEW, numCreated);
+                        finishedIntent.putExtra(EXTRA_NUM_UPDATED, numUpdated);
+                    }
                     sendOrderedBroadcast(finishedIntent, null);
 
                     updateThread = null;

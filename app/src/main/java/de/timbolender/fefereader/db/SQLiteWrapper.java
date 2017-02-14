@@ -28,7 +28,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public Post addOrUpdatePost(RawPost rawPost) throws DatabaseException {
+    public DatabaseOperation addOrUpdatePost(RawPost rawPost) throws DatabaseException {
         checkNotNull(rawPost);
 
         ContentValues insertValues = new ContentValues();
@@ -50,17 +50,17 @@ public class SQLiteWrapper implements DatabaseWrapper {
 
             if(database.update(PostEntry.TABLE_NAME, updateValues, selection, selectionArgs) == 1) {
                 Log.v(TAG, "Updated post " + rawPost.getId());
+                return DatabaseOperation.UPDATED;
             }
             else {
                 Log.v(TAG, "No update necessary for post " + rawPost.getId());
+                return DatabaseOperation.NONE;
             }
         }
         else {
             Log.v(TAG, "Inserted new post " + rawPost.getId());
+            return DatabaseOperation.CREATED;
         }
-
-        // Return new unread post
-        return getPost(rawPost.getId());
     }
 
     @Override
@@ -129,7 +129,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public Post markRead(Post post) throws DatabaseException {
+    public void markRead(Post post) throws DatabaseException {
         checkNotNull(post);
 
         ContentValues values = new ContentValues();
@@ -142,8 +142,6 @@ public class SQLiteWrapper implements DatabaseWrapper {
         if(database.update(PostEntry.TABLE_NAME, values, selection, selectionArgs) == 0) {
             throw new DatabaseException("No post found with id " + post.getId());
         }
-
-        return new Post(post.getId(), post.getTimestampId(), true, false, post.getContents(), post.getDate());
     }
 
     @Override
