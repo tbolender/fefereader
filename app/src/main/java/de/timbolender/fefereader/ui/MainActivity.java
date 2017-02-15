@@ -94,12 +94,16 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_mark_read) {
+            onMarkAllAsReadClick();
+            return true;
+        }
         if(item.getItemId() == R.id.menu_refresh) {
             onUpdateClick();
             return true;
         }
-        else if(item.getItemId() == R.id.menu_mark_read) {
-            onMarkAllAsReadClick();
+        if(item.getItemId() == R.id.menu_settings) {
+            onSettingsClick();
             return true;
         }
         else {
@@ -153,6 +157,11 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
         }
 
         updateAdapter();
+    }
+
+    private void onSettingsClick() {
+        Intent settingsIntent = new Intent(this, SettingsActivity.class);
+        startActivity(settingsIntent);
     }
 
     private void updateAdapter() {

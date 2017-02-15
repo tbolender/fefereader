@@ -31,6 +31,7 @@ import de.timbolender.fefereader.db.SQLiteWrapper;
 import de.timbolender.fefereader.network.Fetcher;
 import de.timbolender.fefereader.network.Parser;
 import de.timbolender.fefereader.ui.MainActivity;
+import de.timbolender.fefereader.util.PreferenceHelper;
 import okhttp3.OkHttpClient;
 
 /**
@@ -40,7 +41,6 @@ public class UpdateService extends Service {
     static final String TAG = UpdateService.class.getSimpleName();
     static final String ACTION_UPDATE = "de.timbolender.fefereader.service.action.UPDATE";
     static final int NOTIFICATION_ID = 42; // What else?
-    static final long UPDATE_PERIOD = 30 * 60 * 1000; // Every 30min
 
     public static final String BROADCAST_UPDATE_FINISHED = "de.timbolender.fefereader.service.action.UPDATE_FINISHED";
     public static final String EXTRA_UPDATE_SUCCESS = "update_success";
@@ -66,12 +66,14 @@ public class UpdateService extends Service {
         context.startService(updateIntent);
     }
 
+    PreferenceHelper preferenceHelper;
     DatabaseWrapper databaseWrapper;
     BroadcastReceiver updateReceiver;
     Thread updateThread;
 
     @Override
     public void onCreate() {
+        preferenceHelper = new PreferenceHelper(this);
         updateThread = null;
 
         // Get access to database
@@ -204,12 +206,20 @@ public class UpdateService extends Service {
      * Set alarm to regularly check for new updates.
      */
     private void registerRegularUpdates() {
-        Log.d(TAG, "Requesting alarm for regular updates with period of " + UPDATE_PERIOD + "ms");
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent updateIntent = createUpdateIntent(this);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, updateIntent, 0);
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-            SystemClock.elapsedRealtime() + UPDATE_PERIOD, UPDATE_PERIOD, pendingIntent);
+        boolean updatesEnabled = preferenceHelper.isUpdatesEnabled();
+        int updateInterval = preferenceHelper.getUpdateInterval();
+
+        if(updatesEnabled) {
+            Log.d(TAG, "Requesting alarm for regular updates with period of " + updateInterval + "ms");
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent updateIntent = createUpdateIntent(this);
+            PendingIntent pendingIntent = PendingIntent.getService(this, 0, updateIntent, 0);
+            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime() + updateInterval, updateInterval, pendingIntent);
+        }
+        else {
+            Log.d(TAG, "No automatic updates desired");
+        }
     }
 
 }
