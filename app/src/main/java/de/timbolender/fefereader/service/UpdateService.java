@@ -1,6 +1,7 @@
 package de.timbolender.fefereader.service;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -11,7 +12,6 @@ import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -112,12 +112,12 @@ public class UpdateService extends Service {
                     UpdateService.this, 0, startIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(UpdateService.this)
+                    .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
                     .setSmallIcon(R.drawable.ic_notification)
                     .setContentTitle("Neues von Fefe!")
                     .setContentText(message)
                     .setContentIntent(startPendingIntent)
                     .setOnlyAlertOnce(true)
-                    .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                     .setShowWhen(true);
 
                 NotificationManager manager = (NotificationManager) UpdateService.this.getSystemService(NOTIFICATION_SERVICE);
