@@ -1,5 +1,35 @@
 <resources>
-    <string name="app_name">FefesBlogReader</string>
-    <string name="menu_mark_read">Mark All Read</string>
-    <string name="menu_refresh">Refresh</string>
+    <string name="app_name">Fefe\'s Blog Reader</string>
+
+    <string name="activity_main_title">Fefe News</string>
+    <string name="activity_details_title">Details</string>
+    <string name="activity_settings_title">Einstellungen</string>
+
+    <!-- Main activity -->
+    <string name="menu_mark_read">Alle Gelesen Markieren</string>
+    <string name="menu_refresh">Aktualisieren</string>
+    <string name="menu_settings">@string/activity_settings_title</string>
+
+    <!-- Notification -->
+    <plurals name="notification_new_posts">
+        <item quantity="one">%d neuen Post</item>
+        <item quantity="other">%d neue Posts</item>
+    </plurals>
+
+    <plurals name="notification_updated_posts">
+        <item quantity="one">%d Update</item>
+        <item quantity="other">%d Updates</item>
+    </plurals>
+
+    <!-- Preferences -->
+    <string name="pref_automatic_updates">Automatische Updates</string>
+
+    <string name="pref_updates_enabled_key">updates_enabled</string>
+    <string name="pref_updates_enabled_title">Hintergrund-Updates</string>
+    <string name="pref_updates_enabled_summary">In regelmäßigen Abständen im Hintergrund Updates holen und benachrichtigen.</string>
+
+    <string name="pref_update_interval_key">update_interval</string>
+    <string name="pref_update_interval_title">Häufigkeit</string>
+    <string name="pref_update_interval_summary">Legt fest in welchen Zeitabständen automatisch Updates geholt werden sollen.</string>
+    <string name="pref_update_interval_default">1800000</string>
 </resources>

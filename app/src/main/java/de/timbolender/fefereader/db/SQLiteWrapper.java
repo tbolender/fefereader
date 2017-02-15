@@ -3,8 +3,10 @@ package de.timbolender.fefereader.db;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import de.timbolender.fefereader.data.Post;
 import de.timbolender.fefereader.data.RawPost;
@@ -16,6 +18,8 @@ import static de.timbolender.fefereader.db.SQLiteFefesBlogContract.PostEntry;
  * Allows loading of posts from SQLite database.
  */
 public class SQLiteWrapper implements DatabaseWrapper {
+    private static final String TAG = SQLiteWrapper.class.getSimpleName();
+
     private final SQLiteDatabase database;
 
     public SQLiteWrapper(SQLiteDatabase database) {
@@ -25,7 +29,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public Post addOrUpdatePost(RawPost rawPost) throws DatabaseException {
+    public void addOrUpdatePost(RawPost rawPost) throws DatabaseException {
         checkNotNull(rawPost);
 
         ContentValues insertValues = new ContentValues();
@@ -34,7 +38,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
         insertValues.put(PostEntry.COLUMN_NAME_DATE, rawPost.getDate());
         insertValues.put(PostEntry.COLUMN_NAME_TIMESTAMP_ID, Long.toString(rawPost.getTimestampId()));
 
-        boolean success = database.insert(PostEntry.TABLE_NAME, null, insertValues) != -1;
+        boolean success = database.insertWithOnConflict(PostEntry.TABLE_NAME, null, insertValues, SQLiteDatabase.CONFLICT_IGNORE) != -1;
 
         if(!success) {
             ContentValues updateValues = new ContentValues();
@@ -45,11 +49,16 @@ public class SQLiteWrapper implements DatabaseWrapper {
             String selection = PostEntry._ID + " = ? AND " + PostEntry.COLUMN_NAME_CONTENTS + " <> ?";
             String[] selectionArgs = { rawPost.getId(), rawPost.getContents() };
 
-            database.update(PostEntry.TABLE_NAME, updateValues, selection, selectionArgs);
+            if(database.update(PostEntry.TABLE_NAME, updateValues, selection, selectionArgs) == 1) {
+                Log.v(TAG, "Updated post " + rawPost.getId());
+            }
+            else {
+                Log.v(TAG, "No update necessary for post " + rawPost.getId());
+            }
         }
-
-        // Return new unread post
-        return getPost(rawPost.getId());
+        else {
+            Log.v(TAG, "Inserted new post " + rawPost.getId());
+        }
     }
 
     @Override
@@ -94,6 +103,28 @@ public class SQLiteWrapper implements DatabaseWrapper {
     }
 
     @Override
+    public long getUnreadPostCount() throws DatabaseException {
+        try {
+            String selection = PostEntry.COLUMN_NAME_IS_READ + " = 0 AND " + PostEntry.COLUMN_NAME_IS_UPDATED + " = 0";
+            return DatabaseUtils.queryNumEntries(database, PostEntry.TABLE_NAME, selection);
+        }
+        catch(SQLException e) {
+            throw new DatabaseException(e);
+        }
+    }
+
+    @Override
+    public long getUpdatedPostCount() throws DatabaseException {
+        try {
+            String selection = PostEntry.COLUMN_NAME_IS_UPDATED + " = 1";
+            return DatabaseUtils.queryNumEntries(database, PostEntry.TABLE_NAME, selection);
+        }
+        catch(SQLException e) {
+            throw new DatabaseException(e);
+        }
+    }
+
+    @Override
     public PostReader getPostsReader() throws DatabaseException {
         try {
             String[] projection = {
@@ -118,7 +149,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public Post markRead(Post post) throws DatabaseException {
+    public void markRead(Post post) throws DatabaseException {
         checkNotNull(post);
 
         ContentValues values = new ContentValues();
@@ -131,8 +162,6 @@ public class SQLiteWrapper implements DatabaseWrapper {
         if(database.update(PostEntry.TABLE_NAME, values, selection, selectionArgs) == 0) {
             throw new DatabaseException("No post found with id " + post.getId());
         }
-
-        return new Post(post.getId(), post.getTimestampId(), true, false, post.getContents(), post.getDate());
     }
 
     @Override

@@ -7,12 +7,17 @@
         android:id="@+id/menu_mark_read"
         android:title="@string/menu_mark_read"
         android:icon="@drawable/ic_mark_read"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/menu_refresh"
         android:title="@string/menu_refresh"
         android:icon="@drawable/ic_refresh"
-        app:showAsAction="always"/>
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_settings"
+        android:title="@string/menu_settings"
+        app:showAsAction="never"/>
 
 </menu>
