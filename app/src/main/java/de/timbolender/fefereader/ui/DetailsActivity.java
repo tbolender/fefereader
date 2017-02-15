@@ -3,6 +3,7 @@ package de.timbolender.fefereader.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
@@ -20,6 +21,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         TextView view = ButterKnife.findById(this, R.id.contents);
+        view.setMovementMethod(LinkMovementMethod.getInstance());
         view.setText(Html.fromHtml(intent.getStringExtra(INTENT_EXTRA_POST_CONTENT)));
     }
 }
