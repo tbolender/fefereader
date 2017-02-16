@@ -23,12 +23,12 @@ public interface DatabaseWrapper {
     Post getPost(String id) throws DatabaseException;
 
     /**
-     * @return Number of posts which are unread. Does not include updated ones.
+     * @return Number of posts which are unread.
      */
     long getUnreadPostCount();
 
     /**
-     * @return Number of posts which are updated and not yet read.
+     * @return Number of posts which are updated and were already read in the past.
      */
     long getUpdatedPostCount();
 

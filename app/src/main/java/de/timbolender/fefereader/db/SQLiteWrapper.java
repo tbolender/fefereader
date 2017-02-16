@@ -105,7 +105,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
     @Override
     public long getUnreadPostCount() throws DatabaseException {
         try {
-            String selection = PostEntry.COLUMN_NAME_IS_READ + " = 0 AND " + PostEntry.COLUMN_NAME_IS_UPDATED + " = 0";
+            String selection = PostEntry.COLUMN_NAME_IS_READ + " = 0";
             return DatabaseUtils.queryNumEntries(database, PostEntry.TABLE_NAME, selection);
         }
         catch(SQLException e) {
@@ -116,7 +116,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
     @Override
     public long getUpdatedPostCount() throws DatabaseException {
         try {
-            String selection = PostEntry.COLUMN_NAME_IS_UPDATED + " = 1";
+            String selection = PostEntry.COLUMN_NAME_IS_UPDATED + " = 1 AND " + PostEntry.COLUMN_NAME_IS_READ + " = 1";
             return DatabaseUtils.queryNumEntries(database, PostEntry.TABLE_NAME, selection);
         }
         catch(SQLException e) {
