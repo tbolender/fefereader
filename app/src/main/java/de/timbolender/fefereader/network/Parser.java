@@ -22,7 +22,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class Parser {
     private static final String TAG = Parser.class.getSimpleName();
 
-    private static final Pattern SEARCH_PATTERN = Pattern.compile("<h3>(.+)<\\/h3>|<li><a href=\"\\?ts=([\\d\\w]+)\">\\[l\\]<\\/a> ?(.+?)\\n");
+    private static final Pattern SEARCH_PATTERN =
+        Pattern.compile("<h3>(.+?)<\\/h3>|<li><a href=\"\\?ts=([\\d\\w]+)\">\\[l\\]<\\/a> ?(.+?)(?=<li>|<\\/ul>)", Pattern.DOTALL);
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM d yyyy", Locale.US);
 
     /**
