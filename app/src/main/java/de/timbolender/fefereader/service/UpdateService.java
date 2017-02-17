@@ -58,6 +58,15 @@ public class UpdateService extends Service {
     }
 
     /**
+     * Start service which enables auto update.
+     * @param context Context to use.
+     */
+    public static void startService(Context context) {
+        Intent intent = new Intent(context, UpdateService.class);
+        context.startService(intent);
+    }
+
+    /**
      * Trigger update in background service
      * @param context Context to use.
      */
