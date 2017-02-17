@@ -7,10 +7,17 @@
     android:layout_height="match_parent"
     tools:context="de.timbolender.fefereader.ui.DetailsActivity">
 
-    <include
-        layout="@layout/view_post"
-        android:layout_height="wrap_content"
+    <!-- Otherwise ScrollView ignores our bottom margin -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_margin="16dp"/>
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <include
+            layout="@layout/view_post"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
+    </FrameLayout>
 
 </ScrollView>
