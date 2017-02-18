@@ -172,6 +172,7 @@ public class UpdateService extends Service {
     private void performUpdate() {
         // Check whether update is running
         if(updateThread != null) {
+            // FIXME: How to handle this in ui?
             Log.e(TAG, "Ignoring update request due to running update");
             return;
         }
