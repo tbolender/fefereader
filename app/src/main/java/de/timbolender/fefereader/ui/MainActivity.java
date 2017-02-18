@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
                 UpdateService.startUpdate(MainActivity.this);
             }
         });
+        refreshLayout.setColorSchemeResources(R.color.colorAccent);
 
         // Create receiver for updates
         updateReceiver = new BroadcastReceiver() {
