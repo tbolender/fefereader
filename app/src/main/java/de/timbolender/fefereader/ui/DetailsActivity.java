@@ -38,7 +38,7 @@ public class DetailsActivity extends AppCompatActivity {
         Date data = new Date(post.getDate());
         setTitle(DATE_FORMAT.format(data));
         PostView view = ButterKnife.findById(this, R.id.post_view);
-        view.fill(post);
+        view.fill(post, "");
 
         // Create receiver for updates
         updateReceiver = new BroadcastReceiver() {
