@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
         updateAdapter();
 
         Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra(DetailsActivity.INTENT_EXTRA_POST_CONTENT, post.getContents());
+        intent.putExtra(DetailsActivity.INTENT_EXTRA_POST, post);
         startActivity(intent);
     }
 }

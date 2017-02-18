@@ -1,11 +1,14 @@
 package de.timbolender.fefereader.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * A single blog post.
  */
-public class Post {
+public class Post implements Parcelable {
     private final String id;
     private final long timestampId;
     private final boolean isRead;
@@ -72,4 +75,46 @@ public class Post {
             ", date='" + date + '\'' +
             '}';
     }
+
+    //
+    // Parcelable
+    //
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel out, int flags) {
+        checkNotNull(out);
+
+        out.writeString(id);
+        out.writeLong(timestampId);
+        out.writeByte((byte) (isRead ? 1 : 0));
+        out.writeByte((byte) (isUpdated ? 1 : 0));
+        out.writeString(contents);
+        out.writeLong(date);
+    }
+
+    private Post(Parcel in) {
+        checkNotNull(in);
+
+        this.id = in.readString();
+        this.timestampId = in.readLong();
+        this.isRead = in.readByte() == 1;
+        this.isUpdated = in.readByte() == 1;
+        this.contents = in.readString();
+        this.date = in.readLong();
+    }
+
+    public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {
+        public Post createFromParcel(Parcel in) {
+            return new Post(in);
+        }
+
+        public Post[] newArray(int size) {
+            return new Post[size];
+        }
+    };
 }

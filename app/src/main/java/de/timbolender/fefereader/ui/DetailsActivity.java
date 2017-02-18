@@ -10,15 +10,21 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import butterknife.ButterKnife;
 import de.timbolender.fefereader.R;
+import de.timbolender.fefereader.data.Post;
 import de.timbolender.fefereader.service.UpdateService;
 import de.timbolender.fefereader.util.Html;
 
 public class DetailsActivity extends AppCompatActivity {
     private static final String TAG = DetailsActivity.class.getSimpleName();
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy", Locale.getDefault());
 
-    public static final String INTENT_EXTRA_POST_CONTENT = "post_content";
+    public static final String INTENT_EXTRA_POST = "post";
 
     BroadcastReceiver updateReceiver;
     
@@ -29,9 +35,13 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
 
         Intent intent = getIntent();
+        Post post = intent.getParcelableExtra(INTENT_EXTRA_POST);
         TextView view = ButterKnife.findById(this, R.id.contents);
         view.setMovementMethod(LinkMovementMethod.getInstance());
-        view.setText(Html.fromHtml(intent.getStringExtra(INTENT_EXTRA_POST_CONTENT)));
+        view.setText(Html.fromHtml(post.getContents()));
+
+        Date data = new Date(post.getDate());
+        setTitle(DATE_FORMAT.format(data));
 
         // Create receiver for updates
         updateReceiver = new BroadcastReceiver() {
