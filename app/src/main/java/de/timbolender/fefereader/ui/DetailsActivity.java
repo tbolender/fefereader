@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,7 +16,7 @@ import butterknife.ButterKnife;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.data.Post;
 import de.timbolender.fefereader.service.UpdateService;
-import de.timbolender.fefereader.util.Html;
+import de.timbolender.fefereader.ui.view.PostView;
 
 public class DetailsActivity extends AppCompatActivity {
     private static final String TAG = DetailsActivity.class.getSimpleName();
@@ -36,12 +34,11 @@ public class DetailsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Post post = intent.getParcelableExtra(INTENT_EXTRA_POST);
-        TextView view = ButterKnife.findById(this, R.id.contents);
-        view.setMovementMethod(LinkMovementMethod.getInstance());
-        view.setText(Html.fromHtml(post.getContents()));
 
         Date data = new Date(post.getDate());
         setTitle(DATE_FORMAT.format(data));
+        PostView view = ButterKnife.findById(this, R.id.post_view);
+        view.fill(post);
 
         // Create receiver for updates
         updateReceiver = new BroadcastReceiver() {

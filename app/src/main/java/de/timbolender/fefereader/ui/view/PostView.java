@@ -1,15 +1,13 @@
 package de.timbolender.fefereader.ui.view;
 
 import android.content.Context;
-import android.text.Spanned;
 import android.util.AttributeSet;
+import android.webkit.WebView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.data.Post;
-import de.timbolender.fefereader.util.Html;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,8 +36,9 @@ public class PostView extends LinearLayout {
         checkNotNull(post);
 
         // Set text values
-        TextView preview = ButterKnife.findById(this, R.id.contents_preview);
-        Spanned previewText = Html.fromHtml(post.getContents());
-        preview.setText(previewText);
+        WebView view = ButterKnife.findById(this, R.id.contents);
+        String fullContent = "<html><body>" + post.getContents() + "</body></html>";
+        // Otherwise umlaute are not displayed correctly; http://stackoverflow.com/questions/3961589/android-webview-and-loaddata
+        view.loadData(fullContent, "text/html; charset=UTF-8", null);
     }
 }
