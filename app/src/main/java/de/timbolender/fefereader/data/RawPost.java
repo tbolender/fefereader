@@ -9,9 +9,9 @@ public class RawPost {
     private final String id;
     private final long timestampId;
     private final String contents;
-    private final String date;
+    private final long date;
 
-    public RawPost(String id, long timestampId, String contents, String date) {
+    public RawPost(String id, long timestampId, String contents, long date) {
         checkNotNull(id);
         checkNotNull(contents);
         checkNotNull(date);
@@ -34,7 +34,7 @@ public class RawPost {
         return contents;
     }
 
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 

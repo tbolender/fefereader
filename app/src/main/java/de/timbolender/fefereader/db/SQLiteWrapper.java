@@ -35,7 +35,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
         ContentValues insertValues = new ContentValues();
         insertValues.put(PostEntry._ID, rawPost.getId());
         insertValues.put(PostEntry.COLUMN_NAME_CONTENTS, rawPost.getContents());
-        insertValues.put(PostEntry.COLUMN_NAME_DATE, rawPost.getDate());
+        insertValues.put(PostEntry.COLUMN_NAME_DATE, Long.toString(rawPost.getDate()));
         insertValues.put(PostEntry.COLUMN_NAME_TIMESTAMP_ID, Long.toString(rawPost.getTimestampId()));
 
         boolean success = database.insertWithOnConflict(PostEntry.TABLE_NAME, null, insertValues, SQLiteDatabase.CONFLICT_IGNORE) != -1;
@@ -90,7 +90,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
                 cursor.getInt(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_IS_READ)) == 1,
                 cursor.getInt(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_IS_UPDATED)) == 1,
                 cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_CONTENTS)),
-                cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_DATE))
+                Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_DATE)))
             );
 
             cursor.close();

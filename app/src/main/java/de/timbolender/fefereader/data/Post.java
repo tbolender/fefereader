@@ -11,9 +11,9 @@ public class Post {
     private final boolean isRead;
     private final boolean isUpdated;
     private final String contents;
-    private final String date;
+    private final long date;
 
-    public Post(String id, long timestampId, boolean isRead, boolean isUpdated, String contents, String date) {
+    public Post(String id, long timestampId, boolean isRead, boolean isUpdated, String contents, long date) {
         checkNotNull(id);
         checkNotNull(contents);
         checkNotNull(date);
@@ -57,7 +57,7 @@ public class Post {
         return contents;
     }
 
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 

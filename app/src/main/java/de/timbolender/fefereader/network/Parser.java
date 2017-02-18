@@ -62,7 +62,7 @@ public class Parser {
                     Element idElement = entryContent.get(0);
                     String id = idElement.attr("href").replace("?ts=", "");
                     String postContent = entry.html().replace(idElement.outerHtml(), "");
-                    RawPost post = new RawPost(id, baseTime + indexCounter, postContent, currentDate.toString());
+                    RawPost post = new RawPost(id, baseTime + indexCounter, postContent, currentDate.getTime());
                     Log.v(TAG, "Parsed " + post.toString());
                     postBuilder.add(post);
 
