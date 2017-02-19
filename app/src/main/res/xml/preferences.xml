@@ -21,4 +21,24 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/pref_display">
+
+        <CheckBoxPreference
+            android:key="@string/pref_inspect_url_key"
+            android:title="@string/pref_inspect_url_title"
+            android:summary="@string/pref_inspect_url_summary"
+            android:defaultValue="@bool/pref_inspect_url_default"/>
+
+        <ListPreference
+            android:key="@string/pref_post_style_key"
+            android:title="@string/pref_post_style_title"
+            android:dialogTitle="@string/pref_post_style_title"
+            android:summary="@string/pref_post_style_summary"
+            android:entries="@array/pref_post_style_entries"
+            android:entryValues="@array/pref_post_style_values"
+            android:defaultValue="@string/pref_post_style_default"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>
