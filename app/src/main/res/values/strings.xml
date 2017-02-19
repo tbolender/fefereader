@@ -55,6 +55,14 @@
 
     <!-- No style removes just some annoying default styles; EVERY STYLE WILL ALSO BE PREPENDED WITH THIS! -->
     <string name="post_style_none">
+        body {
+            margin: %1$dpx;
+        }
+
+        a {
+            color: %2$s;
+        }
+
         ul, ol {
             padding-left: 1.5em;
         }

@@ -55,7 +55,11 @@ public class PreferenceHelper {
         PREF_POST_STYLE = resources.getString(R.string.pref_post_style_key);
         PREF_POST_STYLE_DEFAULT = resources.getString(R.string.pref_post_style_default);
 
-        NONE_POST_STYLE = resources.getString(R.string.post_style_none);
+        // Construct none style
+        int defaultMargin = resources.getDimensionPixelSize(R.dimen.post_view_margin);
+        //noinspection ResourceType
+        String linkColor = resources.getString(R.color.colorAccent).replace("#ff", "#");
+        NONE_POST_STYLE = resources.getString(R.string.post_style_none, defaultMargin, linkColor);
     }
 
     public SharedPreferences getSharedPreferences() {
@@ -88,6 +92,10 @@ public class PreferenceHelper {
 
     public String getPostStyle() {
         String chosenStyle = pref.getString(PREF_POST_STYLE, PREF_POST_STYLE_DEFAULT);
-        return NONE_POST_STYLE + resources.getString(AVAILABLE_STYLES.get(chosenStyle));
+        String styleContent = "";
+        if(!chosenStyle.equals("post_style_none")) {
+            styleContent = resources.getString(AVAILABLE_STYLES.get(chosenStyle));
+        }
+        return NONE_POST_STYLE + styleContent;
     }
 }

@@ -19,8 +19,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Displays full content of a post.
  */
 public class PostView extends LinearLayout {
-    private String BASE_STYLE;
-
     private OnLinkClickedListener listener;
 
     //
@@ -29,24 +27,10 @@ public class PostView extends LinearLayout {
 
     public PostView(Context context) {
         this(context, null);
-
-        init();
     }
 
     public PostView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        init();
-    }
-
-    private void init() {
-        int DEFAULT_MARGIN = getResources().getDimensionPixelSize(R.dimen.post_view_margin);
-        //noinspection ResourceType
-        String LINK_COLOR = getResources().getString(R.color.colorAccent).replace("#ff", "#");
-
-        BASE_STYLE =
-            "body { margin: " + DEFAULT_MARGIN + "px; }\n" +
-            "a { color: " + LINK_COLOR + "; } ";
     }
 
     /**
@@ -89,8 +73,7 @@ public class PostView extends LinearLayout {
         }
 
         // Set content
-        String fullStyle = BASE_STYLE + cssStyle;
-        String fullContent = "<html><style>" + fullStyle + "</style><body>" + post.getContents() + "</body></html>";
+        String fullContent = "<html><style>" + cssStyle + "</style><body>" + post.getContents() + "</body></html>";
         // Otherwise umlaute are not displayed correctly; http://stackoverflow.com/questions/3961589/android-webview-and-loaddata
         view.loadData(fullContent, "text/html; charset=UTF-8", null);
     }
