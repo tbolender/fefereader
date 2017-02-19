@@ -21,4 +21,15 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/pref_others">
+
+        <CheckBoxPreference
+            android:key="@string/pref_inspect_url_key"
+            android:title="@string/pref_inspect_url_title"
+            android:summary="@string/pref_inspect_url_summary"
+            android:defaultValue="@bool/pref_inspect_url_default"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

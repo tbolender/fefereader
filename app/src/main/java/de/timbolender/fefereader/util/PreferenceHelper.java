@@ -15,6 +15,8 @@ public class PreferenceHelper {
     private final boolean PREF_UPDATES_ENABLED_DEFAULT;
     private final String PREF_UPDATE_INTERVAL;
     private final String PREF_UPDATE_INTERVAL_DEFAULT;
+    private final String PREF_INSPECT_URL;
+    private final boolean PREF_INSPECT_URL_DEFAULT;
 
     private final SharedPreferences pref;
 
@@ -31,6 +33,8 @@ public class PreferenceHelper {
         PREF_UPDATES_ENABLED_DEFAULT = resources.getBoolean(R.bool.pref_updates_enabled_default);
         PREF_UPDATE_INTERVAL = resources.getString(R.string.pref_update_interval_key);
         PREF_UPDATE_INTERVAL_DEFAULT = resources.getString(R.string.pref_update_interval_default);
+        PREF_INSPECT_URL = resources.getString(R.string.pref_inspect_url_key);
+        PREF_INSPECT_URL_DEFAULT = resources.getBoolean(R.bool.pref_inspect_url_default);
     }
 
     public SharedPreferences getSharedPreferences() {
@@ -51,5 +55,13 @@ public class PreferenceHelper {
 
     public void setUpdateInterval(int updateInterval) {
         pref.edit().putInt(PREF_UPDATE_INTERVAL, updateInterval).apply();
+    }
+
+    public boolean isUrlInspectionEnabled() {
+        return pref.getBoolean(PREF_INSPECT_URL, PREF_INSPECT_URL_DEFAULT);
+    }
+
+    public void setUrlInspectionEnabled(boolean inspectionEnabled) {
+        pref.edit().putBoolean(PREF_INSPECT_URL, inspectionEnabled).apply();
     }
 }

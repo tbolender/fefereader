@@ -10,6 +10,9 @@
     <string name="menu_refresh">Aktualisieren</string>
     <string name="menu_settings">@string/activity_settings_title</string>
 
+    <!-- Details activity -->
+    <string name="button_open_link">Öffnen</string>
+
     <!-- Notification -->
     <plurals name="notification_new_posts">
         <item quantity="one">%d neuen Post</item>
@@ -32,4 +35,10 @@
     <string name="pref_update_interval_title">Häufigkeit</string>
     <string name="pref_update_interval_summary">Legt fest in welchen Zeitabständen automatisch Updates geholt werden sollen.</string>
     <string name="pref_update_interval_default">1800000</string>
+
+    <string name="pref_others">Sonstiges</string>
+
+    <string name="pref_inspect_url_key">inspect_url</string>
+    <string name="pref_inspect_url_title">Links vor Aufruf anzeigen</string>
+    <string name="pref_inspect_url_summary">Beim Klicken auf Links in Posts wird dir vor Aufruf zuerst die volle Url angezeigt.</string>
 </resources>

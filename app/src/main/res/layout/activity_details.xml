@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context="de.timbolender.fefereader.ui.DetailsActivity">
 
     <include
@@ -12,4 +12,4 @@
         android:layout_width="match_parent"
         android:padding="16dp"/>
 
-</FrameLayout>
+</android.support.design.widget.CoordinatorLayout>
