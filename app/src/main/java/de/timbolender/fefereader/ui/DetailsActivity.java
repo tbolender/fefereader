@@ -45,7 +45,8 @@ public class DetailsActivity extends AppCompatActivity {
         Date data = new Date(post.getDate());
         setTitle(DATE_FORMAT.format(data));
         final PostView view = ButterKnife.findById(this, R.id.post_view);
-        view.fill(post, "");
+        String customStyle = preferenceHelper.getPostStyle();
+        view.fill(post, customStyle);
         view.setOnLinkClickedListener(new PostView.OnLinkClickedListener() {
             @Override
             public void onLinkClicked(String url) {

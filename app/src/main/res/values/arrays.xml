@@ -13,4 +13,14 @@
         <item>3600000</item>
         <item>21600000</item>
     </string-array>
+
+    <string-array name="pref_post_style_entries">
+        <item>Keiner</item>
+        <item>Standard</item>
+    </string-array>
+
+    <string-array name="pref_post_style_values">
+        <item>post_style_none</item>
+        <item>post_style_default</item>
+    </string-array>
 </resources>

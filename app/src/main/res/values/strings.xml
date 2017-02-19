@@ -36,9 +36,41 @@
     <string name="pref_update_interval_summary">Legt fest in welchen Zeitabständen automatisch Updates geholt werden sollen.</string>
     <string name="pref_update_interval_default">1800000</string>
 
-    <string name="pref_others">Sonstiges</string>
+    <string name="pref_display">Darstellung</string>
 
     <string name="pref_inspect_url_key">inspect_url</string>
     <string name="pref_inspect_url_title">Links vor Aufruf anzeigen</string>
     <string name="pref_inspect_url_summary">Beim Klicken auf Links in Posts wird dir vor Aufruf zuerst die volle Url angezeigt.</string>
+
+    <string name="pref_post_style_key">post_style</string>
+    <string name="pref_post_style_title">Style</string>
+    <string name="pref_post_style_summary">Wähle einen Style der bei der Anzeige der Posts verwendet werden.</string>
+    <string name="pref_post_style_default">post_style_default</string>
+
+    <!--
+        Available post styles;
+
+        Do not forget to add new to @array/pref_post_style_entries and PreferenceHelper.AVAILABLE_STYLES
+    -->
+
+    <!-- No style removes just some annoying default styles; EVERY STYLE WILL ALSO BE PREPENDED WITH THIS! -->
+    <string name="post_style_none">
+        ul, ol {
+            padding-left: 1.5em;
+        }
+
+        blockquote {
+            margin: 1em;
+        }
+    </string>
+
+    <!-- Default style, inspired by https://blog.fefe.de/typo.css -->
+    <string name="post_style_default">
+        blockquote {
+            border: 1px dashed black;
+            background-color: #f0f0f0;
+            padding: 0.5em;
+            margin: 1em 0.5em;
+        }
+    </string>
 </resources>
