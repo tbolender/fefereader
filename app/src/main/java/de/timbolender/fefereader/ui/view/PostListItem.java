@@ -3,6 +3,7 @@ package de.timbolender.fefereader.ui.view;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -42,6 +43,9 @@ public class PostListItem extends LinearLayout {
         String previewText = Html.fromHtml(post.getContents()).toString();
         preview.setText(previewText);
         preview.setTypeface((post.isRead() && !post.isUpdated()) ? Typeface.DEFAULT : Typeface.DEFAULT_BOLD);
+
+        View bookmarkView = ButterKnife.findById(this, R.id.bookmark_image);
+        bookmarkView.setVisibility(post.isBookmarked() ? VISIBLE : GONE);
 
         // Attach dispenser to view
         setTag(post);

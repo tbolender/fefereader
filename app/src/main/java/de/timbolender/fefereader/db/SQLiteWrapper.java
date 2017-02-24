@@ -134,6 +134,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
                 PostEntry.COLUMN_NAME_TIMESTAMP_ID,
                 PostEntry.COLUMN_NAME_IS_READ,
                 PostEntry.COLUMN_NAME_IS_UPDATED,
+                PostEntry.COLUMN_NAME_IS_BOOKMARKED,
                 PostEntry.COLUMN_NAME_CONTENTS,
                 PostEntry.COLUMN_NAME_DATE
             };

@@ -179,4 +179,10 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
         intent.putExtra(DetailsActivity.INTENT_EXTRA_POST, post);
         startActivity(intent);
     }
+
+    @Override
+    public void OnPostLongPressed(Post post) {
+        databaseWrapper.setBookmarked(post.getId(), !post.isBookmarked());
+        updateAdapter();
+    }
 }

@@ -72,6 +72,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     if(listener != null) listener.OnPostSelected(post);
                 }
             });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if(listener != null) listener.OnPostLongPressed(post);
+                    return listener != null;
+                }
+            });
         }
 
         public void bind(Post post) {
@@ -86,5 +93,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
          * @param post Selected post.
          */
         void OnPostSelected(Post post);
+
+        /**
+         * Called when post entry is long pressed.
+         * @param post Selected post.
+         */
+        void OnPostLongPressed(Post post);
     }
 }
