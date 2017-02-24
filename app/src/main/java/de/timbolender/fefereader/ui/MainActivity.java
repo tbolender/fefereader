@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
 
         ButterKnife.bind(this);
 
-        // Set up data base
+        // Set up database
         databaseHelper = new SQLiteOpenHelper(this);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
         databaseWrapper = new SQLiteWrapper(database);
@@ -107,9 +107,8 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
             onSettingsClick();
             return true;
         }
-        else {
-            return super.onOptionsItemSelected(item);
-        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

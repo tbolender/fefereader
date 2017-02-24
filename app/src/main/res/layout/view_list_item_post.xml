@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         app:srcCompat="@drawable/ic_bookmark"
+        android:tint="@color/colorAccent"
         android:contentDescription="@string/description_bookmark"
         android:visibility="gone"
         tools:visibility="visible"/>

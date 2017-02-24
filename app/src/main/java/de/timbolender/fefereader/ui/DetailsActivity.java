@@ -4,11 +4,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import java.text.SimpleDateFormat;
@@ -18,6 +22,9 @@ import java.util.Locale;
 import butterknife.ButterKnife;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.data.Post;
+import de.timbolender.fefereader.db.DatabaseWrapper;
+import de.timbolender.fefereader.db.SQLiteOpenHelper;
+import de.timbolender.fefereader.db.SQLiteWrapper;
 import de.timbolender.fefereader.service.UpdateService;
 import de.timbolender.fefereader.ui.view.PostView;
 import de.timbolender.fefereader.util.PreferenceHelper;
@@ -28,8 +35,11 @@ public class DetailsActivity extends AppCompatActivity {
 
     public static final String INTENT_EXTRA_POST = "post";
 
+    SQLiteOpenHelper databaseHelper;
+    DatabaseWrapper databaseWrapper;
     BroadcastReceiver updateReceiver;
     PreferenceHelper preferenceHelper;
+    Post post;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +49,13 @@ public class DetailsActivity extends AppCompatActivity {
 
         preferenceHelper = new PreferenceHelper(this);
 
+        // Set up database
+        databaseHelper = new SQLiteOpenHelper(this);
+        SQLiteDatabase database = databaseHelper.getWritableDatabase();
+        databaseWrapper = new SQLiteWrapper(database);
+
         final Intent intent = getIntent();
-        Post post = intent.getParcelableExtra(INTENT_EXTRA_POST);
+        post = intent.getParcelableExtra(INTENT_EXTRA_POST);
 
         Date data = new Date(post.getDate());
         setTitle(DATE_FORMAT.format(data));
@@ -79,6 +94,29 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_details, menu);
+
+        MenuItem item = menu.findItem(R.id.menu_bookmarked);
+        item.setTitle(post.isBookmarked() ? R.string.menu_bookmark_delete : R.string.menu_bookmark_create);
+        item.setIcon(post.isBookmarked() ? R.drawable.ic_bookmark : R.drawable.ic_bookmark_border);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_bookmarked) {
+            databaseWrapper.setBookmarked(post.getId(), !post.isBookmarked());
+            post = databaseWrapper.getPost(post.getId());
+            invalidateOptionsMenu();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -93,5 +131,12 @@ public class DetailsActivity extends AppCompatActivity {
         unregisterReceiver(updateReceiver);
 
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        databaseWrapper.cleanUp();
+        databaseHelper.close();
+        super.onDestroy();
     }
 }
