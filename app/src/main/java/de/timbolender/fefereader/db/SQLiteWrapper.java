@@ -71,6 +71,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
                 PostEntry.COLUMN_NAME_TIMESTAMP_ID,
                 PostEntry.COLUMN_NAME_IS_READ,
                 PostEntry.COLUMN_NAME_IS_UPDATED,
+                PostEntry.COLUMN_NAME_IS_BOOKMARKED,
                 PostEntry.COLUMN_NAME_CONTENTS,
                 PostEntry.COLUMN_NAME_DATE
             };
@@ -89,6 +90,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
                 Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_TIMESTAMP_ID))),
                 cursor.getInt(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_IS_READ)) == 1,
                 cursor.getInt(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_IS_UPDATED)) == 1,
+                cursor.getInt(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_IS_BOOKMARKED)) == 1,
                 cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_CONTENTS)),
                 Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(PostEntry.COLUMN_NAME_DATE)))
             );
@@ -161,6 +163,21 @@ public class SQLiteWrapper implements DatabaseWrapper {
 
         if(database.update(PostEntry.TABLE_NAME, values, selection, selectionArgs) == 0) {
             throw new DatabaseException("No post found with id " + post.getId());
+        }
+    }
+
+    @Override
+    public void setBookmarked(String id, boolean isBookmarked) throws DatabaseException {
+        checkNotNull(id);
+
+        ContentValues values = new ContentValues();
+        values.put(PostEntry.COLUMN_NAME_IS_BOOKMARKED, isBookmarked);
+
+        String selection = PostEntry._ID + " = ?";
+        String[] selectionArgs = { id };
+
+        if(database.update(PostEntry.TABLE_NAME, values, selection, selectionArgs) == 0) {
+            throw new DatabaseException("No post found with id " + id);
         }
     }
 

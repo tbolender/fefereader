@@ -16,6 +16,7 @@ class SQLiteFefesBlogContract {
             PostEntry.COLUMN_NAME_TIMESTAMP_ID + " TEXT," +
             PostEntry.COLUMN_NAME_IS_READ + " BOOLEAN DEFAULT 0," +
             PostEntry.COLUMN_NAME_IS_UPDATED + " BOOLEAN DEFAULT 0," +
+            PostEntry.COLUMN_NAME_IS_BOOKMARKED + " BOOLEAN DEFAULT 0," +
             PostEntry.COLUMN_NAME_CONTENTS + " TEXT," +
             PostEntry.COLUMN_NAME_DATE + " TEXT)";
 
@@ -26,6 +27,7 @@ class SQLiteFefesBlogContract {
         public static final String COLUMN_NAME_TIMESTAMP_ID = "timestamp_id";
         public static final String COLUMN_NAME_IS_READ = "is_read";
         public static final String COLUMN_NAME_IS_UPDATED = "is_updated";
+        public static final String COLUMN_NAME_IS_BOOKMARKED = "is_bookmarked";
         public static final String COLUMN_NAME_CONTENTS = "contents";
         public static final String COLUMN_NAME_DATE = "date";
     }

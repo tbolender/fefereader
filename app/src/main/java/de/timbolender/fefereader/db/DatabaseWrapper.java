@@ -46,6 +46,14 @@ public interface DatabaseWrapper {
     void markRead(Post post) throws DatabaseException;
 
     /**
+     * Save whether post is saved for later.
+     * @param id Id of post.
+     * @param isBookmarked True if post should be saved as bookmark.
+     * @throws DatabaseException Thrown on database error.
+     */
+    void setBookmarked(String id, boolean isBookmarked) throws DatabaseException;
+
+    /**
      * Clear everything up.
      */
     void cleanUp();

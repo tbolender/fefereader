@@ -29,10 +29,11 @@ public class SQLiteReader implements PostReader {
             Long fetchedTimestamp = Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(SQLiteFefesBlogContract.PostEntry.COLUMN_NAME_TIMESTAMP_ID)));
             boolean isRead = cursor.getInt(cursor.getColumnIndexOrThrow(SQLiteFefesBlogContract.PostEntry.COLUMN_NAME_IS_READ)) == 1;
             boolean isUpdated = cursor.getInt(cursor.getColumnIndexOrThrow(SQLiteFefesBlogContract.PostEntry.COLUMN_NAME_IS_UPDATED)) == 1;
+            boolean isBookmarked = cursor.getInt(cursor.getColumnIndexOrThrow(SQLiteFefesBlogContract.PostEntry.COLUMN_NAME_IS_BOOKMARKED)) == 1;
             String contents = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteFefesBlogContract.PostEntry.COLUMN_NAME_CONTENTS));
             long date = Long.parseLong(cursor.getString(cursor.getColumnIndexOrThrow(SQLiteFefesBlogContract.PostEntry.COLUMN_NAME_DATE)));
 
-            return new Post(id, fetchedTimestamp, isRead, isUpdated, contents, date);
+            return new Post(id, fetchedTimestamp, isRead, isUpdated, isBookmarked, contents, date);
         }
         catch(SQLException e) {
             throw new DatabaseException(e);
