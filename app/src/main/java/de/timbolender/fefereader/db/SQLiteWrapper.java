@@ -151,18 +151,18 @@ public class SQLiteWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public void markRead(Post post) throws DatabaseException {
-        checkNotNull(post);
+    public void setRead(String id, boolean isRead) throws DatabaseException {
+        checkNotNull(id);
 
         ContentValues values = new ContentValues();
-        values.put(PostEntry.COLUMN_NAME_IS_READ, true);
+        values.put(PostEntry.COLUMN_NAME_IS_READ, isRead);
         values.put(PostEntry.COLUMN_NAME_IS_UPDATED, false);
 
         String selection = PostEntry._ID + " = ?";
-        String[] selectionArgs = { post.getId() };
+        String[] selectionArgs = { id };
 
         if(database.update(PostEntry.TABLE_NAME, values, selection, selectionArgs) == 0) {
-            throw new DatabaseException("No post found with id " + post.getId());
+            throw new DatabaseException("No post found with id " + id);
         }
     }
 

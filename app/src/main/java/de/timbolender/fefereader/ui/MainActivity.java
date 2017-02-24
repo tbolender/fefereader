@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
         for(int i = 0; i < reader.getCount(); i++) {
             Post post = reader.get(i);
             if(!post.isRead() || post.isUpdated()) {
-                databaseWrapper.markRead(post);
+                databaseWrapper.setRead(post.getId(), true);
             }
         }
 
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
 
     @Override
     public void OnPostSelected(Post post) {
-        databaseWrapper.markRead(post);
+        databaseWrapper.setRead(post.getId(), true);
         updateAdapter();
 
         Intent intent = new Intent(this, DetailsActivity.class);

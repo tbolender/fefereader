@@ -39,11 +39,12 @@ public interface DatabaseWrapper {
     PostReader getPostsReader() throws DatabaseException;
 
     /**
-     * Mark a post as read. Also removed the updated flag.
-     * @param post Post to mark as read.
+     * Save whether post is marked as read. Removes the updated flag (independent of parameter).
+     * @param id Post to mark as read.
+     * @param isRead True if post was read.
      * @throws DatabaseException Thrown on database error.
      */
-    void markRead(Post post) throws DatabaseException;
+    void setRead(String id, boolean isRead) throws DatabaseException;
 
     /**
      * Save whether post is saved for later.
