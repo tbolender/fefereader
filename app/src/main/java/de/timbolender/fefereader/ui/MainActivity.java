@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
 
         ButterKnife.bind(this);
 
-        // Set up data base
+        // Set up database
         databaseHelper = new SQLiteOpenHelper(this);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
         databaseWrapper = new SQLiteWrapper(database);
@@ -107,9 +107,8 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
             onSettingsClick();
             return true;
         }
-        else {
-            return super.onOptionsItemSelected(item);
-        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -153,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
         for(int i = 0; i < reader.getCount(); i++) {
             Post post = reader.get(i);
             if(!post.isRead() || post.isUpdated()) {
-                databaseWrapper.markRead(post);
+                databaseWrapper.setRead(post.getId(), true);
             }
         }
 
@@ -172,11 +171,17 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
 
     @Override
     public void OnPostSelected(Post post) {
-        databaseWrapper.markRead(post);
+        databaseWrapper.setRead(post.getId(), true);
         updateAdapter();
 
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(DetailsActivity.INTENT_EXTRA_POST, post);
         startActivity(intent);
+    }
+
+    @Override
+    public void OnPostLongPressed(Post post) {
+        databaseWrapper.setBookmarked(post.getId(), !post.isBookmarked());
+        updateAdapter();
     }
 }

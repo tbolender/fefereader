@@ -10,6 +10,9 @@
     <string name="menu_refresh">Aktualisieren</string>
     <string name="menu_settings">@string/activity_settings_title</string>
 
+    <string name="menu_bookmark_create">Merken</string>
+    <string name="menu_bookmark_delete">Nicht mehr Merken</string>
+
     <!-- Details activity -->
     <string name="button_open_link">Öffnen</string>
 
@@ -81,4 +84,5 @@
             margin: 1em 0.5em;
         }
     </string>
+    <string name="description_bookmark">Als Lesezeichen gespeichert</string>
 </resources>

@@ -13,10 +13,11 @@ public class Post implements Parcelable {
     private final long timestampId;
     private final boolean isRead;
     private final boolean isUpdated;
+    private final boolean isBookmarked;
     private final String contents;
     private final long date;
 
-    public Post(String id, long timestampId, boolean isRead, boolean isUpdated, String contents, long date) {
+    public Post(String id, long timestampId, boolean isRead, boolean isUpdated, boolean isBookmarked, String contents, long date) {
         checkNotNull(id);
         checkNotNull(contents);
         checkNotNull(date);
@@ -25,6 +26,7 @@ public class Post implements Parcelable {
         this.timestampId = timestampId;
         this.isRead = isRead;
         this.isUpdated = isUpdated;
+        this.isBookmarked = isBookmarked;
         this.contents = contents;
         this.date = date;
     }
@@ -36,6 +38,7 @@ public class Post implements Parcelable {
         this.timestampId = rawPost.getTimestampId();
         this.isRead = false;
         this.isUpdated = false;
+        this.isBookmarked = false;
         this.contents = rawPost.getContents();
         this.date = rawPost.getDate();
     }
@@ -56,6 +59,10 @@ public class Post implements Parcelable {
         return isUpdated;
     }
 
+    public boolean isBookmarked() {
+        return isBookmarked;
+    }
+
     public String getContents() {
         return contents;
     }
@@ -71,6 +78,7 @@ public class Post implements Parcelable {
             ", timestampId=" + timestampId +
             ", isRead=" + isRead +
             ", isUpdated=" + isUpdated +
+            ", isBookmarked=" + isBookmarked +
             ", contents='" + contents + '\'' +
             ", date='" + date + '\'' +
             '}';
@@ -93,6 +101,7 @@ public class Post implements Parcelable {
         out.writeLong(timestampId);
         out.writeByte((byte) (isRead ? 1 : 0));
         out.writeByte((byte) (isUpdated ? 1 : 0));
+        out.writeByte((byte) (isBookmarked ? 1 : 0));
         out.writeString(contents);
         out.writeLong(date);
     }
@@ -104,6 +113,7 @@ public class Post implements Parcelable {
         this.timestampId = in.readLong();
         this.isRead = in.readByte() == 1;
         this.isUpdated = in.readByte() == 1;
+        this.isBookmarked = in.readByte() == 1;
         this.contents = in.readString();
         this.date = in.readLong();
     }
