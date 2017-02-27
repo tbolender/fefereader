@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
     SQLiteOpenHelper databaseHelper;
     PostAdapter postAdapter;
     DatabaseWrapper databaseWrapper;
+    boolean shouldPerformUpdate;
 
     @BindView(R.id.post_list) RecyclerView postList;
     @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
@@ -82,8 +83,8 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
             }
         };
 
-        // Trigger update on beginning
-        onUpdateClick();
+        // Trigger update on every recreation
+        shouldPerformUpdate = true;
     }
 
     @Override
@@ -126,6 +127,12 @@ public class MainActivity extends AppCompatActivity implements PostAdapter.OnPos
         IntentFilter intentFilter = new IntentFilter(UpdateService.BROADCAST_UPDATE_FINISHED);
         intentFilter.setPriority(UpdateService.BROADCAST_PRIORITY_UI);
         registerReceiver(updateReceiver, intentFilter);
+
+        // Trigger update if desired
+        if(shouldPerformUpdate) {
+            onUpdateClick();
+            shouldPerformUpdate = false;
+        }
     }
 
     @Override

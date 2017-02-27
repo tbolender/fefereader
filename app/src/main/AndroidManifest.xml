@@ -16,8 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.MainActivity"
-            android:label="@string/activity_main_title"
-            android:launchMode="singleTask">
+            android:label="@string/activity_main_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
