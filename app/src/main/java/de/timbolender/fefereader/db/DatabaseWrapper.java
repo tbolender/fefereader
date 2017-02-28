@@ -7,6 +7,9 @@ import de.timbolender.fefereader.data.RawPost;
  * Wrapper interface around a data source.
  */
 public interface DatabaseWrapper {
+    int FILTER_NONE = 0;
+    int FILTER_BOOKMARKED = 2;
+
     /**
      * Add new post to database or update existing.
      * @param rawPost New post to ad.
@@ -34,9 +37,10 @@ public interface DatabaseWrapper {
 
     /**
      * @return Reader providing access to all posts.
+     * @param filter Filter expression which posts to return.
      * @throws DatabaseException Thrown on database error.
      */
-    PostReader getPostsReader() throws DatabaseException;
+    PostReader getPostsReader(int filter) throws DatabaseException;
 
     /**
      * Save whether post is marked as read. Removes the updated flag (independent of parameter).

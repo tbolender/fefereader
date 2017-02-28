@@ -127,7 +127,12 @@ public class SQLiteWrapper implements DatabaseWrapper {
     }
 
     @Override
-    public PostReader getPostsReader() throws DatabaseException {
+    public PostReader getPostsReader(int filter) throws DatabaseException {
+        // Make sure no parameter misuse is done
+        if((filter & FILTER_NONE) != 0 && (filter & FILTER_BOOKMARKED) != 0) {
+            throw new IllegalArgumentException("Passed illegal filter flag combination");
+        }
+
         try {
             String[] projection = {
                 PostEntry._ID,
@@ -141,8 +146,14 @@ public class SQLiteWrapper implements DatabaseWrapper {
 
             String sortOrder = PostEntry.COLUMN_NAME_TIMESTAMP_ID + " DESC";
 
+            // Respect filtering
+            String selection = null;
+            if(filter == FILTER_BOOKMARKED) {
+                selection = PostEntry.COLUMN_NAME_IS_BOOKMARKED + " = 1";
+            }
+
             @SuppressLint("Recycle")
-            Cursor cursor = database.query(PostEntry.TABLE_NAME, projection, null, null, null, null, sortOrder);
+            Cursor cursor = database.query(PostEntry.TABLE_NAME, projection, selection, null, null, null, sortOrder);
 
             return new SQLiteReader(cursor);
         }
