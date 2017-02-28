@@ -86,5 +86,6 @@
             margin: 1em 0.5em;
         }
     </string>
+    <string name="description_updated">Wurde aktualisert</string>
     <string name="description_bookmark">Als Lesezeichen gespeichert</string>
 </resources>
