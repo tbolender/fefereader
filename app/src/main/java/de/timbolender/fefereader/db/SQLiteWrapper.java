@@ -129,7 +129,11 @@ public class SQLiteWrapper implements DatabaseWrapper {
     @Override
     public PostReader getPostsReader(int filter) throws DatabaseException {
         // Make sure no parameter misuse is done
-        if((filter & FILTER_NONE) != 0 && (filter & FILTER_BOOKMARKED) != 0) {
+        int filterCount = 0;
+        filterCount += (filter & FILTER_NONE) != 0 ? 1 : 0;
+        filterCount += (filter & FILTER_BOOKMARKED) != 0 ? 1 : 0;
+        filterCount += (filter & FILTER_UNREAD) != 0 ? 1 : 0;
+        if(filterCount != 1) {
             throw new IllegalArgumentException("Passed illegal filter flag combination");
         }
 
@@ -150,6 +154,9 @@ public class SQLiteWrapper implements DatabaseWrapper {
             String selection = null;
             if(filter == FILTER_BOOKMARKED) {
                 selection = PostEntry.COLUMN_NAME_IS_BOOKMARKED + " = 1";
+            }
+            if(filter == FILTER_UNREAD) {
+                selection = PostEntry.COLUMN_NAME_IS_READ + " = 0 OR " + PostEntry.COLUMN_NAME_IS_UPDATED + " = 1";
             }
 
             @SuppressLint("Recycle")
