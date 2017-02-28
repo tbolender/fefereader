@@ -58,6 +58,10 @@ public class MainActivity extends PostListActivity {
             onMarkAllAsReadClick();
             return true;
         }
+        if(itemId == R.id.menu_bookmark_filter) {
+            onBookmarkFilterClick();
+            return true;
+        }
         if(itemId == R.id.menu_refresh) {
             onUpdateClick();
             return true;
@@ -82,6 +86,10 @@ public class MainActivity extends PostListActivity {
         updateAdapter();
     }
 
+    private void onBookmarkFilterClick() {
+        Intent filterIntent = new Intent(this, BookmarkActivity.class);
+        startActivity(filterIntent);
+    }
 
     private void onUpdateClick() {
         refreshLayout.setRefreshing(true);
