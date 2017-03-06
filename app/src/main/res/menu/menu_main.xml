@@ -21,6 +21,11 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/menu_unread_filter"
+        android:title="@string/menu_unread_filter"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/menu_settings"
         android:title="@string/menu_settings"
         app:showAsAction="never"/>

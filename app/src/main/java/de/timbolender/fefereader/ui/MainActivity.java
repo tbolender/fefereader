@@ -16,9 +16,26 @@ import de.timbolender.fefereader.service.UpdateService;
  * Main activity displaying all retrieved posts
  */
 public class MainActivity extends PostListActivity {
+    private static final String FILTER_UNREAD_KEY = "filter_unread";
+
+    boolean filterUnread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Restore filter state
+        filterUnread = false;
+        if(savedInstanceState != null) {
+            filterUnread = savedInstanceState.getBoolean(FILTER_UNREAD_KEY);
+        }
+
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(FILTER_UNREAD_KEY, filterUnread);
     }
 
     //
@@ -27,7 +44,8 @@ public class MainActivity extends PostListActivity {
 
     @Override
     PostReader getReader(DatabaseWrapper databaseWrapper) {
-        return databaseWrapper.getPostsReader(DatabaseWrapper.FILTER_NONE);
+        int filter = filterUnread ? DatabaseWrapper.FILTER_UNREAD : DatabaseWrapper.FILTER_NONE;
+        return databaseWrapper.getPostsReader(filter);
     }
 
     @Override
@@ -48,6 +66,8 @@ public class MainActivity extends PostListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        MenuItem unreadItem = menu.findItem(R.id.menu_unread_filter);
+        unreadItem.setTitle(filterUnread ? R.string.menu_unread_filter_undo : R.string.menu_unread_filter);
         return true;
     }
 
@@ -64,6 +84,10 @@ public class MainActivity extends PostListActivity {
         }
         if(itemId == R.id.menu_refresh) {
             onUpdateClick();
+            return true;
+        }
+        if(itemId == R.id.menu_unread_filter) {
+            onUnreadFilterToggle();
             return true;
         }
         if(itemId == R.id.menu_settings) {
@@ -94,6 +118,12 @@ public class MainActivity extends PostListActivity {
     private void onUpdateClick() {
         refreshLayout.setRefreshing(true);
         UpdateService.startUpdate(this);
+    }
+
+    private void onUnreadFilterToggle() {
+        filterUnread = !filterUnread;
+        updateAdapter();
+        invalidateOptionsMenu();
     }
 
     private void onSettingsClick() {
