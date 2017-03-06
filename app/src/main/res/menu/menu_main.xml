@@ -10,9 +10,19 @@
         app:showAsAction="ifRoom"/>
 
     <item
+        android:id="@+id/menu_bookmark_filter"
+        android:title="@string/menu_bookmark_filter"
+        android:icon="@drawable/ic_bookmark"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/menu_refresh"
         android:title="@string/menu_refresh"
-        android:icon="@drawable/ic_refresh"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_unread_filter"
+        android:title="@string/menu_unread_filter"
         app:showAsAction="never"/>
 
     <item

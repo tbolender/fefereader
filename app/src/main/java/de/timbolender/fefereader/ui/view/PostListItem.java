@@ -47,6 +47,9 @@ public class PostListItem extends LinearLayout {
         View bookmarkView = ButterKnife.findById(this, R.id.bookmark_image);
         bookmarkView.setVisibility(post.isBookmarked() ? VISIBLE : GONE);
 
+        View updatedView = ButterKnife.findById(this, R.id.updated_image);
+        updatedView.setVisibility(post.isUpdated() ? VISIBLE : GONE);
+
         // Attach dispenser to view
         setTag(post);
     }

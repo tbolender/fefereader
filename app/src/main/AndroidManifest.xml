@@ -24,8 +24,18 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.BookmarkActivity"
+            android:label="@string/activity_bookmark_title"
+            android:parentActivityName=".ui.MainActivity">
+        </activity>
+        <activity
             android:name=".ui.DetailsActivity"
             android:label="@string/activity_details_title"
+            android:parentActivityName=".ui.MainActivity">
+        </activity>
+        <activity
+            android:name=".ui.UnreadActivity"
+            android:label="@string/activity_unread_title"
             android:parentActivityName=".ui.MainActivity">
         </activity>
         <activity

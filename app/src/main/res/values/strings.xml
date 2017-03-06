@@ -2,12 +2,16 @@
     <string name="app_name">Fefe\'s Blog Reader</string>
 
     <string name="activity_main_title">Fefe News</string>
+    <string name="activity_bookmark_title">Lesezeichen</string>
     <string name="activity_details_title">Details</string>
+    <string name="activity_unread_title">Ungelesene</string>
     <string name="activity_settings_title">Einstellungen</string>
 
     <!-- Main activity -->
     <string name="menu_mark_read">Alle Gelesen Markieren</string>
+    <string name="menu_bookmark_filter">Lesezeichen anzeigen</string>
     <string name="menu_refresh">Aktualisieren</string>
+    <string name="menu_unread_filter">Ungelesene anzeigen</string>
     <string name="menu_settings">@string/activity_settings_title</string>
 
     <string name="menu_bookmark_create">Merken</string>
@@ -84,5 +88,6 @@
             margin: 1em 0.5em;
         }
     </string>
+    <string name="description_updated">Wurde aktualisert</string>
     <string name="description_bookmark">Als Lesezeichen gespeichert</string>
 </resources>

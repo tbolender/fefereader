@@ -100,7 +100,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         MenuItem item = menu.findItem(R.id.menu_bookmarked);
         item.setTitle(post.isBookmarked() ? R.string.menu_bookmark_delete : R.string.menu_bookmark_create);
-        item.setIcon(post.isBookmarked() ? R.drawable.ic_bookmark : R.drawable.ic_bookmark_border);
+        item.setIcon(post.isBookmarked() ? R.drawable.ic_bookmark_border : R.drawable.ic_bookmark);
         return true;
     }
 
