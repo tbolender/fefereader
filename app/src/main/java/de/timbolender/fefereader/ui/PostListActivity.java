@@ -102,9 +102,11 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
         notificationManager.cancelAll();
 
         // Register broadcast receiver for notifications
-        IntentFilter intentFilter = new IntentFilter(UpdateService.BROADCAST_UPDATE_FINISHED);
-        intentFilter.setPriority(UpdateService.BROADCAST_PRIORITY_UI);
-        registerReceiver(updateReceiver, intentFilter);
+        IntentFilter updateFilter = new IntentFilter(UpdateService.BROADCAST_UPDATE_FINISHED);
+        updateFilter.setPriority(UpdateService.BROADCAST_PRIORITY_UI);
+        registerReceiver(updateReceiver, updateFilter);
+        IntentFilter skippedFilter = new IntentFilter(UpdateService.BROADCAST_UPDATE_SKIPPED);
+        registerReceiver(updateReceiver, skippedFilter);
 
         // Trigger update if desired
         if(shouldPerformUpdate) {

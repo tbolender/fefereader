@@ -42,6 +42,7 @@ public class UpdateService extends Service {
     static final String ACTION_UPDATE = "de.timbolender.fefereader.service.action.UPDATE";
     static final int NOTIFICATION_ID = 42; // What else?
 
+    public static final String BROADCAST_UPDATE_SKIPPED = "de.timbolender.fefereader.service.action.UPDATE_SKIPPED";
     public static final String BROADCAST_UPDATE_FINISHED = "de.timbolender.fefereader.service.action.UPDATE_FINISHED";
     public static final String EXTRA_UPDATE_SUCCESS = "update_success";
     public static final int BROADCAST_PRIORITY_UI = 10;
@@ -172,8 +173,9 @@ public class UpdateService extends Service {
     private void performUpdate() {
         // Check whether update is running
         if(updateThread != null) {
-            // FIXME: How to handle this in ui?
             Log.e(TAG, "Ignoring update request due to running update");
+            Intent skippedIntent = new Intent(BROADCAST_UPDATE_SKIPPED);
+            sendOrderedBroadcast(skippedIntent, null);
             return;
         }
 
