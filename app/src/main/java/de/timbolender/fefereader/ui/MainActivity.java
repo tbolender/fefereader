@@ -97,7 +97,7 @@ public class MainActivity extends PostListActivity {
 
     private void onUpdateClick() {
         refreshLayout.setRefreshing(true);
-        UpdateService.startUpdate(this);
+        UpdateService.startManualUpdate(this);
     }
 
     private void onUnreadFilterClick() {

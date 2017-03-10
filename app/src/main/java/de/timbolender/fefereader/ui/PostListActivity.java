@@ -69,7 +69,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
             refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    UpdateService.startUpdate(PostListActivity.this);
+                    UpdateService.startManualUpdate(PostListActivity.this);
                 }
             });
             refreshLayout.setColorSchemeResources(R.color.colorAccent);
@@ -150,7 +150,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
 
     void requestUpdate() {
         refreshLayout.setRefreshing(true);
-        UpdateService.startUpdate(this);
+        UpdateService.startManualUpdate(this);
     }
 
     //

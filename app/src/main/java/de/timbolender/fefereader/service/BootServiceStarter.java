@@ -10,6 +10,6 @@ import android.content.Intent;
 public class BootServiceStarter extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        UpdateService.startUpdate(context);
+        UpdateService.startManualUpdate(context);
     }
 }

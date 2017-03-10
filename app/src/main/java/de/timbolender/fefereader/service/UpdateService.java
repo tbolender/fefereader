@@ -40,6 +40,8 @@ import okhttp3.OkHttpClient;
 public class UpdateService extends Service {
     static final String TAG = UpdateService.class.getSimpleName();
     static final String ACTION_UPDATE = "de.timbolender.fefereader.service.action.UPDATE";
+    static final String ACTION_ENABLE_REGULAR_UPDATES = "de.timbolender.fefereader.service.action.ENABLE_UPDATES";
+    static final String ACTION_DISABLE_REGULAR_UPDATES = "de.timbolender.fefereader.service.action.DISABLE_UPDATES";
     static final int NOTIFICATION_ID = 42; // What else?
 
     public static final String BROADCAST_UPDATE_SKIPPED = "de.timbolender.fefereader.service.action.UPDATE_SKIPPED";
@@ -59,21 +61,32 @@ public class UpdateService extends Service {
     }
 
     /**
-     * Start service which enables auto update.
+     * Trigger update in background service.
      * @param context Context to use.
      */
-    public static void startService(Context context) {
-        Intent intent = new Intent(context, UpdateService.class);
-        context.startService(intent);
+    public static void startManualUpdate(Context context) {
+        Intent updateIntent = createUpdateIntent(context);
+        context.startService(updateIntent);
     }
 
     /**
-     * Trigger update in background service
+     * Start automatic updates in background service.
      * @param context Context to use.
      */
-    public static void startUpdate(Context context) {
-        Intent updateIntent = createUpdateIntent(context);
-        context.startService(updateIntent);
+    public static void enableAutomaticUpdates(Context context) {
+        Intent enableIntent = new Intent(context, UpdateService.class);
+        enableIntent.setAction(ACTION_ENABLE_REGULAR_UPDATES);
+        context.startService(enableIntent);
+    }
+
+    /**
+     * Stop automatic updates in background service.
+     * @param context Context to use.
+     */
+    public static void disableAutomaticUpdates(Context context) {
+        Intent disableIntent = new Intent(context, UpdateService.class);
+        disableIntent.setAction(ACTION_DISABLE_REGULAR_UPDATES);
+        context.startService(disableIntent);
     }
 
     PreferenceHelper preferenceHelper;
@@ -146,10 +159,18 @@ public class UpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        String action = intent.getAction();
         // Trigger update
-        if(intent.getAction().equals(ACTION_UPDATE)) {
+        if(action.equals(ACTION_UPDATE)) {
             Log.i(TAG, "Starting update");
             performUpdate();
+        }
+        // Take care about background updates
+        if(action.equals(ACTION_ENABLE_REGULAR_UPDATES)) {
+            registerRegularUpdates();
+        }
+        if(action.equals(ACTION_DISABLE_REGULAR_UPDATES)) {
+            unregisterRegularUpdates();
         }
 
         return START_NOT_STICKY;
@@ -225,6 +246,7 @@ public class UpdateService extends Service {
             Log.d(TAG, "Requesting alarm for regular updates with period of " + updateInterval + "ms");
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             Intent updateIntent = createUpdateIntent(this);
+            // Double registration seemed to be prevented by AlarmManager (tests on 4.4 and 6.0.1)
             PendingIntent pendingIntent = PendingIntent.getService(this, 0, updateIntent, 0);
             alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() + updateInterval, updateInterval, pendingIntent);
@@ -234,4 +256,15 @@ public class UpdateService extends Service {
         }
     }
 
+    /**
+     * Cancel receiving of update alarm.
+     */
+    private void unregisterRegularUpdates() {
+        Log.d(TAG, "Canceling any alarm for regular updates");
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent updateIntent = createUpdateIntent(this);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, updateIntent, 0);
+        alarmManager.cancel(pendingIntent);
+        pendingIntent.cancel();
+    }
 }
