@@ -1,6 +1,7 @@
 package de.timbolender.fefereader.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -70,6 +71,10 @@ public class MainActivity extends PostListActivity {
             onUnreadFilterClick();
             return true;
         }
+        if(itemId == R.id.menu_feedback_mail) {
+            onFeedbackMailClick();
+            return true;
+        }
         if(itemId == R.id.menu_settings) {
             onSettingsClick();
             return true;
@@ -103,6 +108,14 @@ public class MainActivity extends PostListActivity {
     private void onUnreadFilterClick() {
         Intent filterIntent = new Intent(this, UnreadActivity.class);
         startActivity(filterIntent);
+    }
+
+    private void onFeedbackMailClick() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@timbolender.de"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback Fefe News");
+        startActivity(intent);
     }
 
     private void onSettingsClick() {
