@@ -20,3 +20,4 @@ exportFile() {
 
 
 exportFile "mipmap" 1.0 icon.svg ic_launcher
+exportFile "drawable" 3.0 icon.svg about

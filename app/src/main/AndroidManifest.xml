@@ -44,6 +44,11 @@
             android:label="@string/activity_settings_title"
             android:parentActivityName=".ui.MainActivity">
         </activity>
+        <activity
+            android:name=".ui.AboutActivity"
+            android:label="@string/activity_about_title"
+            android:parentActivityName=".ui.MainActivity">
+        </activity>
 
         <service
             android:name=".service.UpdateService"

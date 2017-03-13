@@ -8,4 +8,17 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Elements of about layout -->
+    <style name="AboutHeader" parent="TextAppearance.AppCompat">
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:textColor">@color/primaryTextDark</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="AboutTextBig" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/primaryTextDark</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

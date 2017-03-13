@@ -79,6 +79,10 @@ public class MainActivity extends PostListActivity {
             onSettingsClick();
             return true;
         }
+        if(itemId == R.id.menu_about) {
+            onAboutClick();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -116,6 +120,11 @@ public class MainActivity extends PostListActivity {
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@timbolender.de"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback Fefe News");
         startActivity(intent);
+    }
+
+    private void onAboutClick() {
+        Intent aboutIntent = new Intent(this, AboutActivity.class);
+        startActivity(aboutIntent);
     }
 
     private void onSettingsClick() {

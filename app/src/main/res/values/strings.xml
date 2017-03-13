@@ -6,6 +6,7 @@
     <string name="activity_details_title">Details</string>
     <string name="activity_unread_title">Ungelesene</string>
     <string name="activity_settings_title">Einstellungen</string>
+    <string name="activity_about_title">Infos</string>
 
     <!-- Main activity -->
     <string name="menu_mark_read">Alle Gelesen Markieren</string>
@@ -13,13 +14,55 @@
     <string name="menu_refresh">Aktualisieren</string>
     <string name="menu_unread_filter">Ungelesene anzeigen</string>
     <string name="menu_feedback_mail">Feedback geben</string>
-    <string name="menu_settings">@string/activity_settings_title</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="menu_about">Infos</string>
 
     <string name="menu_bookmark_create">Merken</string>
     <string name="menu_bookmark_delete">Nicht mehr Merken</string>
 
     <!-- Details activity -->
     <string name="button_open_link">Öffnen</string>
+
+    <!-- About activity -->
+    <string name="about_author_head">Entwicklung</string>
+    <string name="about_author_value">Tim Bolender</string>
+
+    <string name="about_general_head">Allgemein</string>
+    <string name="about_general_details">
+        Dies ist eine inoffizielle App. Alle anzeigten Blog-Post stammen von Fefe\'s Blog, ich habe folglich keinerlei Kontrolle
+        über Inhalt und Ansichten.
+    </string>
+
+    <string name="about_android_support_head" translatable="false">Android Support Library</string>
+    <string name="about_android_support_details" translatable="false">
+        Copyright The Android Open Source Project\n\nLicensed under the Apache License, Version 2.0.
+    </string>
+
+    <string name="about_jsoup_head" translatable="false">jsoup</string>
+    <string name="about_jsoup_details" translatable="false">
+        Copyright &#169; 2009 - 2016 Jonathan Hedley\n\nLicensed under the MIT License.
+    </string>
+
+    <string name="about_guava_head" translatable="false">Guava</string>
+    <string name="about_guava_details" translatable="false">
+        Copyright &#169; The Guava Authors\n\nLicensed under the Apache License, Version 2.0.
+    </string>
+
+    <string name="about_okhttp_head" translatable="false">OkHttp</string>
+    <string name="about_okhttp_details" translatable="false">
+        Copyright 2016 Square, Inc\n\nLicensed under the Apache License, Version 2.0.
+    </string>
+
+    <string name="about_butterknife_head" translatable="false">Butter Knife</string>
+    <string name="about_butterknife_details" translatable="false">
+        Copyright 2013 Jake Wharton\n\nLicensed under the Apache License, Version 2.0.
+    </string>
+
+    <string name="about_icons_head" translatable="false">Material Design Icons</string>
+    <string name="about_icons_details" translatable="false">
+        Licensed under Creative Commons - Attribution 4.0 International. Some icons are used in a modified version. You
+        may maintain a copy of the license at\n\nhttps://creativecommons.org/licenses/by/4.0/
+    </string>
 
     <!-- Notification -->
     <plurals name="notification_new_posts">
