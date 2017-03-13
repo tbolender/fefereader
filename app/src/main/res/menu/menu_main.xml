@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_mark_read"
-        android:title="@string/menu_mark_read"
-        android:icon="@drawable/ic_mark_read"
+        android:id="@+id/menu_unread_filter"
+        android:title="@string/menu_unread_filter"
+        android:icon="@drawable/ic_unread"
         app:showAsAction="ifRoom"/>
 
     <item
@@ -16,13 +16,14 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/menu_refresh"
-        android:title="@string/menu_refresh"
-        app:showAsAction="never"/>
+        android:id="@+id/menu_mark_read"
+        android:title="@string/menu_mark_read"
+        android:icon="@drawable/ic_mark_read"
+        app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/menu_unread_filter"
-        android:title="@string/menu_unread_filter"
+        android:id="@+id/menu_refresh"
+        android:title="@string/menu_refresh"
         app:showAsAction="never"/>
 
     <item
