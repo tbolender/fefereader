@@ -109,6 +109,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
         registerReceiver(updateReceiver, skippedFilter);
 
         // Trigger update if desired
+        refreshLayout.setRefreshing(false);
         if(shouldPerformUpdate) {
             requestUpdate();
             shouldPerformUpdate = false;
