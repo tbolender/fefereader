@@ -108,6 +108,9 @@
     <string name="post_style_none">
         body {
             margin: %1$dpx;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            word-wrap: break-word;
         }
 
         a {
@@ -120,6 +123,11 @@
 
         blockquote {
             margin: 1em;
+        }
+
+        pre {
+            padding: 0.5em;
+            margin: 1em 0.5em;
         }
     </string>
 
