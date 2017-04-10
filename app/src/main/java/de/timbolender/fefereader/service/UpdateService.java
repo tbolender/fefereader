@@ -159,21 +159,23 @@ public class UpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String action = intent.getAction();
-        // Trigger update
-        if(action.equals(ACTION_UPDATE)) {
-            Log.i(TAG, "Starting update");
-            performUpdate();
-        }
-        // Take care about background updates
-        if(action.equals(ACTION_ENABLE_REGULAR_UPDATES)) {
-            registerRegularUpdates();
-        }
-        if(action.equals(ACTION_DISABLE_REGULAR_UPDATES)) {
-            unregisterRegularUpdates();
+        if(intent != null) {
+            String action = intent.getAction();
+            // Trigger update
+            if (action.equals(ACTION_UPDATE)) {
+                Log.i(TAG, "Starting update");
+                performUpdate();
+            }
+            // Take care about background updates
+            if (action.equals(ACTION_ENABLE_REGULAR_UPDATES)) {
+                registerRegularUpdates();
+            }
+            if (action.equals(ACTION_DISABLE_REGULAR_UPDATES)) {
+                unregisterRegularUpdates();
+            }
         }
 
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
     @Override
