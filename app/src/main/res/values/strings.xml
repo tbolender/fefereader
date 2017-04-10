@@ -80,11 +80,11 @@
 
     <string name="pref_updates_enabled_key">updates_enabled</string>
     <string name="pref_updates_enabled_title">Hintergrund-Updates</string>
-    <string name="pref_updates_enabled_summary">In regelmäßigen Abständen im Hintergrund Updates holen und benachrichtigen.</string>
+    <string name="pref_updates_enabled_summary">In regelmäßigen Abständen im Hintergrund nach Updates suchen und benachrichtigen.</string>
 
     <string name="pref_update_interval_key">update_interval</string>
     <string name="pref_update_interval_title">Häufigkeit</string>
-    <string name="pref_update_interval_summary">Legt fest in welchen Zeitabständen automatisch Updates geholt werden sollen.</string>
+    <string name="pref_update_interval_summary">Legt fest in welchen Zeitabständen automatisch nach Updates gesucht werden soll.</string>
     <string name="pref_update_interval_default">1800000</string>
 
     <string name="pref_display">Darstellung</string>
@@ -95,7 +95,7 @@
 
     <string name="pref_post_style_key">post_style</string>
     <string name="pref_post_style_title">Style</string>
-    <string name="pref_post_style_summary">Wähle einen Style der bei der Anzeige der Posts verwendet werden.</string>
+    <string name="pref_post_style_summary">Wähle einen Style der bei der Anzeige der Posts verwendet wird.</string>
     <string name="pref_post_style_default">post_style_default</string>
 
     <!--
