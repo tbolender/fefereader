@@ -13,12 +13,13 @@ So what does it do?
 
 ### How to install
 
-Currently: Clone this repository, build is using AndroidStudio and
-deploy it to your device.
+Currently two options are available:
 
-In the future there will be the option to install it via
-[Google Play](https://play.google.com/) or
-[F-Droid](https://f-droid.org/) .
+- Clone this repository, build is using AndroidStudio and
+deploy it to your device.
+- Download it from the [Google Play Store](https://play.google.com/store/apps/details?id=de.timbolender.fefereader)
+
+In the future there will be the option to install it via [F-Droid](https://f-droid.org/) .
 
 ### Contribute
 
