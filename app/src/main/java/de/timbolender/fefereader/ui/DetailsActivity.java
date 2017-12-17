@@ -23,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.data.Post;
+import de.timbolender.fefereader.db.DatabaseException;
 import de.timbolender.fefereader.db.DatabaseWrapper;
 import de.timbolender.fefereader.db.SQLiteOpenHelper;
 import de.timbolender.fefereader.db.SQLiteWrapper;
@@ -33,7 +34,8 @@ import de.timbolender.fefereader.util.PreferenceHelper;
 public class DetailsActivity extends AppCompatActivity implements PostView.OnLinkClickedListener {
     private static final String TAG = DetailsActivity.class.getSimpleName();
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy", Locale.getDefault());
-    private static final String SHARE_URL = "https://blog.fefe.de/?ts=%s";
+    private static final String FEFE_BASE_URL = "https://blog.fefe.de/?ts=";
+    private static final String SHARE_URL = FEFE_BASE_URL + "%s";
 
     public static final String INTENT_EXTRA_POST = "post";
 
@@ -44,7 +46,19 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
     Post post;
     @BindView(R.id.post_view)
     PostView postView;
-    
+
+    /**
+     * Creates an intent to show this activity with given post.
+     * @param context Context to use.
+     * @param post Post to display.
+     * @return Intent showing the post.
+     */
+    public static Intent createShowPostIntent(Context context, Post post) {
+        Intent intent = new Intent(context, DetailsActivity.class);
+        intent.putExtra(DetailsActivity.INTENT_EXTRA_POST, post);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,6 +146,23 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
 
     @Override
     public void onLinkClicked(String url) {
+        // Handle links to post internally
+        if(url.startsWith(FEFE_BASE_URL)) {
+            try {
+                Log.d(TAG, "Clicked on link to post, try to handle it internally");
+                String postId = url.substring(FEFE_BASE_URL.length());
+                Post post = databaseWrapper.getPost(postId);
+
+                Intent intent = createShowPostIntent(this, post);
+                startActivity(intent);
+                return;
+            }
+            catch(DatabaseException e) {
+                Log.d(TAG, "Post is not stored, following normal procedure");
+            }
+        }
+
+        // Start intent with optional preview
         final Intent urlIntent = new Intent(Intent.ACTION_VIEW);
         urlIntent.setData(Uri.parse(url));
         if(preferenceHelper.isUrlInspectionEnabled()) {

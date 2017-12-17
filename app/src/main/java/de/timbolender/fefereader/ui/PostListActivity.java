@@ -163,8 +163,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
         databaseWrapper.setRead(post.getId(), true);
         updateAdapter();
 
-        Intent intent = new Intent(this, DetailsActivity.class);
-        intent.putExtra(DetailsActivity.INTENT_EXTRA_POST, post);
+        Intent intent = DetailsActivity.createShowPostIntent(this, post);
         startActivity(intent);
     }
 
