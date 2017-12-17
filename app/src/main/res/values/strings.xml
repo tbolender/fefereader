@@ -21,6 +21,8 @@
     <string name="menu_bookmark_delete">Nicht mehr Merken</string>
 
     <!-- Details activity -->
+    <string name="menu_share">Teilen</string>
+    <string name="intent_share_title">Teile Post via</string>
     <string name="button_open_link">Öffnen</string>
 
     <!-- About activity -->
