@@ -77,7 +77,7 @@ public class PostView extends LinearLayout {
         // Set content
         String fullContent = "<html><style>" + cssStyle + "</style><body>" + post.getContents() + "</body></html>";
         // Otherwise umlaute are not displayed correctly; http://stackoverflow.com/questions/3961589/android-webview-and-loaddata
-        view.loadDataWithBaseURL(null, fullContent, "text/html; charset=UTF-8", null, null);
+        view.loadDataWithBaseURL("https://blog.fefe.de/", fullContent, "text/html; charset=UTF-8", null, null);
     }
 
     /**
