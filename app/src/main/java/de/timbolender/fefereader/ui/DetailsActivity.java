@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.data.Post;
@@ -29,7 +30,7 @@ import de.timbolender.fefereader.service.UpdateService;
 import de.timbolender.fefereader.ui.view.PostView;
 import de.timbolender.fefereader.util.PreferenceHelper;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity implements PostView.OnLinkClickedListener {
     private static final String TAG = DetailsActivity.class.getSimpleName();
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy", Locale.getDefault());
     private static final String SHARE_URL = "https://blog.fefe.de/?ts=%s";
@@ -41,12 +42,15 @@ public class DetailsActivity extends AppCompatActivity {
     BroadcastReceiver updateReceiver;
     PreferenceHelper preferenceHelper;
     Post post;
+    @BindView(R.id.post_view)
+    PostView postView;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_details);
+        ButterKnife.bind(this);
 
         preferenceHelper = new PreferenceHelper(this);
 
@@ -55,34 +59,18 @@ public class DetailsActivity extends AppCompatActivity {
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
         databaseWrapper = new SQLiteWrapper(database);
 
+        // Extract post
         final Intent intent = getIntent();
         post = intent.getParcelableExtra(INTENT_EXTRA_POST);
 
+        // Set title
         Date data = new Date(post.getDate());
         setTitle(DATE_FORMAT.format(data));
-        final PostView view = ButterKnife.findById(this, R.id.post_view);
+
+        // Fill view
         String customStyle = preferenceHelper.getPostStyle();
-        view.fill(post, customStyle);
-        view.setOnLinkClickedListener(new PostView.OnLinkClickedListener() {
-            @Override
-            public void onLinkClicked(String url) {
-                final Intent urlIntent = new Intent(Intent.ACTION_VIEW);
-                urlIntent.setData(Uri.parse(url));
-                if(preferenceHelper.isUrlInspectionEnabled()) {
-                    Snackbar snackbar = Snackbar.make(view, url, Snackbar.LENGTH_INDEFINITE);
-                    snackbar.setAction(R.string.button_open_link, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            startActivity(urlIntent);
-                        }
-                    });
-                    snackbar.show();
-                }
-                else {
-                    startActivity(urlIntent);
-                }
-            }
-        });
+        postView.fill(post, customStyle);
+        postView.setOnLinkClickedListener(this);
 
         // Create receiver for updates
         updateReceiver = new BroadcastReceiver() {
@@ -140,6 +128,25 @@ public class DetailsActivity extends AppCompatActivity {
         unregisterReceiver(updateReceiver);
 
         super.onPause();
+    }
+
+    @Override
+    public void onLinkClicked(String url) {
+        final Intent urlIntent = new Intent(Intent.ACTION_VIEW);
+        urlIntent.setData(Uri.parse(url));
+        if(preferenceHelper.isUrlInspectionEnabled()) {
+            Snackbar snackbar = Snackbar.make(postView, url, Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction(R.string.button_open_link, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(urlIntent);
+                }
+            });
+            snackbar.show();
+        }
+        else {
+            startActivity(urlIntent);
+        }
     }
 
     @Override
