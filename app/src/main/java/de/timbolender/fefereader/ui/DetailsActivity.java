@@ -32,6 +32,7 @@ import de.timbolender.fefereader.util.PreferenceHelper;
 public class DetailsActivity extends AppCompatActivity {
     private static final String TAG = DetailsActivity.class.getSimpleName();
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy", Locale.getDefault());
+    private static final String SHARE_URL = "https://blog.fefe.de/?ts=%s";
 
     public static final String INTENT_EXTRA_POST = "post";
 
@@ -111,6 +112,14 @@ public class DetailsActivity extends AppCompatActivity {
             post = databaseWrapper.getPost(post.getId());
             invalidateOptionsMenu();
             return true;
+        }
+        else if(item.getItemId() == R.id.menu_share) {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, String.format(SHARE_URL, post.getId()));
+            shareIntent.setType("text/plain");
+
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.intent_share_title)));
         }
 
         return super.onOptionsItemSelected(item);
