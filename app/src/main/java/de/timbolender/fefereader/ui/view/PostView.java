@@ -3,14 +3,13 @@ package de.timbolender.fefereader.ui.view;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
-import butterknife.ButterKnife;
+import androidx.annotation.RequiresApi;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.data.Post;
 
@@ -51,7 +50,7 @@ public class PostView extends LinearLayout {
         checkNotNull(post);
 
         // Set up link interception
-        WebView view = ButterKnife.findById(this, R.id.contents);
+        WebView view = findViewById(R.id.contents);
         view.setBackgroundColor(Color.TRANSPARENT);
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             view.setWebViewClient(new LinkClickInterceptor() {

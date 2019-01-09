@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import butterknife.ButterKnife;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.data.Post;
 import de.timbolender.fefereader.util.Html;
@@ -39,15 +38,15 @@ public class PostListItem extends LinearLayout {
         checkNotNull(post);
 
         // Set text values
-        TextView preview = ButterKnife.findById(this, R.id.contents_preview);
+        TextView preview = findViewById(R.id.contents_preview);
         String previewText = Html.fromHtml(post.getContents()).toString();
         preview.setText(previewText);
         preview.setTypeface((post.isRead() && !post.isUpdated()) ? Typeface.DEFAULT : Typeface.DEFAULT_BOLD);
 
-        View bookmarkView = ButterKnife.findById(this, R.id.bookmark_image);
+        View bookmarkView = findViewById(R.id.bookmark_image);
         bookmarkView.setVisibility(post.isBookmarked() ? VISIBLE : GONE);
 
-        View updatedView = ButterKnife.findById(this, R.id.updated_image);
+        View updatedView = findViewById(R.id.updated_image);
         updatedView.setVisibility(post.isUpdated() ? VISIBLE : GONE);
 
         // Attach dispenser to view
