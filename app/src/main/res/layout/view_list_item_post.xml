@@ -5,7 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="post"
+            type="de.timbolender.fefereader.viewmodel.PostViewModel"/>
     </data>
 
     <de.timbolender.fefereader.ui.view.PostListItem
