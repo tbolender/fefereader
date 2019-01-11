@@ -39,7 +39,7 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
     private static final String FEFE_BASE_URL = "https://blog.fefe.de/?ts=";
     private static final String SHARE_URL = FEFE_BASE_URL + "%s";
 
-    public static final String INTENT_EXTRA_POST = "post";
+    public static final String INTENT_EXTRA_POST_ID = "post_id";
 
     SQLiteOpenHelper databaseHelper;
     DatabaseWrapper databaseWrapper;
@@ -52,12 +52,12 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
     /**
      * Creates an intent to show this activity with given post.
      * @param context Context to use.
-     * @param post Post to display.
+     * @param postId Post id to display.
      * @return Intent showing the post.
      */
-    public static Intent createShowPostIntent(Context context, Post post) {
+    public static Intent createShowPostIntent(Context context, String postId) {
         Intent intent = new Intent(context, DetailsActivity.class);
-        intent.putExtra(DetailsActivity.INTENT_EXTRA_POST, post);
+        intent.putExtra(DetailsActivity.INTENT_EXTRA_POST_ID, postId);
         return intent;
     }
 
@@ -102,7 +102,9 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
 
         // Extract post
         final Intent intent = getIntent();
-        postData.postValue(intent.getParcelableExtra(INTENT_EXTRA_POST));
+        String postId = intent.getStringExtra(INTENT_EXTRA_POST_ID);
+        Post post = databaseWrapper.getPost(postId);
+        postData.postValue(post);
     }
 
     @Override
@@ -167,9 +169,8 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
             try {
                 Log.d(TAG, "Clicked on link to post, try to handle it internally");
                 String postId = url.substring(FEFE_BASE_URL.length());
-                Post post = databaseWrapper.getPost(postId);
 
-                Intent intent = createShowPostIntent(this, post);
+                Intent intent = createShowPostIntent(this, postId);
                 startActivity(intent);
                 return;
             }
