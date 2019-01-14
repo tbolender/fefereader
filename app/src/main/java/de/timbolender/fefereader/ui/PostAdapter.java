@@ -68,14 +68,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         public void bindTo(PostViewModel post) {
             this.binding.setPost(post);
-
-            itemView.setOnClickListener(view -> {
-                if(listener != null) listener.OnPostSelected(post.getId());
-            });
-            itemView.setOnLongClickListener(view -> {
-                if(listener != null) listener.OnPostLongPressed(post.getId());
-                return listener != null;
-            });
+            this.binding.setListener(listener);
         }
     }
 
@@ -89,7 +82,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         /**
          * Called when post entry is long pressed.
          * @param postId Selected post id.
+         * @return True if the event is consumed.
          */
-        void OnPostLongPressed(String postId);
+        boolean OnPostLongPressed(String postId);
     }
 }

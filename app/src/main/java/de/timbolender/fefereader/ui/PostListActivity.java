@@ -167,9 +167,10 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     }
 
     @Override
-    public void OnPostLongPressed(String postId) {
+    public boolean OnPostLongPressed(String postId) {
         Post post = databaseWrapper.getPost(postId);
         databaseWrapper.setBookmarked(post.getId(), !post.isBookmarked());
         updateAdapter();
+        return true;
     }
 }

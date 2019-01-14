@@ -8,6 +8,10 @@
         <variable
             name="post"
             type="de.timbolender.fefereader.viewmodel.PostViewModel"/>
+
+        <variable
+            name="listener"
+            type="de.timbolender.fefereader.ui.PostAdapter.OnPostSelectedListener"/>
     </data>
 
     <de.timbolender.fefereader.ui.view.PostListItem
@@ -18,7 +22,9 @@
         android:paddingStart="16dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:paddingEnd="8dp">
+        android:paddingEnd="8dp"
+        android:onClick="@{() -> listener.OnPostSelected(post.id)}"
+        android:onLongClick="@{() -> listener.OnPostLongPressed(post.id)}">
 
         <TextView
             android:id="@+id/contents_preview"
