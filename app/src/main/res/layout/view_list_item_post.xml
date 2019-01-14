@@ -28,6 +28,8 @@
             android:ellipsize="end"
             android:lines="3"
             android:layout_weight="1"
+            android:html_text="@{post.contents}"
+            android:textStyle='@{(post.isRead() &amp;&amp; !post.isUpdated()) ? "normal" : "bold"}'
             tools:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."/>
 
         <LinearLayout
@@ -43,7 +45,7 @@
                 app:srcCompat="@drawable/ic_bookmark"
                 android:tint="@color/colorAccent"
                 android:contentDescription="@string/description_bookmark"
-                android:visibility="gone"
+                android:visibility="@{post.isBookmarked}"
                 tools:visibility="visible"/>
 
             <ImageView
@@ -53,7 +55,7 @@
                 android:layout_gravity="center_horizontal"
                 app:srcCompat="@drawable/ic_updated"
                 android:contentDescription="@string/description_updated"
-                android:visibility="gone"
+                android:visibility="@{post.isUpdated}"
                 tools:visibility="visible"/>
 
         </LinearLayout>
