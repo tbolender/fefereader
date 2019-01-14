@@ -4,11 +4,10 @@ import android.graphics.Typeface
 import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import androidx.databinding.BindingConversion
 
-@BindingConversion()
-fun convertVisibility(visible: Boolean): Int {
-    return if (visible) View.VISIBLE else View.GONE
+@BindingAdapter("android:visibility")
+fun setVisibility(view: View, visible: Boolean) {
+    view.visibility = if (visible) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("android:html_text")
