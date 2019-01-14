@@ -12,7 +12,7 @@ fun setVisibility(view: View, visible: Boolean) {
 
 @BindingAdapter("android:html_text")
 fun setHtmlText(view: TextView, value: String?) {
-    view.text = Html.fromHtml(if (value != null) value else "")
+    view.text = Html.fromHtml(if (value != null) value else "").toString()
 }
 
 @BindingAdapter("android:textStyle")
