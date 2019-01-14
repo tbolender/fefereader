@@ -19,7 +19,8 @@ fun setHtmlText(view: TextView, value: String?) {
 @BindingAdapter("android:textStyle")
 fun setTextStyle(view: TextView, value: String?) {
     when(value) {
-        "bold" -> view.setTypeface(Typeface.DEFAULT_BOLD)
-        else -> view.setTypeface(Typeface.DEFAULT)
+        "bold" -> view.setTypeface(view.typeface, Typeface.BOLD)
+        "italic" -> view.setTypeface(view.typeface, Typeface.ITALIC)
+        else -> view.setTypeface(view.typeface, Typeface.NORMAL)
     }
 }
