@@ -21,8 +21,6 @@ import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.data.Post;
 import de.timbolender.fefereader.db.DatabaseException;
@@ -46,7 +44,6 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
     BroadcastReceiver updateReceiver;
     PreferenceHelper preferenceHelper;
     MutableLiveData<Post> postData;
-    @BindView(R.id.post_view)
     PostView postView;
 
     /**
@@ -66,7 +63,7 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_details);
-        ButterKnife.bind(this);
+        postView = findViewById(R.id.post_view);
 
         preferenceHelper = new PreferenceHelper(this);
 
