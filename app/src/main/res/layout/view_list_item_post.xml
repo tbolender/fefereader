@@ -14,7 +14,7 @@
             type="de.timbolender.fefereader.ui.PostAdapter.OnPostSelectedListener"/>
     </data>
 
-    <de.timbolender.fefereader.ui.view.PostListItem
+    <LinearLayout
         android:id="@+id/post_list_item"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
 
         <TextView
             android:id="@+id/contents_preview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
@@ -66,5 +66,5 @@
 
         </LinearLayout>
 
-    </de.timbolender.fefereader.ui.view.PostListItem>
+    </LinearLayout>
 </layout>

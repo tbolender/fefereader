@@ -3,6 +3,7 @@ package de.timbolender.fefereader.ui;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import de.timbolender.fefereader.R;
@@ -32,15 +33,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public PostAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PostAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ViewListItemPostBinding binding = DataBindingUtil.inflate(inflater, R.layout.view_list_item_post, parent, false);
         return new ViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(PostAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PostAdapter.ViewHolder holder, int position) {
         Post post = reader.get(position);
         PostViewModel vm = new PostViewModel(
             post.getId(), post.getTimestampId(), post.isRead(), post.isUpdated(),
