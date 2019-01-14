@@ -1,9 +1,6 @@
-package de.timbolender.fefereader.data
+package de.timbolender.fefereader.viewmodel
 
-/**
- * A single blog post.
- */
-data class Post(
+data class PostViewModel(
         val id: String,
         val timestampId: Long,
         val isRead: Boolean,
@@ -11,4 +8,4 @@ data class Post(
         val isBookmarked: Boolean,
         val contents: String,
         val date: Long
-);
+)

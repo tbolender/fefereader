@@ -1,16 +1,16 @@
 package de.timbolender.fefereader.ui;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.data.Post;
+import de.timbolender.fefereader.databinding.ViewListItemPostBinding;
 import de.timbolender.fefereader.db.PostReader;
-import de.timbolender.fefereader.ui.view.PostListItem;
+import de.timbolender.fefereader.viewmodel.PostViewModel;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -33,17 +33,22 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public PostAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.view_list_item_post, parent, false);
-        return new ViewHolder(v, listener);
+    public PostAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        ViewListItemPostBinding binding = DataBindingUtil.inflate(inflater, R.layout.view_list_item_post, parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(PostAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PostAdapter.ViewHolder holder, int position) {
         Post post = reader.get(position);
-        holder.bind(post);
+        PostViewModel vm = new PostViewModel(
+            post.getId(), post.getTimestampId(), post.isRead(), post.isUpdated(),
+            post.isBookmarked(), post.getContents(), post.getDate()
+        );
+        holder.bindTo(vm);
     }
 
     @Override
@@ -55,49 +60,32 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
      * Wraps an actual entry view in the list.
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.post_list_item)
-        PostListItem view;
+        private final ViewListItemPostBinding binding;
 
-        private Post post;
+        public ViewHolder(ViewListItemPostBinding binding) {
+            super(binding.getRoot());
 
-        public ViewHolder(View itemView, final OnPostSelectedListener listener) {
-            super(itemView);
-
-            checkNotNull(itemView);
-
-            ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(listener != null) listener.OnPostSelected(post);
-                }
-            });
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    if(listener != null) listener.OnPostLongPressed(post);
-                    return listener != null;
-                }
-            });
+            this.binding = binding;
         }
 
-        public void bind(Post post) {
-            this.post = post;
-            view.fill(post);
+        public void bindTo(PostViewModel post) {
+            this.binding.setPost(post);
+            this.binding.setListener(listener);
         }
     }
 
     public interface OnPostSelectedListener {
         /**
          * Called when post entry was selected.
-         * @param post Selected post.
+         * @param postId Selected post id.
          */
-        void OnPostSelected(Post post);
+        void OnPostSelected(String postId);
 
         /**
          * Called when post entry is long pressed.
-         * @param post Selected post.
+         * @param postId Selected post id.
+         * @return True if the event is consumed.
          */
-        void OnPostLongPressed(Post post);
+        boolean OnPostLongPressed(String postId);
     }
 }

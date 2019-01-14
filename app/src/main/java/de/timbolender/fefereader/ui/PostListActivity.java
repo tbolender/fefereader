@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.data.Post;
 import de.timbolender.fefereader.db.DatabaseWrapper;
@@ -35,8 +33,8 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     DatabaseWrapper databaseWrapper;
     boolean shouldPerformUpdate;
 
-    @BindView(R.id.post_list) RecyclerView postList;
-    @BindView(R.id.refresh_layout) SwipeRefreshLayout refreshLayout;
+    RecyclerView postList;
+    SwipeRefreshLayout refreshLayout;
 
     BroadcastReceiver updateReceiver;
 
@@ -46,7 +44,8 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
 
         // Prepare ui
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        postList = findViewById(R.id.post_list);
+        refreshLayout = findViewById(R.id.refresh_layout);
 
         // Set up database
         databaseHelper = new SQLiteOpenHelper(this);
@@ -159,17 +158,19 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     //
 
     @Override
-    public void OnPostSelected(Post post) {
-        databaseWrapper.setRead(post.getId(), true);
+    public void OnPostSelected(String postId) {
+        databaseWrapper.setRead(postId, true);
         updateAdapter();
 
-        Intent intent = DetailsActivity.createShowPostIntent(this, post);
+        Intent intent = DetailsActivity.createShowPostIntent(this, postId);
         startActivity(intent);
     }
 
     @Override
-    public void OnPostLongPressed(Post post) {
+    public boolean OnPostLongPressed(String postId) {
+        Post post = databaseWrapper.getPost(postId);
         databaseWrapper.setBookmarked(post.getId(), !post.isBookmarked());
         updateAdapter();
+        return true;
     }
 }

@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 // Load signing information from file
 // Source: https://developer.android.com/studio/publish/app-signing.html
@@ -36,11 +38,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.defaultConfig
         }
+
+        debug {
+            applicationIdSuffix ".debug"
+        }
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    dataBinding {
+        enabled = true
     }
 }
 
@@ -53,19 +63,16 @@ dependencies {
     implementation 'androidx.fragment:fragment:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
 
     implementation 'org.jsoup:jsoup:1.10.2'
     implementation 'com.google.guava:guava:24.1-jre'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'com.jakewharton:butterknife:10.0.0'
-    kapt 'com.jakewharton:butterknife-compiler:10.0.0'
 
     implementation 'com.facebook.stetho:stetho:1.5.0'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 
-    kaptAndroidTest('androidx.test.espresso:espresso-core:3.1.1', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    kaptAndroidTest 'androidx.test.espresso:espresso-core:3.1.1'
     kaptTest 'junit:junit:4.12'
 }

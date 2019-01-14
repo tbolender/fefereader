@@ -1,53 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<de.timbolender.fefereader.ui.view.PostListItem
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/post_list_item"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingStart="16dp"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp"
-    android:paddingEnd="8dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/contents_preview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:ellipsize="end"
-        android:lines="3"
-        android:layout_weight="1"
-        tools:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."/>
+    <data>
+        <variable
+            name="post"
+            type="de.timbolender.fefereader.viewmodel.PostViewModel"/>
+
+        <variable
+            name="listener"
+            type="de.timbolender.fefereader.ui.PostAdapter.OnPostSelectedListener"/>
+    </data>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/post_list_item"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical">
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingEnd="8dp"
+        android:onClick="@{() -> listener.OnPostSelected(post.id)}"
+        android:onLongClick="@{() -> listener.OnPostLongPressed(post.id)}">
 
-        <ImageView
-            android:id="@+id/bookmark_image"
+        <TextView
+            android:id="@+id/contents_preview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:lines="3"
+            android:layout_weight="1"
+            android:html_text="@{post.contents}"
+            android:textStyle='@{(post.isRead() &amp;&amp; !post.isUpdated()) ? "normal" : "bold"}'
+            tools:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."/>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_bookmark"
-            android:tint="@color/colorAccent"
-            android:contentDescription="@string/description_bookmark"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/updated_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            app:srcCompat="@drawable/ic_updated"
-            android:contentDescription="@string/description_updated"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+            <ImageView
+                android:id="@+id/bookmark_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_bookmark"
+                android:tint="@color/colorAccent"
+                android:contentDescription="@string/description_bookmark"
+                android:visibility="@{post.isBookmarked}"
+                tools:visibility="visible"/>
+
+            <ImageView
+                android:id="@+id/updated_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:srcCompat="@drawable/ic_updated"
+                android:contentDescription="@string/description_updated"
+                android:visibility="@{post.isUpdated}"
+                tools:visibility="visible"/>
+
+        </LinearLayout>
 
     </LinearLayout>
-
-</de.timbolender.fefereader.ui.view.PostListItem>
+</layout>

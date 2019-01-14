@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Fefe\'s Blog Reader (Debug)</string>
+
+    <string name="activity_main_title">Fefe News Debug</string>
+
+    <string name="about_general_head">Allgemein</string>
+    <string name="about_general_details">
+        Dies ist eine inoffizielle App. Alle anzeigten Blog-Post stammen von Fefe\'s Blog, ich habe folglich keinerlei Kontrolle
+        über Inhalt und Ansichten.\n\nDies ist die Debug Version.
+    </string>
+</resources>

@@ -12,27 +12,21 @@ import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.os.SystemClock;
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import android.util.Log;
-
-import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import de.timbolender.fefereader.R;
-import de.timbolender.fefereader.data.RawPost;
 import de.timbolender.fefereader.db.DatabaseWrapper;
 import de.timbolender.fefereader.db.SQLiteOpenHelper;
 import de.timbolender.fefereader.db.SQLiteWrapper;
-import de.timbolender.fefereader.network.Fetcher;
-import de.timbolender.fefereader.network.Parser;
+import de.timbolender.fefereader.network.Updater;
 import de.timbolender.fefereader.ui.MainActivity;
 import de.timbolender.fefereader.util.PreferenceHelper;
-import okhttp3.OkHttpClient;
 
 /**
  * Perform regular post updates in the background.
@@ -202,36 +196,23 @@ public class UpdateService extends Service {
             return;
         }
 
-        updateThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                boolean success = false;
+        updateThread = new Thread(() -> {
+            boolean success = false;
 
-                try {
-                    OkHttpClient client = new OkHttpClient.Builder()
-                        .addNetworkInterceptor(new StethoInterceptor())
-                        .build();
-                    Parser parser = new Parser();
-                    Fetcher fetcher = new Fetcher(client, parser);
-                    List<RawPost> posts = fetcher.fetch();
+            try {
+                new Updater(databaseWrapper).update();
+                success = true;
+                Log.d(TAG, "Update finished");
+            }
+            catch(ParseException | IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                Intent finishedIntent = new Intent(BROADCAST_UPDATE_FINISHED);
+                finishedIntent.putExtra(EXTRA_UPDATE_SUCCESS, success);
+                sendOrderedBroadcast(finishedIntent, null);
 
-                    for(RawPost post : posts) {
-                        databaseWrapper.addOrUpdatePost(post);
-                    }
-
-                    success = true;
-                    Log.d(TAG, "Update finished");
-                }
-                catch(ParseException | IOException e) {
-                    e.printStackTrace();
-                }
-                finally {
-                    Intent finishedIntent = new Intent(BROADCAST_UPDATE_FINISHED);
-                    finishedIntent.putExtra(EXTRA_UPDATE_SUCCESS, success);
-                    sendOrderedBroadcast(finishedIntent, null);
-
-                    updateThread = null;
-                }
+                updateThread = null;
             }
         });
         updateThread.start();
