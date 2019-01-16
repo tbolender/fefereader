@@ -8,10 +8,11 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.util.Objects;
+
 import de.timbolender.fefereader.data.Post;
 import de.timbolender.fefereader.data.RawPost;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static de.timbolender.fefereader.db.SQLiteFefesBlogContract.PostEntry;
 
 /**
@@ -23,14 +24,12 @@ public class SQLiteWrapper implements DatabaseWrapper {
     private final SQLiteDatabase database;
 
     public SQLiteWrapper(SQLiteDatabase database) {
-        checkNotNull(database);
-
-        this.database = database;
+        this.database = Objects.requireNonNull(database);
     }
 
     @Override
     public void addOrUpdatePost(RawPost rawPost) throws DatabaseException {
-        checkNotNull(rawPost);
+        Objects.requireNonNull(rawPost);
 
         ContentValues insertValues = new ContentValues();
         insertValues.put(PostEntry._ID, rawPost.getId());
@@ -64,7 +63,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
     @Override
     public Post getPost(String id) throws DatabaseException {
         try {
-            checkNotNull(id);
+            Objects.requireNonNull(id);
 
             String[] projection = {
                 PostEntry._ID,
@@ -171,7 +170,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
 
     @Override
     public void setRead(String id, boolean isRead) throws DatabaseException {
-        checkNotNull(id);
+        Objects.requireNonNull(id);
 
         ContentValues values = new ContentValues();
         values.put(PostEntry.COLUMN_NAME_IS_READ, isRead);
@@ -187,7 +186,7 @@ public class SQLiteWrapper implements DatabaseWrapper {
 
     @Override
     public void setBookmarked(String id, boolean isBookmarked) throws DatabaseException {
-        checkNotNull(id);
+        Objects.requireNonNull(id);
 
         ContentValues values = new ContentValues();
         values.put(PostEntry.COLUMN_NAME_IS_BOOKMARKED, isBookmarked);

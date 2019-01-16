@@ -9,11 +9,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
+import java.util.Objects;
+
 import androidx.annotation.RequiresApi;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.data.Post;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Displays full content of a post.
@@ -47,7 +47,7 @@ public class PostView extends LinearLayout {
      * @param post Object to load data from.
      */
     public void fill(Post post, String cssStyle) {
-        checkNotNull(post);
+        Objects.requireNonNull(post);
 
         // Set up link interception
         WebView view = findViewById(R.id.contents);

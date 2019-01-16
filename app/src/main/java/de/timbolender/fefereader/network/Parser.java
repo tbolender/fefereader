@@ -2,8 +2,6 @@ package de.timbolender.fefereader.network;
 
 import android.util.Log;
 
-import com.google.common.collect.ImmutableList;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,13 +9,14 @@ import org.jsoup.select.Elements;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import de.timbolender.fefereader.data.RawPost;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Parses a blog page for posts.
@@ -34,12 +33,12 @@ public class Parser {
      * @throws ParseException Error when parsing.
      */
     public List<RawPost> parse(String content) throws ParseException {
-        checkNotNull(content);
+        Objects.requireNonNull(content);
 
         Document document = Jsoup.parse(content);
 
         Date currentDate = null;
-        ImmutableList.Builder<RawPost> postBuilder = new ImmutableList.Builder<>();
+        List<RawPost> postList = new ArrayList<>();
 
         long baseTime = System.currentTimeMillis() << 8;
         long indexCounter = 255;
@@ -64,7 +63,7 @@ public class Parser {
                     String postContent = entry.html().replace(idElement.outerHtml(), "");
                     RawPost post = new RawPost(id, baseTime + indexCounter, postContent, currentDate.getTime());
                     Log.v(TAG, "Parsed " + post.toString());
-                    postBuilder.add(post);
+                    postList.add(post);
 
                     // Decrement index counter
                     if(indexCounter == 0) {
@@ -76,6 +75,6 @@ public class Parser {
             }
         }
 
-        return postBuilder.build();
+        return Collections.unmodifiableList(postList);
     }
 }

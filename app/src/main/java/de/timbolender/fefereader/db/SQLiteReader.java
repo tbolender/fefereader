@@ -3,9 +3,9 @@ package de.timbolender.fefereader.db;
 import android.database.Cursor;
 import android.database.SQLException;
 
-import de.timbolender.fefereader.data.Post;
+import java.util.Objects;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import de.timbolender.fefereader.data.Post;
 
 /**
  * Reads posts from SQLite cursor.
@@ -14,9 +14,7 @@ public class SQLiteReader implements PostReader {
     private final Cursor cursor;
 
     public SQLiteReader(Cursor cursor) {
-        checkNotNull(cursor);
-
-        this.cursor = cursor;
+        this.cursor = Objects.requireNonNull(cursor);
     }
 
     public Post get(int index) throws DatabaseException {

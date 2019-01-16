@@ -3,13 +3,12 @@ package de.timbolender.fefereader.network;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Objects;
 
 import de.timbolender.fefereader.data.RawPost;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Fetched current front page of Fefe's blog.
@@ -21,11 +20,8 @@ public class Fetcher {
     private final Parser parser;
 
     public Fetcher(OkHttpClient client, Parser parser) {
-        checkNotNull(client);
-        checkNotNull(parser);
-
-        this.client = client;
-        this.parser = parser;
+        this.client = Objects.requireNonNull(client);
+        this.parser = Objects.requireNonNull(parser);
     }
 
     /**

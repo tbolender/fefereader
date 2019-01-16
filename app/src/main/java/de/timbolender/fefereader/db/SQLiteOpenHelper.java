@@ -3,8 +3,9 @@ package de.timbolender.fefereader.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static de.timbolender.fefereader.db.SQLiteFefesBlogContract.*;
+import java.util.Objects;
+
+import static de.timbolender.fefereader.db.SQLiteFefesBlogContract.SQL_CREATE_POST_TABLE;
 
 /**
  * Helper for initialising database.
@@ -16,9 +17,7 @@ public class SQLiteOpenHelper extends android.database.sqlite.SQLiteOpenHelper {
     static final String DATABASE_NAME = "FefesBlogDatabase.db";
 
     public SQLiteOpenHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-
-        checkNotNull(context);
+        super(Objects.requireNonNull(context), DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override

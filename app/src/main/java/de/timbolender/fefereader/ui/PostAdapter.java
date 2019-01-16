@@ -3,6 +3,8 @@ package de.timbolender.fefereader.ui;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import java.util.Objects;
+
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,8 +14,6 @@ import de.timbolender.fefereader.databinding.ViewListItemPostBinding;
 import de.timbolender.fefereader.db.PostReader;
 import de.timbolender.fefereader.viewmodel.PostViewModel;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Enables displaying of post in a RecyclerView.
  */
@@ -22,9 +22,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     private final OnPostSelectedListener listener;
 
     public PostAdapter(PostReader reader, OnPostSelectedListener listener) {
-        checkNotNull(reader);
-
-        this.reader = reader;
+        this.reader = Objects.requireNonNull(reader);
         this.listener = listener;
     }
 
