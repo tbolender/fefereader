@@ -30,6 +30,7 @@ import de.timbolender.fefereader.util.PreferenceHelper;
 
 /**
  * Perform regular post updates in the background.
+ * TODO: Migrate to WorkManager as soon as its fully AndroidX
  */
 public class UpdateService extends Service {
     static final String TAG = UpdateService.class.getSimpleName();
