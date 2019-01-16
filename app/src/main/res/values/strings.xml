@@ -35,7 +35,7 @@
         über Inhalt und Ansichten.
     </string>
 
-    <string name="about_android_support_head" translatable="false">Android Support Library</string>
+    <string name="about_android_support_head" translatable="false">AndroidX Libraries</string>
     <string name="about_android_support_details" translatable="false">
         Copyright The Android Open Source Project\n\nLicensed under the Apache License, Version 2.0.
     </string>
@@ -45,19 +45,9 @@
         Copyright &#169; 2009 - 2016 Jonathan Hedley\n\nLicensed under the MIT License.
     </string>
 
-    <string name="about_guava_head" translatable="false">Guava</string>
-    <string name="about_guava_details" translatable="false">
-        Copyright &#169; The Guava Authors\n\nLicensed under the Apache License, Version 2.0.
-    </string>
-
     <string name="about_okhttp_head" translatable="false">OkHttp</string>
     <string name="about_okhttp_details" translatable="false">
         Copyright 2016 Square, Inc\n\nLicensed under the Apache License, Version 2.0.
-    </string>
-
-    <string name="about_butterknife_head" translatable="false">Butter Knife</string>
-    <string name="about_butterknife_details" translatable="false">
-        Copyright 2013 Jake Wharton\n\nLicensed under the Apache License, Version 2.0.
     </string>
 
     <string name="about_icons_head" translatable="false">Material Design Icons</string>

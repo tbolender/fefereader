@@ -63,26 +63,6 @@
             style="@style/AboutHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/about_guava_head"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/about_guava_details"/>
-
-        <TextView
-            style="@style/AboutHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/about_butterknife_head"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/about_butterknife_details"/>
-
-        <TextView
-            style="@style/AboutHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:text="@string/about_android_support_head"/>
         <TextView
             android:layout_width="match_parent"
