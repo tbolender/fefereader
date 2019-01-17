@@ -39,9 +39,6 @@ interface PostDao {
     // Insert/Update
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPost(post: Post): Long
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPosts(vararg posts: Post): Array<Long>
 
     // Count

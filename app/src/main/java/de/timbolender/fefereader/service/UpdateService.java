@@ -21,6 +21,7 @@ import java.util.Locale;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import de.timbolender.fefereader.R;
+import de.timbolender.fefereader.db.DataRepository;
 import de.timbolender.fefereader.db.DatabaseWrapper;
 import de.timbolender.fefereader.db.SQLiteOpenHelper;
 import de.timbolender.fefereader.db.SQLiteWrapper;
@@ -89,6 +90,8 @@ public class UpdateService extends Service {
     BroadcastReceiver updateReceiver;
     Thread updateThread;
 
+    DataRepository repository;
+
     @Override
     public void onCreate() {
         preferenceHelper = new PreferenceHelper(this);
@@ -98,6 +101,7 @@ public class UpdateService extends Service {
         SQLiteOpenHelper databaseHelper = new SQLiteOpenHelper(this);
         SQLiteDatabase database = databaseHelper.getWritableDatabase();
         databaseWrapper = new SQLiteWrapper(database);
+        repository = new DataRepository(getApplication());
 
         // Register broadcast receiver for notifications
         updateReceiver = new BroadcastReceiver() {
@@ -201,7 +205,7 @@ public class UpdateService extends Service {
             boolean success = false;
 
             try {
-                new Updater(databaseWrapper).update();
+                new Updater(repository).update();
                 success = true;
                 Log.d(TAG, "Update finished");
             }
