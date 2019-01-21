@@ -25,8 +25,8 @@ import de.timbolender.fefereader.service.UpdateService;
 /**
  * Base activity class featuring a list of posts with default actions.
  */
-public abstract class PostListActivity extends AppCompatActivity implements PostAdapter.OnPostSelectedListener  {
-    static final String TAG = PostListActivity.class.getSimpleName();
+public abstract class PostListOldActivity extends AppCompatActivity implements PostAdapter.OnPostSelectedListener  {
+    static final String TAG = PostListOldActivity.class.getSimpleName();
 
     SQLiteOpenHelper databaseHelper;
     PostAdapter postAdapter;
@@ -68,7 +68,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
             refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    UpdateService.startManualUpdate(PostListActivity.this);
+                    UpdateService.startManualUpdate(PostListOldActivity.this);
                 }
             });
             refreshLayout.setColorSchemeResources(R.color.colorAccent);

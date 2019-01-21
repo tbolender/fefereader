@@ -16,7 +16,7 @@ import de.timbolender.fefereader.service.UpdateService;
 /**
  * Main activity displaying all retrieved posts
  */
-public class MainActivity extends PostListActivity {
+public class MainActivity extends PostListOldActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import de.timbolender.fefereader.db.DatabaseWrapper;
 import de.timbolender.fefereader.db.PostReader;
 
-public class BookmarkActivity extends PostListActivity {
+public class BookmarkActivity extends PostListOldActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

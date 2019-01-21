@@ -5,7 +5,7 @@ import android.os.Bundle;
 import de.timbolender.fefereader.db.DatabaseWrapper;
 import de.timbolender.fefereader.db.PostReader;
 
-public class UnreadActivity extends PostListActivity {
+public class UnreadActivity extends PostListOldActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
