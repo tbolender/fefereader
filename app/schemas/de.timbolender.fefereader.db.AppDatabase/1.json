@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "e199d4e810beb1813704c4d4c3647689",
+    "identityHash": "e705eb36342c37f5cd267384bcca90c2",
     "entities": [
       {
         "tableName": "Post",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestampId` INTEGER NOT NULL, `isRead` INTEGER NOT NULL, `isUpdated` INTEGER NOT NULL, `isBookmarked` INTEGER NOT NULL, `contents` TEXT NOT NULL, `date` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `timestampId` INTEGER NOT NULL, `isRead` INTEGER NOT NULL, `isUpdated` INTEGER NOT NULL, `isBookmarked` INTEGER NOT NULL, `contents` TEXT NOT NULL, `date` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -55,7 +55,7 @@
           "columnNames": [
             "id"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [
           {
@@ -80,7 +80,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e199d4e810beb1813704c4d4c3647689\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e705eb36342c37f5cd267384bcca90c2\")"
     ]
   }
 }

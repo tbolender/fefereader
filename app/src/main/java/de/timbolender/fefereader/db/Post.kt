@@ -10,8 +10,8 @@ import java.util.*
  */
 @Entity(indices = [Index("id"), Index("timestampId")])
 data class Post(
-        @PrimaryKey(autoGenerate = true)
-        var id: Long,
+        @PrimaryKey
+        var id: String,
         val timestampId: Long,
         val isRead: Boolean,
         val isUpdated: Boolean,
