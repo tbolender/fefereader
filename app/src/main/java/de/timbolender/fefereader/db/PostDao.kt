@@ -31,10 +31,10 @@ interface PostDao {
     // Single data
 
     @Query(SINGLE_POST_QUERY)
-    fun loadPostSync(postId: Long): Post
+    fun loadPostSync(postId: String): Post?
 
     @Query(SINGLE_POST_QUERY)
-    fun loadPost(postId: Long): LiveData<Post>
+    fun loadPost(postId: String): LiveData<Post?>
 
     // Insert/Update
 
