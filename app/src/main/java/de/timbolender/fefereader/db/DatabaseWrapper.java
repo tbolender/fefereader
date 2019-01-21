@@ -1,7 +1,6 @@
 package de.timbolender.fefereader.db;
 
 import de.timbolender.fefereader.data.Post;
-import de.timbolender.fefereader.data.RawPost;
 
 /**
  * Wrapper interface around a data source.
@@ -10,13 +9,6 @@ public interface DatabaseWrapper {
     int FILTER_NONE = 1;
     int FILTER_BOOKMARKED = 1 << 1;
     int FILTER_UNREAD = 1 << 2;
-
-    /**
-     * Add new post to database or update existing.
-     * @param rawPost New post to ad.
-     * @throws DatabaseException Thrown on database error.
-     */
-    void addOrUpdatePost(RawPost rawPost) throws DatabaseException;
 
     /**
      * Fetch post with given id.

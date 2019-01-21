@@ -6,10 +6,8 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import de.timbolender.fefereader.data.Post;
-import de.timbolender.fefereader.data.RawPost;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static de.timbolender.fefereader.db.SQLiteFefesBlogContract.PostEntry;
@@ -26,39 +24,6 @@ public class SQLiteWrapper implements DatabaseWrapper {
         checkNotNull(database);
 
         this.database = database;
-    }
-
-    @Override
-    public void addOrUpdatePost(RawPost rawPost) throws DatabaseException {
-        checkNotNull(rawPost);
-
-        ContentValues insertValues = new ContentValues();
-        insertValues.put(PostEntry._ID, rawPost.getId());
-        insertValues.put(PostEntry.COLUMN_NAME_CONTENTS, rawPost.getContents());
-        insertValues.put(PostEntry.COLUMN_NAME_DATE, Long.toString(rawPost.getDate()));
-        insertValues.put(PostEntry.COLUMN_NAME_TIMESTAMP_ID, Long.toString(rawPost.getTimestampId()));
-
-        boolean success = database.insertWithOnConflict(PostEntry.TABLE_NAME, null, insertValues, SQLiteDatabase.CONFLICT_IGNORE) != -1;
-
-        if(!success) {
-            ContentValues updateValues = new ContentValues();
-            updateValues.put(PostEntry.COLUMN_NAME_CONTENTS, rawPost.getContents());
-            updateValues.put(PostEntry.COLUMN_NAME_DATE, rawPost.getDate());
-            updateValues.put(PostEntry.COLUMN_NAME_IS_UPDATED, true);
-
-            String selection = PostEntry._ID + " = ? AND " + PostEntry.COLUMN_NAME_CONTENTS + " <> ?";
-            String[] selectionArgs = { rawPost.getId(), rawPost.getContents() };
-
-            if(database.update(PostEntry.TABLE_NAME, updateValues, selection, selectionArgs) == 1) {
-                Log.v(TAG, "Updated post " + rawPost.getId());
-            }
-            else {
-                Log.v(TAG, "No update necessary for post " + rawPost.getId());
-            }
-        }
-        else {
-            Log.v(TAG, "Inserted new post " + rawPost.getId());
-        }
     }
 
     @Override
