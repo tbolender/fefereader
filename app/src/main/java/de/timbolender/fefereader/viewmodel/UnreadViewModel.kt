@@ -7,7 +7,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import de.timbolender.fefereader.db.DataRepository
 
-class MainViewModel(app: Application): AndroidViewModel(app) {
+class UnreadViewModel(app: Application): AndroidViewModel(app) {
     private val repository: DataRepository = DataRepository(app)
 
     val postsPaged: LiveData<PagedList<PostViewModel>>

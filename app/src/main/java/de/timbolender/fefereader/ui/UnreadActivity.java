@@ -1,23 +1,16 @@
 package de.timbolender.fefereader.ui;
 
-import android.os.Bundle;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
+import de.timbolender.fefereader.viewmodel.PostViewModel;
+import de.timbolender.fefereader.viewmodel.UnreadViewModel;
 
-import de.timbolender.fefereader.db.DatabaseWrapper;
-import de.timbolender.fefereader.db.PostReader;
-
-public class UnreadActivity extends PostListOldActivity {
+public class UnreadActivity extends PostListActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    //
-    // Override important methods
-    //
-
-    @Override
-    PostReader getReader(DatabaseWrapper databaseWrapper) {
-        return databaseWrapper.getPostsReader(DatabaseWrapper.FILTER_UNREAD);
+    LiveData<PagedList<PostViewModel>> getPostPagedList() {
+        UnreadViewModel vm = ViewModelProviders.of(this).get(UnreadViewModel.class);
+        return vm.getPostsPaged();
     }
 
     @Override

@@ -9,16 +9,15 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.LiveData;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.timbolender.fefereader.R;
-import de.timbolender.fefereader.db.DatabaseWrapper;
-import de.timbolender.fefereader.db.PostReader;
 import de.timbolender.fefereader.service.UpdateService;
-import de.timbolender.fefereader.viewmodel.MainViewModel;
+import de.timbolender.fefereader.viewmodel.PostViewModel;
 
 /**
  * Base activity class featuring a list of posts with default actions.
@@ -50,10 +49,8 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
         postList.addItemDecoration(dividerItemDecoration);
 
         // Fill content
-        MainViewModel vm = ViewModelProviders.of(this).get(MainViewModel.class);
         postAdapter = new PostPagedAdapter(this);
-        // FIXME: Move to subclass
-        vm.getPostsPaged().observe(this, postAdapter::submitList);
+        getPostPagedList().observe(this, postAdapter::submitList);
         postList.setAdapter(postAdapter);
 
         // Handle swipe update gesture
@@ -110,7 +107,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     // Behavior determining methods
     //
 
-    abstract PostReader getReader(DatabaseWrapper databaseWrapper);
+    abstract LiveData<PagedList<PostViewModel>> getPostPagedList();
 
     abstract boolean isUpdateOnStartEnabled();
 

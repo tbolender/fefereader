@@ -1,23 +1,16 @@
 package de.timbolender.fefereader.ui;
 
-import android.os.Bundle;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
+import de.timbolender.fefereader.viewmodel.BookmarkViewModel;
+import de.timbolender.fefereader.viewmodel.PostViewModel;
 
-import de.timbolender.fefereader.db.DatabaseWrapper;
-import de.timbolender.fefereader.db.PostReader;
-
-public class BookmarkActivity extends PostListOldActivity {
+public class BookmarkActivity extends PostListActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    //
-    // Override important methods
-    //
-
-    @Override
-    PostReader getReader(DatabaseWrapper databaseWrapper) {
-        return databaseWrapper.getPostsReader(DatabaseWrapper.FILTER_BOOKMARKED);
+    LiveData<PagedList<PostViewModel>> getPostPagedList() {
+        BookmarkViewModel vm = ViewModelProviders.of(this).get(BookmarkViewModel.class);
+        return vm.getPostsPaged();
     }
 
     @Override

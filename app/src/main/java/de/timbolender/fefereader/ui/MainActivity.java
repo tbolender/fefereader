@@ -2,32 +2,30 @@ package de.timbolender.fefereader.ui;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
 import de.timbolender.fefereader.R;
-import de.timbolender.fefereader.db.DatabaseWrapper;
-import de.timbolender.fefereader.db.PostReader;
 import de.timbolender.fefereader.service.UpdateService;
+import de.timbolender.fefereader.viewmodel.MainViewModel;
+import de.timbolender.fefereader.viewmodel.PostViewModel;
 
 /**
  * Main activity displaying all retrieved posts
  */
 public class MainActivity extends PostListActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     //
     // Override important methods
     //
 
     @Override
-    PostReader getReader(DatabaseWrapper databaseWrapper) {
-        return databaseWrapper.getPostsReader(DatabaseWrapper.FILTER_NONE);
+    LiveData<PagedList<PostViewModel>> getPostPagedList() {
+        MainViewModel vm = ViewModelProviders.of(this).get(MainViewModel.class);
+        return vm.getPostsPaged();
     }
 
     @Override
