@@ -8,7 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import de.timbolender.fefereader.R;
-import de.timbolender.fefereader.data.Post;
 import de.timbolender.fefereader.db.DatabaseWrapper;
 import de.timbolender.fefereader.db.PostReader;
 import de.timbolender.fefereader.service.UpdateService;
@@ -16,7 +15,7 @@ import de.timbolender.fefereader.service.UpdateService;
 /**
  * Main activity displaying all retrieved posts
  */
-public class MainActivity extends PostListOldActivity {
+public class MainActivity extends PostListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,15 +87,14 @@ public class MainActivity extends PostListOldActivity {
     }
 
     private void onMarkAllAsReadClick() {
-        PostReader reader = getReader(databaseWrapper);
+        // FIXME
+        /*PostReader reader = getReader(databaseWrapper);
         for(int i = 0; i < reader.getCount(); i++) {
             Post post = reader.get(i);
             if(!post.isRead() || post.isUpdated()) {
                 databaseWrapper.setRead(post.getId(), true);
             }
-        }
-
-        updateAdapter();
+        }*/
     }
 
     private void onBookmarkFilterClick() {

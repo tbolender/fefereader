@@ -14,4 +14,10 @@ class DataRepository(application: Application) {
     fun getPost(postId: String) = postDao.loadPost(postId)
 
     fun getPostSync(postId: String) = postDao.loadPostSync(postId)
+
+    fun getAllPostsPaged() = postDao.loadAllPostsPaged()
+
+    fun getBookmarkedPostsPaged() = postDao.loadBookmarkedPostsPaged()
+
+    fun getUnreadPostsPaged() = postDao.loadUnreadPostsPaged()
 }
