@@ -12,7 +12,7 @@ class BookmarkViewModel(app: Application): AndroidViewModel(app) {
 
     val postsPaged: LiveData<PagedList<PostViewModel>>
         init {
-            val factory = repository.getAllPostsPaged().map { post -> PostViewModel(post) }
+            val factory = repository.getBookmarkedPostsPaged().map { post -> PostViewModel(post) }
             postsPaged = LivePagedListBuilder<Int, PostViewModel>(factory, 20).build()
         }
 }
