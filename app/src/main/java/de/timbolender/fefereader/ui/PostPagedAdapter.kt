@@ -33,8 +33,8 @@ class PostPagedAdapter(private val listener: OnPostSelectedListener):
     override fun onBindViewHolder(holder: PostPagedAdapter.ViewHolder, position: Int) {
         val post = getItem(position)!!
         val vm = PostViewModel(
-                post.id, post.timestampId, post.isRead, post.isUpdated,
-                post.isBookmarked, post.contents, post.date
+            post.id, post.timestampId, post.isRead, post.isUpdated,
+            post.isBookmarked, post.contents, post.date
         )
         holder.bindTo(vm)
     }

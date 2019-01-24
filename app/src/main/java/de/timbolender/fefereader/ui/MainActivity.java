@@ -2,6 +2,7 @@ package de.timbolender.fefereader.ui;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,13 +19,20 @@ import de.timbolender.fefereader.viewmodel.PostViewModel;
  * Main activity displaying all retrieved posts
  */
 public class MainActivity extends PostListActivity {
+    MainViewModel vm;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        vm = ViewModelProviders.of(this).get(MainViewModel.class);
+        super.onCreate(savedInstanceState);
+    }
+
     //
     // Override important methods
     //
 
     @Override
     LiveData<PagedList<PostViewModel>> getPostPagedList() {
-        MainViewModel vm = ViewModelProviders.of(this).get(MainViewModel.class);
         return vm.getPostsPaged();
     }
 
@@ -53,7 +61,7 @@ public class MainActivity extends PostListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if(itemId == R.id.menu_mark_read) {
-            onMarkAllAsReadClick();
+            vm.markAllPostsAsRead();
             return true;
         }
         if(itemId == R.id.menu_bookmark_filter) {
@@ -82,17 +90,6 @@ public class MainActivity extends PostListActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void onMarkAllAsReadClick() {
-        // FIXME
-        /*PostReader reader = getReader(databaseWrapper);
-        for(int i = 0; i < reader.getCount(); i++) {
-            Post post = reader.get(i);
-            if(!post.isRead() || post.isUpdated()) {
-                databaseWrapper.setRead(post.getId(), true);
-            }
-        }*/
     }
 
     private void onBookmarkFilterClick() {

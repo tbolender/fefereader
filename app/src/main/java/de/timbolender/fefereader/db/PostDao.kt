@@ -25,6 +25,9 @@ interface PostDao {
     @Query(UNREAD_POSTS_QUERY)
     fun loadUnreadPostsPaged(): DataSource.Factory<Int, Post>
 
+    @Query(UNREAD_POSTS_QUERY)
+    fun loadUnreadPostsSync(): List<Post>
+
     @Query(BOOKMARK_POSTS_QUERY)
     fun loadBookmarkedPostsPaged(): DataSource.Factory<Int, Post>
 
@@ -48,4 +51,9 @@ interface PostDao {
 
     @Query("SELECT COUNT(*) FROM post WHERE isBookmarked = 1")
     fun loadBookmarkedCount(): Long
+
+    // Custom update methods
+
+    @Query("UPDATE post SET isRead = 1, isUpdated = 0 WHERE id = :postId")
+    fun markAsReadSync(postId: String)
 }
