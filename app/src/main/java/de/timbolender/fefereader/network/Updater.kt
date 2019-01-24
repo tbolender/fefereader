@@ -32,7 +32,7 @@ class Updater(private val repository: DataRepository) {
             }
             else {
                 Log.d(TAG, "Updated post ${post.id}")
-                existingPost.copy(contents = post.contents, isUpdated = true)
+                existingPost.copy(contents = post.contents, isRead = false, isUpdated = true)
             }
             repository.createOrUpdatePostSync(dbPost)
         }
