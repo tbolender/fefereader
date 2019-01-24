@@ -41,8 +41,8 @@ public class Parser {
         Date currentDate = null;
         ImmutableList.Builder<RawPost> postBuilder = new ImmutableList.Builder<>();
 
-        long baseTime = System.currentTimeMillis() << 8;
-        long indexCounter = 255;
+        long baseTime = System.currentTimeMillis() * 1000;
+        long indexCounter = 999;
 
         for(Element element : document.select("body > h3, body > ul")) {
             if(element.tagName().equals("h3")) {
