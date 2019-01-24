@@ -98,7 +98,7 @@ public class MainActivity extends PostListActivity {
     }
 
     private void onUpdateClick() {
-        refreshLayout.setRefreshing(true);
+        binding.refreshLayout.setRefreshing(true);
         UpdateService.startManualUpdate(this);
     }
 

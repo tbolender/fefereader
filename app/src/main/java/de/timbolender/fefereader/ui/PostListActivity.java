@@ -11,14 +11,13 @@ import android.util.Log;
 import org.jetbrains.annotations.NotNull;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.timbolender.fefereader.R;
+import de.timbolender.fefereader.databinding.ActivityPostListBinding;
 import de.timbolender.fefereader.service.UpdateService;
 import de.timbolender.fefereader.viewmodel.PostListViewModel;
 import de.timbolender.fefereader.viewmodel.PostViewModel;
@@ -29,13 +28,10 @@ import de.timbolender.fefereader.viewmodel.PostViewModel;
 public abstract class PostListActivity extends AppCompatActivity implements PostPagedAdapter.OnPostSelectedListener  {
     static final String TAG = PostListActivity.class.getSimpleName();
 
+    ActivityPostListBinding binding;
     PostListViewModel vm;
 
-    PostPagedAdapter postAdapter;
     boolean shouldPerformUpdate;
-
-    RecyclerView postList;
-    SwipeRefreshLayout refreshLayout;
 
     BroadcastReceiver updateReceiver;
 
@@ -44,26 +40,22 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
         super.onCreate(savedInstanceState);
 
         // Prepare ui
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_post_list);
         vm = ViewModelProviders.of(this).get(PostListViewModel.class);
-        postList = findViewById(R.id.post_list);
-        refreshLayout = findViewById(R.id.refresh_layout);
 
         // Prepare list view
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        postList.setLayoutManager(layoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        postList.addItemDecoration(dividerItemDecoration);
+        binding.postList.addItemDecoration(dividerItemDecoration);
 
         // Fill content
-        postAdapter = new PostPagedAdapter(this);
+        PostPagedAdapter postAdapter = new PostPagedAdapter(this);
         getPostPagedList().observe(this, postAdapter::submitList);
-        postList.setAdapter(postAdapter);
+        binding.postList.setAdapter(postAdapter);
 
         // Handle swipe update gesture
         if(isRefreshGestureEnabled()) {
-            refreshLayout.setOnRefreshListener(() -> UpdateService.startManualUpdate(PostListActivity.this));
-            refreshLayout.setColorSchemeResources(R.color.colorAccent);
+            binding.refreshLayout.setOnRefreshListener(() -> UpdateService.startManualUpdate(PostListActivity.this));
+            binding.refreshLayout.setColorSchemeResources(R.color.colorAccent);
         }
 
         // Create receiver for updates
@@ -71,7 +63,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d(TAG, "Received content update notification");
-                refreshLayout.setRefreshing(false);
+                binding.refreshLayout.setRefreshing(false);
                 abortBroadcast();
             }
         };
@@ -96,7 +88,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
         registerReceiver(updateReceiver, skippedFilter);
 
         // Trigger update if desired
-        refreshLayout.setRefreshing(false);
+        binding.refreshLayout.setRefreshing(false);
         if(shouldPerformUpdate) {
             requestUpdate();
             shouldPerformUpdate = false;
@@ -125,7 +117,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     //
 
     void requestUpdate() {
-        refreshLayout.setRefreshing(true);
+        binding.refreshLayout.setRefreshing(true);
         UpdateService.startManualUpdate(this);
     }
 
