@@ -23,5 +23,7 @@ class DataRepository(application: Application) {
 
     fun getUnreadPostsSync() = postDao.loadUnreadPostsSync()
 
-    fun markAsReadSync(postId: String) = postDao.markAsReadSync(postId)
+    fun markPostAsReadSync(postId: String) = postDao.markAsReadSync(postId)
+
+    fun togglePostBookmark(postId: String) = postDao.toggleBookmarkSync(postId)
 }

@@ -8,8 +8,11 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.service.UpdateService;
+import de.timbolender.fefereader.viewmodel.PostListViewModel;
 import de.timbolender.fefereader.viewmodel.PostViewModel;
 
 /**
@@ -24,6 +28,8 @@ import de.timbolender.fefereader.viewmodel.PostViewModel;
  */
 public abstract class PostListActivity extends AppCompatActivity implements PostPagedAdapter.OnPostSelectedListener  {
     static final String TAG = PostListActivity.class.getSimpleName();
+
+    PostListViewModel vm;
 
     PostPagedAdapter postAdapter;
     boolean shouldPerformUpdate;
@@ -39,6 +45,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
 
         // Prepare ui
         setContentView(R.layout.activity_main);
+        vm = ViewModelProviders.of(this).get(PostListViewModel.class);
         postList = findViewById(R.id.post_list);
         refreshLayout = findViewById(R.id.refresh_layout);
 
@@ -127,19 +134,15 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     //
 
     @Override
-    public void onPostSelected(String postId) {
-        // FIXME
-        //databaseWrapper.setRead(postId, true);
-
+    public void onPostSelected(@NotNull String postId) {
+        vm.markPostAsRead(postId);
         Intent intent = DetailsActivity.createShowPostIntent(this, postId);
         startActivity(intent);
     }
 
     @Override
-    public boolean onPostLongPressed(String postId) {
-        // FIXME
-        //Post post = databaseWrapper.getPost(postId);
-        //databaseWrapper.setBookmarked(post.getId(), !post.isBookmarked());
+    public boolean onPostLongPressed(@NotNull String postId) {
+        vm.togglePostBookmark(postId);
         return true;
     }
 }

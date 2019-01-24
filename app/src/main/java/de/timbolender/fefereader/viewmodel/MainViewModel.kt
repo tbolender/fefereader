@@ -26,7 +26,7 @@ class MainViewModel(app: Application): AndroidViewModel(app) {
         Log.d(TAG, "Mark all posts as read")
         Executors.newSingleThreadScheduledExecutor().execute {
             for (post in repository.getUnreadPostsSync()) {
-                repository.markAsReadSync(post.id)
+                repository.markPostAsReadSync(post.id)
             }
         }
     }
