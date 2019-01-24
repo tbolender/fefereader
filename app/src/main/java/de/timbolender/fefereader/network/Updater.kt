@@ -26,15 +26,17 @@ class Updater(private val repository: DataRepository) {
 
         for (post in posts) {
             val existingPost = repository.getPostSync(post.id)
-            val dbPost = if(existingPost == null) {
+            if(existingPost == null) {
                 Log.d(TAG, "Inserted new post ${post.id}")
-                Post(post.id, post.timestampId, false, false, false, post.contents, Date(post.date))
+                val dbPost = Post(post.id, post.timestampId, false, false, false, post.contents, Date(post.date))
+                repository.createOrUpdatePostSync(dbPost)
             }
-            else {
+            else if(existingPost.contents != post.contents) {
                 Log.d(TAG, "Updated post ${post.id}")
-                existingPost.copy(contents = post.contents, isRead = false, isUpdated = true)
+                val dbPost = existingPost.copy(contents = post.contents, isRead = false, isUpdated = true)
+                repository.createOrUpdatePostSync(dbPost)
             }
-            repository.createOrUpdatePostSync(dbPost)
+
         }
     }
 }
