@@ -25,5 +25,5 @@ class DataRepository(application: Application) {
 
     fun markPostAsReadSync(postId: String) = postDao.markAsReadSync(postId)
 
-    fun togglePostBookmark(postId: String) = postDao.toggleBookmarkSync(postId)
+    fun togglePostBookmarkSync(postId: String) = postDao.toggleBookmarkSync(postId)
 }

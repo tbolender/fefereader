@@ -5,7 +5,9 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.paging.toLiveData
 import de.timbolender.fefereader.db.DataRepository
-import java.util.concurrent.Executors
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainViewModel(app: Application): AndroidViewModel(app) {
     companion object {
@@ -13,12 +15,13 @@ class MainViewModel(app: Application): AndroidViewModel(app) {
     }
 
     private val repository: DataRepository = DataRepository(app)
-
     val postsPaged = repository.getAllPostsPaged().toLiveData(20)
 
+    private val ioScope = CoroutineScope(Dispatchers.IO)
+
     fun markAllPostsAsRead() {
-        Log.d(TAG, "Mark all posts as read")
-        Executors.newSingleThreadScheduledExecutor().execute {
+        ioScope.launch {
+            Log.d(TAG, "Mark all posts as read")
             for (post in repository.getUnreadPostsSync()) {
                 repository.markPostAsReadSync(post.id)
             }
