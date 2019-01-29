@@ -11,7 +11,7 @@ data class PostViewModel(
         val isBookmarked: Boolean,
         val contents: String,
         val date: Date
-) {
-    constructor(post: Post) :
-            this(post.id, post.timestampId, post.isRead, post.isUpdated, post.isBookmarked, post.contents, post.date)
-}
+)
+
+// Shorthand conversion
+fun Post.toPostViewModel(): PostViewModel = PostViewModel(id, timestampId, isRead, isUpdated, isBookmarked, contents, date)

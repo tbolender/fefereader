@@ -23,11 +23,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.db.DatabaseException;
+import de.timbolender.fefereader.db.Post;
 import de.timbolender.fefereader.service.UpdateService;
 import de.timbolender.fefereader.ui.view.PostView;
 import de.timbolender.fefereader.util.PreferenceHelper;
 import de.timbolender.fefereader.viewmodel.DetailsViewModel;
 import de.timbolender.fefereader.viewmodel.PostViewModel;
+
+import static de.timbolender.fefereader.viewmodel.PostViewModelKt.toPostViewModel;
 
 public class DetailsActivity extends AppCompatActivity implements PostView.OnLinkClickedListener {
     private static final String TAG = DetailsActivity.class.getSimpleName();
@@ -37,10 +40,11 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
 
     public static final String INTENT_EXTRA_POST_ID = "post_id";
 
+    LiveData<Post> postVm;
+    PostView postView;
+
     BroadcastReceiver updateReceiver;
     PreferenceHelper preferenceHelper;
-    LiveData<PostViewModel> postVm;
-    PostView postView;
 
     /**
      * Creates an intent to show this activity with given post.
@@ -69,7 +73,9 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
 
         DetailsViewModel vm = ViewModelProviders.of(this).get(DetailsViewModel.class);
         postVm = vm.getPost(postId);
-        postVm.observe(this, post -> {
+        postVm.observe(this, dbPost -> {
+            PostViewModel post = toPostViewModel(dbPost);
+
             // Set title
             Date date = post.getDate();
             setTitle(DATE_FORMAT.format(date));
@@ -98,7 +104,7 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_details, menu);
 
-        PostViewModel post = postVm.getValue();
+        Post post = postVm.getValue();
         if(post != null) {
             MenuItem item = menu.findItem(R.id.menu_bookmarked);
             item.setTitle(post.isBookmarked() ? R.string.menu_bookmark_delete : R.string.menu_bookmark_create);
@@ -110,7 +116,7 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Ensure post is present
-        PostViewModel currentPost = postVm.getValue();
+        Post currentPost = postVm.getValue();
         if(currentPost == null)
             return super.onOptionsItemSelected(item);
 

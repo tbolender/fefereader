@@ -1,5 +1,6 @@
 package de.timbolender.fefereader.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -8,19 +9,22 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import de.timbolender.fefereader.R
 import de.timbolender.fefereader.databinding.ViewItemPostBinding
-import de.timbolender.fefereader.viewmodel.PostViewModel
+import de.timbolender.fefereader.db.Post
+import de.timbolender.fefereader.viewmodel.toPostViewModel
 
 /**
  * Enables paged displaying of posts in a RecyclerView.
  */
 class PostPagedAdapter(private val listener: OnPostSelectedListener):
-        PagedListAdapter<PostViewModel, PostPagedAdapter.ViewHolder>(DIFF_HANDLER) {
+        PagedListAdapter<Post, PostPagedAdapter.ViewHolder>(DIFF_HANDLER) {
 
     companion object {
-        private val DIFF_HANDLER = object : DiffUtil.ItemCallback<PostViewModel>() {
-            override fun areItemsTheSame(oldItem: PostViewModel, newItem: PostViewModel) = oldItem.id == newItem.id
+        private val TAG: String = PostPagedAdapter::class.simpleName!!
 
-            override fun areContentsTheSame(oldItem: PostViewModel, newItem: PostViewModel) = oldItem == newItem
+        private val DIFF_HANDLER = object : DiffUtil.ItemCallback<Post>() {
+            override fun areItemsTheSame(oldItem: Post, newItem: Post) = oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: Post, newItem: Post) = oldItem == newItem
         }
     }
 
@@ -32,20 +36,18 @@ class PostPagedAdapter(private val listener: OnPostSelectedListener):
 
     override fun onBindViewHolder(holder: PostPagedAdapter.ViewHolder, position: Int) {
         val post = getItem(position)!!
-        val vm = PostViewModel(
-            post.id, post.timestampId, post.isRead, post.isUpdated,
-            post.isBookmarked, post.contents, post.date
-        )
-        holder.bindTo(vm)
+        holder.bindTo(post, listener)
     }
 
     /**
      * Wraps an actual entry view in the list.
      */
     inner class ViewHolder(private val binding: ViewItemPostBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bindTo(post: PostViewModel) {
-            this.binding.post = post
-            this.binding.listener = listener
+        fun bindTo(post: Post, listener: OnPostSelectedListener) {
+            Log.d(TAG, "Binding post ${post.id} to item")
+            binding.post = post.toPostViewModel()
+            binding.listener = listener
+            binding.executePendingBindings()
         }
     }
 

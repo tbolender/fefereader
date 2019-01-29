@@ -77,7 +77,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
 
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation "androidx.paging:paging-runtime:2.0.0"
+    implementation "androidx.paging:paging-runtime-ktx:2.1.0"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.0.0'
 

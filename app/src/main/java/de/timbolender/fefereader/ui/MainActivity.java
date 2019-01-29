@@ -11,9 +11,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import de.timbolender.fefereader.R;
+import de.timbolender.fefereader.db.Post;
 import de.timbolender.fefereader.service.UpdateService;
 import de.timbolender.fefereader.viewmodel.MainViewModel;
-import de.timbolender.fefereader.viewmodel.PostViewModel;
 
 /**
  * Main activity displaying all retrieved posts
@@ -32,7 +32,7 @@ public class MainActivity extends PostListActivity {
     //
 
     @Override
-    LiveData<PagedList<PostViewModel>> getPostPagedList() {
+    LiveData<PagedList<Post>> getPostPagedList() {
         return vm.getPostsPaged();
     }
 

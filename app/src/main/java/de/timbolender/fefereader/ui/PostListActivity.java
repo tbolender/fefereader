@@ -18,9 +18,9 @@ import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.databinding.ActivityPostListBinding;
+import de.timbolender.fefereader.db.Post;
 import de.timbolender.fefereader.service.UpdateService;
 import de.timbolender.fefereader.viewmodel.PostListViewModel;
-import de.timbolender.fefereader.viewmodel.PostViewModel;
 
 /**
  * Base activity class featuring a list of posts with default actions.
@@ -106,7 +106,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     // Behavior determining methods
     //
 
-    abstract LiveData<PagedList<PostViewModel>> getPostPagedList();
+    abstract LiveData<PagedList<Post>> getPostPagedList();
 
     abstract boolean isUpdateOnStartEnabled();
 
