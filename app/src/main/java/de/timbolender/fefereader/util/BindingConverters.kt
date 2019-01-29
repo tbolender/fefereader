@@ -22,9 +22,9 @@ object BindingConverters {
     @BindingAdapter("android:textStyle")
     fun setTextStyle(view: TextView, value: String?) {
         when (value) {
-            "bold" -> view.setTypeface(view.typeface, Typeface.BOLD)
-            "italic" -> view.setTypeface(view.typeface, Typeface.ITALIC)
-            else -> view.setTypeface(view.typeface, Typeface.NORMAL)
+            "bold" -> view.setTypeface(null, Typeface.BOLD)
+            "italic" -> view.setTypeface(null, Typeface.ITALIC)
+            else -> view.setTypeface(null, Typeface.NORMAL)
         }
     }
 }
