@@ -67,6 +67,9 @@
     </string>
 
     <!-- Notification -->
+    <string name="channel_name">Neue Nachrichten</string>
+    <string name="channel_description">Informiert dich wenn neue Nachrichten oder Updates gefunden wurden</string>
+
     <plurals name="notification_new_posts">
         <item quantity="one">%d neuen Post</item>
         <item quantity="other">%d neue Posts</item>

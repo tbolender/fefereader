@@ -2,6 +2,7 @@ package de.timbolender.fefereader.service;
 
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -10,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
@@ -45,6 +47,7 @@ public class UpdateService extends Service {
     public static final String EXTRA_UPDATE_SUCCESS = "update_success";
     public static final int BROADCAST_PRIORITY_UI = 10;
     public static final int BROADCAST_PRIORITY_SERVICE = 0;
+    private static final String CHANNEL_ID = "default";
 
     /**
      * @param context  Context to use.
@@ -135,7 +138,7 @@ public class UpdateService extends Service {
                 PendingIntent startPendingIntent = PendingIntent.getActivity(
                     UpdateService.this, 0, startIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(UpdateService.this)
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(UpdateService.this, CHANNEL_ID)
                     .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
                     .setSmallIcon(R.drawable.ic_notification)
                     .setContentTitle("Neues von Fefe!")
@@ -158,6 +161,8 @@ public class UpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        createNotificationChannel();
+
         if(intent != null) {
             String action = intent.getAction();
             // Trigger update
@@ -187,6 +192,23 @@ public class UpdateService extends Service {
     public IBinder onBind(Intent intent) {
         // We do not support binding
         return null;
+    }
+
+    /**
+     * Create notification channel for Android O.
+     */
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String name = getString(R.string.channel_name);
+            String descriptionText = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(descriptionText);
+            // Register the channel with the system
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
+
     }
 
     /**
