@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -21,9 +20,6 @@ import java.text.ParseException;
 import androidx.annotation.Nullable;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.db.DataRepository;
-import de.timbolender.fefereader.db.DatabaseWrapper;
-import de.timbolender.fefereader.db.SQLiteOpenHelper;
-import de.timbolender.fefereader.db.SQLiteWrapper;
 import de.timbolender.fefereader.network.Updater;
 import de.timbolender.fefereader.util.PreferenceHelper;
 
@@ -84,7 +80,6 @@ public class UpdateService extends Service {
     }
 
     PreferenceHelper preferenceHelper;
-    DatabaseWrapper databaseWrapper;
     BroadcastReceiver updateReceiver;
     Thread updateThread;
 
@@ -93,13 +88,8 @@ public class UpdateService extends Service {
     @Override
     public void onCreate() {
         preferenceHelper = new PreferenceHelper(this);
-        updateThread = null;
-
-        // Get access to database
-        SQLiteOpenHelper databaseHelper = new SQLiteOpenHelper(this);
-        SQLiteDatabase database = databaseHelper.getWritableDatabase();
-        databaseWrapper = new SQLiteWrapper(database);
         repository = new DataRepository(getApplication());
+        updateThread = null;
 
         // Register broadcast receiver for notifications
         updateReceiver = new NotificationReceiver(repository, EXTRA_UPDATE_SUCCESS, CHANNEL_ID);

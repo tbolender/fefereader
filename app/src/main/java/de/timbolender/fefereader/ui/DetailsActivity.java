@@ -22,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import de.timbolender.fefereader.R;
-import de.timbolender.fefereader.db.DatabaseException;
 import de.timbolender.fefereader.db.Post;
 import de.timbolender.fefereader.service.UpdateService;
 import de.timbolender.fefereader.ui.view.PostView;
@@ -158,17 +157,12 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
     public void onLinkClicked(String url) {
         // Handle links to post internally
         if(url.startsWith(FEFE_BASE_URL)) {
-            try {
-                Log.d(TAG, "Clicked on link to post, try to handle it internally");
-                String postId = url.substring(FEFE_BASE_URL.length());
+            Log.d(TAG, "Clicked on link to post, try to handle it internally");
+            String postId = url.substring(FEFE_BASE_URL.length());
 
-                Intent intent = createShowPostIntent(this, postId);
-                startActivity(intent);
-                return;
-            }
-            catch(DatabaseException e) {
-                Log.d(TAG, "Post is not stored, following normal procedure");
-            }
+            Intent intent = createShowPostIntent(this, postId);
+            startActivity(intent);
+            return;
         }
 
         // Start intent with optional preview
