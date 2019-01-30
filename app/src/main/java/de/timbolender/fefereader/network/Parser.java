@@ -15,8 +15,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import de.timbolender.fefereader.data.RawPost;
-
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**

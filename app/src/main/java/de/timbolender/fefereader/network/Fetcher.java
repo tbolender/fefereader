@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
-import de.timbolender.fefereader.data.RawPost;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
