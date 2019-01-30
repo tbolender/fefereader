@@ -23,6 +23,12 @@ class DataRepository(application: Application) {
 
     fun getUnreadPostsSync() = postDao.loadUnreadPostsSync()
 
+    val newPostsCount
+        get() = postDao.loadNewCount()
+
+    val updatedPostsCount
+        get() = postDao.loadUpdatedCount()
+
     fun markPostAsReadSync(postId: String) = postDao.markAsReadSync(postId)
 
     fun togglePostBookmarkSync(postId: String) = postDao.toggleBookmarkSync(postId)

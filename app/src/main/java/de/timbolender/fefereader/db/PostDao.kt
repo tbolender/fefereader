@@ -46,11 +46,11 @@ interface PostDao {
 
     // Count
 
-    @Query("SELECT COUNT(*) FROM post WHERE isRead = 0")
-    fun loadUnreadCount(): Long
+    @Query("SELECT COUNT(*) FROM post WHERE isRead = 0 AND isUpdated = 0")
+    fun loadNewCount(): Long
 
-    @Query("SELECT COUNT(*) FROM post WHERE isBookmarked = 1")
-    fun loadBookmarkedCount(): Long
+    @Query("SELECT COUNT(*) FROM post WHERE isUpdated = 1")
+    fun loadUpdatedCount(): Long
 
     // Custom update methods
 
