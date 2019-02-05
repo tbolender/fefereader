@@ -4,12 +4,15 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import de.timbolender.fefereader.db.Post
 import de.timbolender.fefereader.db.PostDao
 import java.util.*
 
 class ManualToRoomMigration(val context: Context, val postDao: PostDao) {
     companion object {
+        private val TAG: String = ManualToRoomMigration::class.simpleName!!
+
         const val DATABASE_VERSION = 1
         const val DATABASE_NAME = "FefesBlogDatabase.db"
 
@@ -31,17 +34,21 @@ class ManualToRoomMigration(val context: Context, val postDao: PostDao) {
         get() = databaseFile.exists()
 
     fun migrate() {
+        Log.d(TAG, "Migrating manual database to Room")
         val oldDatabase = openOldDatabase()
         val cursor = oldDatabase.query(TABLE_NAME, null, null, null, null, null, null)
 
         // Migrate all post we can find
         while(cursor.moveToNext()) {
             val post = getCurrentPost(cursor)
+            Log.d(TAG, "Migrate post ${post.id}")
             postDao.insertPosts(post)
         }
 
         cursor.close()
         databaseFile.delete()
+
+        Log.d(TAG, "Migration complete")
     }
 
     private fun openOldDatabase(): SQLiteDatabase {
