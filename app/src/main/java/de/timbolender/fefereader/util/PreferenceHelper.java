@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 
-import com.google.common.collect.ImmutableMap;
-
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import de.timbolender.fefereader.R;
@@ -15,10 +15,10 @@ import de.timbolender.fefereader.R;
  * Class to simplify access to default settings with resource ids.
  */
 public class PreferenceHelper {
-    private static final Map<String, Integer> AVAILABLE_STYLES = new ImmutableMap.Builder<String, Integer>()
-        .put("post_style_none", R.string.post_style_none)
-        .put("post_style_default", R.string.post_style_default)
-        .build();
+    private static final Map<String, Integer> AVAILABLE_STYLES = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
+        put("post_style_none", R.string.post_style_none);
+        put("post_style_default", R.string.post_style_default);
+    }});
 
     private final String PREF_UPDATES_ENABLED;
     private final boolean PREF_UPDATES_ENABLED_DEFAULT;
