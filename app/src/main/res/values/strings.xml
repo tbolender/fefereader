@@ -57,6 +57,11 @@
     </string>
 
     <!-- Notification -->
+    <string name="notification_channel_name">Neue Nachrichten</string>
+    <string name="notification_channel_description">Informiert dich wenn neue Nachrichten oder Updates gefunden wurden</string>
+
+    <string name="notification_title">Neues von Fefe!</string>
+
     <plurals name="notification_new_posts">
         <item quantity="one">%d neuen Post</item>
         <item quantity="other">%d neue Posts</item>

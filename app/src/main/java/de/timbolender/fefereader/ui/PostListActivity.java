@@ -5,36 +5,33 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.timbolender.fefereader.R;
-import de.timbolender.fefereader.data.Post;
-import de.timbolender.fefereader.db.DatabaseWrapper;
-import de.timbolender.fefereader.db.PostReader;
-import de.timbolender.fefereader.db.SQLiteOpenHelper;
-import de.timbolender.fefereader.db.SQLiteWrapper;
+import de.timbolender.fefereader.databinding.ActivityPostListBinding;
+import de.timbolender.fefereader.db.Post;
 import de.timbolender.fefereader.service.UpdateService;
+import de.timbolender.fefereader.viewmodel.PostListViewModel;
 
 /**
  * Base activity class featuring a list of posts with default actions.
  */
-public abstract class PostListActivity extends AppCompatActivity implements PostAdapter.OnPostSelectedListener  {
+public abstract class PostListActivity extends AppCompatActivity implements PostPagedAdapter.OnPostSelectedListener  {
     static final String TAG = PostListActivity.class.getSimpleName();
 
-    SQLiteOpenHelper databaseHelper;
-    PostAdapter postAdapter;
-    DatabaseWrapper databaseWrapper;
-    boolean shouldPerformUpdate;
+    ActivityPostListBinding binding;
+    PostListViewModel vm;
 
-    RecyclerView postList;
-    SwipeRefreshLayout refreshLayout;
+    boolean shouldPerformUpdate;
 
     BroadcastReceiver updateReceiver;
 
@@ -43,35 +40,22 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
         super.onCreate(savedInstanceState);
 
         // Prepare ui
-        setContentView(R.layout.activity_main);
-        postList = findViewById(R.id.post_list);
-        refreshLayout = findViewById(R.id.refresh_layout);
-
-        // Set up database
-        databaseHelper = new SQLiteOpenHelper(this);
-        SQLiteDatabase database = databaseHelper.getWritableDatabase();
-        databaseWrapper = new SQLiteWrapper(database);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_post_list);
+        vm = ViewModelProviders.of(this).get(PostListViewModel.class);
 
         // Prepare list view
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        postList.setLayoutManager(layoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        postList.addItemDecoration(dividerItemDecoration);
+        binding.postList.addItemDecoration(dividerItemDecoration);
 
         // Fill content
-        PostReader reader = getReader(databaseWrapper);
-        postAdapter = new PostAdapter(reader, this);
-        postList.setAdapter(postAdapter);
+        PostPagedAdapter postAdapter = new PostPagedAdapter(this);
+        getPostPagedList().observe(this, postAdapter::submitList);
+        binding.postList.setAdapter(postAdapter);
 
         // Handle swipe update gesture
         if(isRefreshGestureEnabled()) {
-            refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    UpdateService.startManualUpdate(PostListActivity.this);
-                }
-            });
-            refreshLayout.setColorSchemeResources(R.color.colorAccent);
+            binding.refreshLayout.setOnRefreshListener(() -> UpdateService.startManualUpdate(PostListActivity.this));
+            binding.refreshLayout.setColorSchemeResources(R.color.colorAccent);
         }
 
         // Create receiver for updates
@@ -79,8 +63,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d(TAG, "Received content update notification");
-                refreshLayout.setRefreshing(false);
-                updateAdapter();
+                binding.refreshLayout.setRefreshing(false);
                 abortBroadcast();
             }
         };
@@ -92,9 +75,6 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     @Override
     protected void onResume() {
         super.onResume();
-
-        // Make sure we have the latest content
-        updateAdapter();
 
         // Drop all user notifications
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -108,7 +88,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
         registerReceiver(updateReceiver, skippedFilter);
 
         // Trigger update if desired
-        refreshLayout.setRefreshing(false);
+        binding.refreshLayout.setRefreshing(false);
         if(shouldPerformUpdate) {
             requestUpdate();
             shouldPerformUpdate = false;
@@ -122,18 +102,11 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
         super.onPause();
     }
 
-    @Override
-    protected void onDestroy() {
-        databaseWrapper.cleanUp();
-        databaseHelper.close();
-        super.onDestroy();
-    }
-
     //
     // Behavior determining methods
     //
 
-    abstract PostReader getReader(DatabaseWrapper databaseWrapper);
+    abstract LiveData<PagedList<Post>> getPostPagedList();
 
     abstract boolean isUpdateOnStartEnabled();
 
@@ -143,13 +116,8 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     // General utility functions
     //
 
-    void updateAdapter() {
-        PostReader reader = getReader(databaseWrapper);
-        postAdapter.setReader(reader);
-    }
-
     void requestUpdate() {
-        refreshLayout.setRefreshing(true);
+        binding.refreshLayout.setRefreshing(true);
         UpdateService.startManualUpdate(this);
     }
 
@@ -158,19 +126,15 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     //
 
     @Override
-    public void OnPostSelected(String postId) {
-        databaseWrapper.setRead(postId, true);
-        updateAdapter();
-
+    public void onPostSelected(@NotNull String postId) {
+        vm.markPostAsRead(postId);
         Intent intent = DetailsActivity.createShowPostIntent(this, postId);
         startActivity(intent);
     }
 
     @Override
-    public boolean OnPostLongPressed(String postId) {
-        Post post = databaseWrapper.getPost(postId);
-        databaseWrapper.setBookmarked(post.getId(), !post.isBookmarked());
-        updateAdapter();
+    public boolean onPostLongPressed(@NotNull String postId) {
+        vm.togglePostBookmark(postId);
         return true;
     }
 }

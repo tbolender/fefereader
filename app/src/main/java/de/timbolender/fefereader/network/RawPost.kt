@@ -1,4 +1,4 @@
-package de.timbolender.fefereader.data
+package de.timbolender.fefereader.network
 
 /**
  * The minimal data representing a post.

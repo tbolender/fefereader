@@ -13,7 +13,7 @@ import java.util.Objects;
 
 import androidx.annotation.RequiresApi;
 import de.timbolender.fefereader.R;
-import de.timbolender.fefereader.data.Post;
+import de.timbolender.fefereader.viewmodel.PostViewModel;
 
 /**
  * Displays full content of a post.
@@ -46,7 +46,7 @@ public class PostView extends LinearLayout {
      *
      * @param post Object to load data from.
      */
-    public void fill(Post post, String cssStyle) {
+    public void fill(PostViewModel post, String cssStyle) {
         Objects.requireNonNull(post);
 
         // Set up link interception

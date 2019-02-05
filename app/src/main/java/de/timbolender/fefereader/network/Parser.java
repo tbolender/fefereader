@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import de.timbolender.fefereader.data.RawPost;
-
 /**
  * Parses a blog page for posts.
  */
@@ -40,8 +38,8 @@ public class Parser {
         Date currentDate = null;
         List<RawPost> postList = new ArrayList<>();
 
-        long baseTime = System.currentTimeMillis() << 8;
-        long indexCounter = 255;
+        long baseTime = System.currentTimeMillis() * 1000;
+        long indexCounter = 999;
 
         for(Element element : document.select("body > h3, body > ul")) {
             if(element.tagName().equals("h3")) {

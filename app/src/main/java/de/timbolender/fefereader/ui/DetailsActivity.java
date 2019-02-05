@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,16 +19,17 @@ import java.util.Date;
 import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
 import de.timbolender.fefereader.R;
-import de.timbolender.fefereader.data.Post;
-import de.timbolender.fefereader.db.DatabaseException;
-import de.timbolender.fefereader.db.DatabaseWrapper;
-import de.timbolender.fefereader.db.SQLiteOpenHelper;
-import de.timbolender.fefereader.db.SQLiteWrapper;
+import de.timbolender.fefereader.db.Post;
 import de.timbolender.fefereader.service.UpdateService;
 import de.timbolender.fefereader.ui.view.PostView;
 import de.timbolender.fefereader.util.PreferenceHelper;
+import de.timbolender.fefereader.viewmodel.DetailsViewModel;
+import de.timbolender.fefereader.viewmodel.PostViewModel;
+
+import static de.timbolender.fefereader.viewmodel.PostViewModelKt.toPostViewModel;
 
 public class DetailsActivity extends AppCompatActivity implements PostView.OnLinkClickedListener {
     private static final String TAG = DetailsActivity.class.getSimpleName();
@@ -39,12 +39,11 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
 
     public static final String INTENT_EXTRA_POST_ID = "post_id";
 
-    SQLiteOpenHelper databaseHelper;
-    DatabaseWrapper databaseWrapper;
+    LiveData<Post> postVm;
+    PostView postView;
+
     BroadcastReceiver updateReceiver;
     PreferenceHelper preferenceHelper;
-    MutableLiveData<Post> postData;
-    PostView postView;
 
     /**
      * Creates an intent to show this activity with given post.
@@ -67,17 +66,18 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
 
         preferenceHelper = new PreferenceHelper(this);
 
-        // Set up database
-        databaseHelper = new SQLiteOpenHelper(this);
-        SQLiteDatabase database = databaseHelper.getWritableDatabase();
-        databaseWrapper = new SQLiteWrapper(database);
+        // Set up data binding
+        final Intent intent = getIntent();
+        String postId = intent.getStringExtra(INTENT_EXTRA_POST_ID);
 
-        // Track post changes
-        postData = new MutableLiveData<>();
-        postData.observe(this, post -> {
+        DetailsViewModel vm = ViewModelProviders.of(this).get(DetailsViewModel.class);
+        postVm = vm.getPost(postId);
+        postVm.observe(this, dbPost -> {
+            PostViewModel post = toPostViewModel(dbPost);
+
             // Set title
-            Date data = new Date(post.getDate());
-            setTitle(DATE_FORMAT.format(data));
+            Date date = post.getDate();
+            setTitle(DATE_FORMAT.format(date));
 
             // Fill view
             String customStyle = preferenceHelper.getPostStyle();
@@ -96,12 +96,6 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
                 abortBroadcast();
             }
         };
-
-        // Extract post
-        final Intent intent = getIntent();
-        String postId = intent.getStringExtra(INTENT_EXTRA_POST_ID);
-        Post post = databaseWrapper.getPost(postId);
-        postData.postValue(post);
     }
 
     @Override
@@ -109,7 +103,7 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_details, menu);
 
-        Post post = postData.getValue();
+        Post post = postVm.getValue();
         if(post != null) {
             MenuItem item = menu.findItem(R.id.menu_bookmarked);
             item.setTitle(post.isBookmarked() ? R.string.menu_bookmark_delete : R.string.menu_bookmark_create);
@@ -121,13 +115,13 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Ensure post is present
-        Post currentPost = postData.getValue();
+        Post currentPost = postVm.getValue();
         if(currentPost == null)
             return super.onOptionsItemSelected(item);
 
         if(item.getItemId() == R.id.menu_bookmarked) {
-            databaseWrapper.setBookmarked(currentPost.getId(), !currentPost.isBookmarked());
-            postData.postValue(databaseWrapper.getPost(currentPost.getId()));
+            // FIXME: Do it correctly
+            //databaseWrapper.setBookmarked(currentPost.getId(), !currentPost.isBookmarked());
             return true;
         }
         else if(item.getItemId() == R.id.menu_share) {
@@ -163,17 +157,12 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
     public void onLinkClicked(String url) {
         // Handle links to post internally
         if(url.startsWith(FEFE_BASE_URL)) {
-            try {
-                Log.d(TAG, "Clicked on link to post, try to handle it internally");
-                String postId = url.substring(FEFE_BASE_URL.length());
+            Log.d(TAG, "Clicked on link to post, try to handle it internally");
+            String postId = url.substring(FEFE_BASE_URL.length());
 
-                Intent intent = createShowPostIntent(this, postId);
-                startActivity(intent);
-                return;
-            }
-            catch(DatabaseException e) {
-                Log.d(TAG, "Post is not stored, following normal procedure");
-            }
+            Intent intent = createShowPostIntent(this, postId);
+            startActivity(intent);
+            return;
         }
 
         // Start intent with optional preview
@@ -192,12 +181,5 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
         else {
             startActivity(urlIntent);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        databaseWrapper.cleanUp();
-        databaseHelper.close();
-        super.onDestroy();
     }
 }

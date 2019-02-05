@@ -11,7 +11,7 @@
 
         <variable
             name="listener"
-            type="de.timbolender.fefereader.ui.PostAdapter.OnPostSelectedListener"/>
+            type="de.timbolender.fefereader.ui.PostPagedAdapter.OnPostSelectedListener"/>
     </data>
 
     <LinearLayout
@@ -23,8 +23,8 @@
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:paddingEnd="8dp"
-        android:onClick="@{() -> listener.OnPostSelected(post.id)}"
-        android:onLongClick="@{() -> listener.OnPostLongPressed(post.id)}">
+        android:onClick="@{() -> listener.onPostSelected(post.id)}"
+        android:onLongClick="@{() -> listener.onPostLongPressed(post.id)}">
 
         <TextView
             android:id="@+id/contents_preview"
@@ -35,7 +35,7 @@
             android:lines="3"
             android:layout_weight="1"
             android:html_text="@{post.contents}"
-            android:textStyle='@{(post.isRead() &amp;&amp; !post.isUpdated()) ? "normal" : "bold"}'
+            android:textStyle='@{post.isRead() ? "normal" : "bold"}'
             tools:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."/>
 
         <LinearLayout

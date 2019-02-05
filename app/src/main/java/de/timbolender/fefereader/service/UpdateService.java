@@ -1,7 +1,7 @@
 package de.timbolender.fefereader.service;
 
 import android.app.AlarmManager;
-import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -9,40 +9,36 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Locale;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import de.timbolender.fefereader.R;
-import de.timbolender.fefereader.db.DatabaseWrapper;
-import de.timbolender.fefereader.db.SQLiteOpenHelper;
-import de.timbolender.fefereader.db.SQLiteWrapper;
+import de.timbolender.fefereader.db.DataRepository;
 import de.timbolender.fefereader.network.Updater;
-import de.timbolender.fefereader.ui.MainActivity;
 import de.timbolender.fefereader.util.PreferenceHelper;
 
 /**
  * Perform regular post updates in the background.
+ * TODO: Migrate to WorkManager as soon as its fully AndroidX
  */
 public class UpdateService extends Service {
     static final String TAG = UpdateService.class.getSimpleName();
     static final String ACTION_UPDATE = "de.timbolender.fefereader.service.action.UPDATE";
     static final String ACTION_ENABLE_REGULAR_UPDATES = "de.timbolender.fefereader.service.action.ENABLE_UPDATES";
     static final String ACTION_DISABLE_REGULAR_UPDATES = "de.timbolender.fefereader.service.action.DISABLE_UPDATES";
-    static final int NOTIFICATION_ID = 42; // What else?
 
     public static final String BROADCAST_UPDATE_SKIPPED = "de.timbolender.fefereader.service.action.UPDATE_SKIPPED";
     public static final String BROADCAST_UPDATE_FINISHED = "de.timbolender.fefereader.service.action.UPDATE_FINISHED";
     public static final String EXTRA_UPDATE_SUCCESS = "update_success";
     public static final int BROADCAST_PRIORITY_UI = 10;
     public static final int BROADCAST_PRIORITY_SERVICE = 0;
+    private static final String CHANNEL_ID = "default";
 
     /**
      * @param context  Context to use.
@@ -84,65 +80,19 @@ public class UpdateService extends Service {
     }
 
     PreferenceHelper preferenceHelper;
-    DatabaseWrapper databaseWrapper;
     BroadcastReceiver updateReceiver;
     Thread updateThread;
+
+    DataRepository repository;
 
     @Override
     public void onCreate() {
         preferenceHelper = new PreferenceHelper(this);
+        repository = new DataRepository(getApplication());
         updateThread = null;
 
-        // Get access to database
-        SQLiteOpenHelper databaseHelper = new SQLiteOpenHelper(this);
-        SQLiteDatabase database = databaseHelper.getWritableDatabase();
-        databaseWrapper = new SQLiteWrapper(database);
-
         // Register broadcast receiver for notifications
-        updateReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "Received update broadcast, no ui visible currently");
-
-                // Only show notification if there is something to report
-                boolean success = intent.getBooleanExtra(EXTRA_UPDATE_SUCCESS, false);
-                long numNew = databaseWrapper.getUnreadPostCount();
-                long numUpdated = databaseWrapper.getUpdatedPostCount();
-                if(!success || (numNew == 0 && numUpdated == 0)) {
-                    return;
-                }
-
-                // Show notification about update
-                Log.d(TAG, "Showing notification");
-                String newString = getResources()
-                    .getQuantityString(R.plurals.notification_new_posts, (int) numNew, (int) numNew);
-                String updatedString = getResources()
-                    .getQuantityString(R.plurals.notification_updated_posts, (int) numUpdated, (int) numUpdated);
-                String message = String.format(Locale.ENGLISH, "Es gibt %s und %s für dich.", newString, updatedString);
-                if(numNew == 0) {
-                    message = String.format(Locale.ENGLISH, "Es gibt %s für dich.", updatedString);
-                }
-                if(numUpdated == 0) {
-                    message = String.format(Locale.ENGLISH, "Es gibt %s für dich.", newString);
-                }
-
-                Intent startIntent = new Intent(UpdateService.this, MainActivity.class);
-                PendingIntent startPendingIntent = PendingIntent.getActivity(
-                    UpdateService.this, 0, startIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(UpdateService.this)
-                    .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
-                    .setSmallIcon(R.drawable.ic_notification)
-                    .setContentTitle("Neues von Fefe!")
-                    .setContentText(message)
-                    .setContentIntent(startPendingIntent)
-                    .setOnlyAlertOnce(true)
-                    .setShowWhen(true);
-
-                NotificationManager manager = (NotificationManager) UpdateService.this.getSystemService(NOTIFICATION_SERVICE);
-                manager.notify(NOTIFICATION_ID, builder.build());
-            }
-        };
+        updateReceiver = new NotificationReceiver(repository, EXTRA_UPDATE_SUCCESS, CHANNEL_ID);
         IntentFilter intentFilter = new IntentFilter(BROADCAST_UPDATE_FINISHED);
         intentFilter.setPriority(BROADCAST_PRIORITY_SERVICE);
         registerReceiver(updateReceiver, intentFilter);
@@ -153,6 +103,8 @@ public class UpdateService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        createNotificationChannel();
+
         if(intent != null) {
             String action = intent.getAction();
             // Trigger update
@@ -185,6 +137,23 @@ public class UpdateService extends Service {
     }
 
     /**
+     * Create notification channel for Android O.
+     */
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String name = getString(R.string.notification_channel_name);
+            String descriptionText = getString(R.string.notification_channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(descriptionText);
+            // Register the channel with the system
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+    }
+
+    /**
      * Start update in a separate thread (if not already running).
      */
     private void performUpdate() {
@@ -200,7 +169,7 @@ public class UpdateService extends Service {
             boolean success = false;
 
             try {
-                new Updater(databaseWrapper).update();
+                new Updater(repository).update();
                 success = true;
                 Log.d(TAG, "Update finished");
             }

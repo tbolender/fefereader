@@ -7,18 +7,23 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
 import de.timbolender.fefereader.R;
-import de.timbolender.fefereader.data.Post;
-import de.timbolender.fefereader.db.DatabaseWrapper;
-import de.timbolender.fefereader.db.PostReader;
+import de.timbolender.fefereader.db.Post;
 import de.timbolender.fefereader.service.UpdateService;
+import de.timbolender.fefereader.viewmodel.MainViewModel;
 
 /**
  * Main activity displaying all retrieved posts
  */
 public class MainActivity extends PostListActivity {
+    MainViewModel vm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        vm = ViewModelProviders.of(this).get(MainViewModel.class);
         super.onCreate(savedInstanceState);
     }
 
@@ -27,8 +32,8 @@ public class MainActivity extends PostListActivity {
     //
 
     @Override
-    PostReader getReader(DatabaseWrapper databaseWrapper) {
-        return databaseWrapper.getPostsReader(DatabaseWrapper.FILTER_NONE);
+    LiveData<PagedList<Post>> getPostPagedList() {
+        return vm.getPostsPaged();
     }
 
     @Override
@@ -56,7 +61,7 @@ public class MainActivity extends PostListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if(itemId == R.id.menu_mark_read) {
-            onMarkAllAsReadClick();
+            vm.markAllPostsAsRead();
             return true;
         }
         if(itemId == R.id.menu_bookmark_filter) {
@@ -87,25 +92,13 @@ public class MainActivity extends PostListActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void onMarkAllAsReadClick() {
-        PostReader reader = getReader(databaseWrapper);
-        for(int i = 0; i < reader.getCount(); i++) {
-            Post post = reader.get(i);
-            if(!post.isRead() || post.isUpdated()) {
-                databaseWrapper.setRead(post.getId(), true);
-            }
-        }
-
-        updateAdapter();
-    }
-
     private void onBookmarkFilterClick() {
         Intent filterIntent = new Intent(this, BookmarkActivity.class);
         startActivity(filterIntent);
     }
 
     private void onUpdateClick() {
-        refreshLayout.setRefreshing(true);
+        binding.refreshLayout.setRefreshing(true);
         UpdateService.startManualUpdate(this);
     }
 
