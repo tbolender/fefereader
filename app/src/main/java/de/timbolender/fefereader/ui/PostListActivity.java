@@ -67,9 +67,16 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
         // Create receiver for manual updates
         WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(MANUAL_UPDATE_WORKER)
             .observe(this, workInfo -> {
-                // Skip non-interesting info
+                // Extract state
                 if(workInfo.isEmpty()) return;
                 WorkInfo.State state = workInfo.get(0).getState();
+
+                // Set correct refresh layout state
+                if(state == WorkInfo.State.RUNNING) {
+                    binding.refreshLayout.setRefreshing(true);
+                }
+
+                // Skip non-interesting info
                 if(state != WorkInfo.State.SUCCEEDED && state != WorkInfo.State.FAILED) return;
 
                 Log.d(TAG, "Received new update worker info");
@@ -128,7 +135,6 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     //
 
     void requestUpdate() {
-        binding.refreshLayout.setRefreshing(true);
         OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(UpdateWorker.class).build();
         WorkManager.getInstance().enqueueUniqueWork(MANUAL_UPDATE_WORKER, ExistingWorkPolicy.KEEP, request);
     }
