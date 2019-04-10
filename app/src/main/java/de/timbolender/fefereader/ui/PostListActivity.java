@@ -2,11 +2,11 @@ package de.timbolender.fefereader.ui;
 
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,10 +16,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.databinding.ActivityPostListBinding;
 import de.timbolender.fefereader.db.Post;
 import de.timbolender.fefereader.service.UpdateService;
+import de.timbolender.fefereader.service.UpdateWorker;
 import de.timbolender.fefereader.viewmodel.PostListViewModel;
 
 /**
@@ -27,6 +32,7 @@ import de.timbolender.fefereader.viewmodel.PostListViewModel;
  */
 public abstract class PostListActivity extends AppCompatActivity implements PostPagedAdapter.OnPostSelectedListener  {
     static final String TAG = PostListActivity.class.getSimpleName();
+    static final String MANUAL_UPDATE_WORKER = "update-manual";
 
     ActivityPostListBinding binding;
     PostListViewModel vm;
@@ -54,19 +60,24 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
 
         // Handle swipe update gesture
         if(isRefreshGestureEnabled()) {
-            binding.refreshLayout.setOnRefreshListener(() -> UpdateService.startManualUpdate(PostListActivity.this));
+            binding.refreshLayout.setOnRefreshListener(this::requestUpdate);
             binding.refreshLayout.setColorSchemeResources(R.color.colorAccent);
         }
 
-        // Create receiver for updates
-        updateReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "Received content update notification");
+        // Create receiver for manual updates
+        WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(MANUAL_UPDATE_WORKER)
+            .observe(this, workInfo -> {
+                // Skip non-interesting info
+                if(workInfo.isEmpty()) return;
+                WorkInfo.State state = workInfo.get(0).getState();
+                if(state != WorkInfo.State.SUCCEEDED && state != WorkInfo.State.FAILED) return;
+
+                Log.d(TAG, "Received new update worker info");
+                if(state == WorkInfo.State.FAILED) {
+                    Toast.makeText(this, "Update failed", Toast.LENGTH_LONG).show();
+                }
                 binding.refreshLayout.setRefreshing(false);
-                abortBroadcast();
-            }
-        };
+            });
 
         // Trigger update if desired
         shouldPerformUpdate = isUpdateOnStartEnabled();
@@ -118,7 +129,8 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
 
     void requestUpdate() {
         binding.refreshLayout.setRefreshing(true);
-        UpdateService.startManualUpdate(this);
+        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(UpdateWorker.class).build();
+        WorkManager.getInstance().enqueueUniqueWork(MANUAL_UPDATE_WORKER, ExistingWorkPolicy.KEEP, request);
     }
 
     //
