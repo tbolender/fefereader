@@ -57,6 +57,6 @@ interface PostDao {
     @Query("UPDATE post SET isRead = 1, isUpdated = 0 WHERE id = :postId")
     fun markAsReadSync(postId: String)
 
-    @Query("UPDATE post SET isBookmarked = abs(isBookmarked - 1) WHERE id = :postId")
+    @Query("UPDATE post SET isBookmarked = (1 - isBookmarked) WHERE id = :postId")
     fun toggleBookmarkSync(postId: String)
 }

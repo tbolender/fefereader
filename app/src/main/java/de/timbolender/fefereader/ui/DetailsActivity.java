@@ -39,6 +39,7 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
 
     public static final String INTENT_EXTRA_POST_ID = "post_id";
 
+    DetailsViewModel vm;
     LiveData<Post> postVm;
     PostView postView;
 
@@ -70,7 +71,7 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
         final Intent intent = getIntent();
         String postId = intent.getStringExtra(INTENT_EXTRA_POST_ID);
 
-        DetailsViewModel vm = ViewModelProviders.of(this).get(DetailsViewModel.class);
+        vm = ViewModelProviders.of(this).get(DetailsViewModel.class);
         postVm = vm.getPost(postId);
         postVm.observe(this, dbPost -> {
             PostViewModel post = toPostViewModel(dbPost);
@@ -120,8 +121,7 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
             return super.onOptionsItemSelected(item);
 
         if(item.getItemId() == R.id.menu_bookmarked) {
-            // FIXME: Do it correctly
-            //databaseWrapper.setBookmarked(currentPost.getId(), !currentPost.isBookmarked());
+            vm.toggleBookmark(currentPost.getId());
             return true;
         }
         else if(item.getItemId() == R.id.menu_share) {
