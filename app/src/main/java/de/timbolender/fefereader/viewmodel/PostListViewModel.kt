@@ -17,17 +17,15 @@ class PostListViewModel(app: Application): AndroidViewModel(app) {
 
     private val ioScope = CoroutineScope(Dispatchers.IO)
 
-    fun markPostAsRead(postId: String) {
+    fun markPostAsRead(postId: String) =
         ioScope.launch {
             Log.d(TAG, "Mark post $postId as read")
             repository.markPostAsReadSync(postId)
         }
-    }
 
-    fun togglePostBookmark(postId: String) = {
+    fun togglePostBookmark(postId: String) =
         ioScope.launch {
             Log.d(TAG, "Toggle post $postId bookmark")
             repository.togglePostBookmarkSync(postId)
         }
-    }
 }

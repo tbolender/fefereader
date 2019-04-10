@@ -19,10 +19,9 @@ class DetailsViewModel(app: Application): AndroidViewModel(app) {
 
     fun getPost(postId: String) = repository.getPost(postId)
 
-    fun toggleBookmark(postId: String) = {
+    fun toggleBookmark(postId: String) =
         ioScope.launch {
             Log.d(TAG, "Toggle post $postId bookmark")
             repository.togglePostBookmarkSync(postId)
         }
-    }
 }
