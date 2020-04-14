@@ -183,7 +183,7 @@ public class UpdateService extends Service {
      */
     private void registerRegularUpdates() {
         boolean updatesEnabled = preferenceHelper.isUpdatesEnabled();
-        int updateInterval = preferenceHelper.getUpdateInterval();
+        long updateInterval = preferenceHelper.getUpdateInterval();
 
         if(updatesEnabled) {
             Log.d(TAG, "Requesting alarm for regular updates with period of " + updateInterval + "ms");
