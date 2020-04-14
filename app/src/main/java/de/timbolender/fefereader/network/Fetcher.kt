@@ -26,6 +26,6 @@ class Fetcher(private val client: OkHttpClient, private val parser: Parser) {
             .build()
 
         val response = client.newCall(request).execute()
-        return parser.parse(response.body()!!.string())
+        return parser.parse(response.body!!.string())
     }
 }

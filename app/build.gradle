@@ -65,10 +65,10 @@ android {
 }
 
 dependencies {
-    def room_version = "2.0.0"
-    def lifecycle_version = "2.0.0"
+    def room_version = "2.2.5"
+    def lifecycle_version = "2.2.0"
     def coroutines_version = "1.1.1"
-    def work_version = "2.0.0"
+    def work_version = "2.3.4"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -77,15 +77,15 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
-    implementation 'androidx.fragment:fragment:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.fragment:fragment:1.2.4'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
 
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation "androidx.paging:paging-runtime-ktx:2.1.0"
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation "androidx.paging:paging-runtime-ktx:2.1.2"
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
-    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.0.0'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
 
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
 
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
@@ -98,12 +98,12 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:$work_version"
     androidTestImplementation "androidx.work:work-testing:$work_version"
 
-    implementation 'org.jsoup:jsoup:1.10.2'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'org.jsoup:jsoup:1.13.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.5.0'
 
-    implementation 'com.facebook.stetho:stetho:1.5.0'
-    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+    implementation 'com.facebook.stetho:stetho:1.5.1'
+    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
 
-    kaptAndroidTest 'androidx.test.espresso:espresso-core:3.1.1'
+    kaptAndroidTest 'androidx.test.espresso:espresso-core:3.2.0'
     kaptTest 'junit:junit:4.12'
 }
