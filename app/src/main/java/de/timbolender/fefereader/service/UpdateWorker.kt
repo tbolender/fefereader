@@ -35,10 +35,12 @@ class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, 
          */
         fun configureAutomaticUpdates(context: Context, preferenceHelper: PreferenceHelper) {
             if(!preferenceHelper.isUpdatesEnabled) {
+                Log.d(TAG, "Disabling automatic updates")
                 WorkManager.getInstance(context)
                         .cancelUniqueWork(AUTOMATIC_UPDATE_WORKER)
             }
             else {
+                Log.d(TAG, "Enabling automatic updates")
                 val interval = preferenceHelper.updateInterval
                 val automaticConstraints = Constraints.Builder()
                         .setRequiredNetworkType(NetworkType.CONNECTED)
