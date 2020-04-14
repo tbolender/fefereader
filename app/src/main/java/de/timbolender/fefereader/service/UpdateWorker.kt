@@ -3,8 +3,7 @@ package de.timbolender.fefereader.service
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import de.timbolender.fefereader.db.DataRepository
 import de.timbolender.fefereader.network.Updater
 import java.io.IOException
@@ -13,6 +12,19 @@ import java.text.ParseException
 class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, params) {
     companion object {
         private var TAG: String = UpdateWorker::class.simpleName!!
+
+        val MANUAL_UPDATE_WORKER = "update-manual"
+
+        /**
+         * Trigger update in background service.
+         * @param context Context to use.
+         */
+        fun startManualUpdate(context: Context) {
+            val request = OneTimeWorkRequestBuilder<UpdateWorker>()
+                    .build()
+            WorkManager.getInstance(context)
+                    .enqueueUniqueWork(MANUAL_UPDATE_WORKER, ExistingWorkPolicy.KEEP, request)
+        }
     }
 
     val repository: DataRepository = DataRepository(context.applicationContext as Application)

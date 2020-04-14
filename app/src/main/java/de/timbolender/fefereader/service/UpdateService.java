@@ -51,15 +51,6 @@ public class UpdateService extends Service {
     }
 
     /**
-     * Trigger update in background service.
-     * @param context Context to use.
-     */
-    public static void startManualUpdate(Context context) {
-        Intent updateIntent = createUpdateIntent(context);
-        context.startService(updateIntent);
-    }
-
-    /**
      * Start automatic updates in background service.
      * @param context Context to use.
      */

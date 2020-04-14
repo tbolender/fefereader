@@ -14,8 +14,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.work.ExistingWorkPolicy;
-import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 import de.timbolender.fefereader.R;
@@ -29,7 +27,6 @@ import de.timbolender.fefereader.viewmodel.PostListViewModel;
  */
 public abstract class PostListActivity extends AppCompatActivity implements PostPagedAdapter.OnPostSelectedListener  {
     static final String TAG = PostListActivity.class.getSimpleName();
-    static final String MANUAL_UPDATE_WORKER = "update-manual";
 
     ActivityPostListBinding binding;
     PostListViewModel vm;
@@ -55,12 +52,13 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
 
         // Handle swipe update gesture
         if(isRefreshGestureEnabled()) {
-            binding.refreshLayout.setOnRefreshListener(this::requestUpdate);
+            binding.refreshLayout.setOnRefreshListener(() -> UpdateWorker.Companion.startManualUpdate(this));
             binding.refreshLayout.setColorSchemeResources(R.color.colorAccent);
         }
 
         // Create receiver for manual updates
-        WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(MANUAL_UPDATE_WORKER)
+        WorkManager.getInstance(this)
+            .getWorkInfosForUniqueWorkLiveData(UpdateWorker.Companion.getMANUAL_UPDATE_WORKER())
             .observe(this, workInfo -> {
                 // Extract state
                 if(workInfo.isEmpty()) return;
@@ -96,7 +94,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
         // Trigger update if desired
         binding.refreshLayout.setRefreshing(false);
         if(shouldPerformUpdate) {
-            requestUpdate();
+            UpdateWorker.Companion.startManualUpdate(this);
             shouldPerformUpdate = false;
         }
     }
@@ -110,15 +108,6 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     abstract boolean isUpdateOnStartEnabled();
 
     abstract boolean isRefreshGestureEnabled();
-
-    //
-    // General utility functions
-    //
-
-    void requestUpdate() {
-        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(UpdateWorker.class).build();
-        WorkManager.getInstance().enqueueUniqueWork(MANUAL_UPDATE_WORKER, ExistingWorkPolicy.KEEP, request);
-    }
 
     //
     // Post entry handling

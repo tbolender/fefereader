@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.db.Post;
-import de.timbolender.fefereader.service.UpdateService;
+import de.timbolender.fefereader.service.UpdateWorker;
 import de.timbolender.fefereader.viewmodel.MainViewModel;
 
 /**
@@ -99,7 +99,7 @@ public class MainActivity extends PostListActivity {
 
     private void onUpdateClick() {
         binding.refreshLayout.setRefreshing(true);
-        UpdateService.startManualUpdate(this);
+        UpdateWorker.Companion.startManualUpdate(this);
     }
 
     private void onUnreadFilterClick() {
