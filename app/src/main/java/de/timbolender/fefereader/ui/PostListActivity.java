@@ -20,6 +20,7 @@ import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.databinding.ActivityPostListBinding;
 import de.timbolender.fefereader.db.Post;
 import de.timbolender.fefereader.service.UpdateWorker;
+import de.timbolender.fefereader.ui.helper.SilentReceiver;
 import de.timbolender.fefereader.viewmodel.PostListViewModel;
 
 /**
@@ -32,6 +33,8 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     PostListViewModel vm;
 
     boolean shouldPerformUpdate;
+
+    SilentReceiver updateReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,9 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
             binding.refreshLayout.setOnRefreshListener(() -> UpdateWorker.Companion.startManualUpdate(this));
             binding.refreshLayout.setColorSchemeResources(R.color.colorAccent);
         }
+
+        // Create receiver to consume update notifications
+        updateReceiver = new SilentReceiver();
 
         // Create receiver for manual updates
         WorkManager.getInstance(this)
@@ -87,6 +93,8 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     protected void onResume() {
         super.onResume();
 
+        updateReceiver.register(this);
+
         // Drop all user notifications
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
@@ -97,6 +105,13 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
             UpdateWorker.Companion.startManualUpdate(this);
             shouldPerformUpdate = false;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        updateReceiver.unregister(this);
+
+        super.onPause();
     }
 
     //
