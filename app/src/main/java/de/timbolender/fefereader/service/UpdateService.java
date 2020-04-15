@@ -9,23 +9,22 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.db.DataRepository;
 
+import static de.timbolender.fefereader.service.UpdateWorker.BROADCAST_PRIORITY_SERVICE;
+import static de.timbolender.fefereader.service.UpdateWorker.BROADCAST_UPDATE_FINISHED;
+import static de.timbolender.fefereader.service.UpdateWorker.EXTRA_UPDATE_SUCCESS;
+
 /**
  * Perform regular post updates in the background.
- * TODO: Migrate to WorkManager as soon as its fully AndroidX
  */
 public class UpdateService extends Service {
     static final String TAG = UpdateService.class.getSimpleName();
 
-    public static final String BROADCAST_UPDATE_SKIPPED = "de.timbolender.fefereader.service.action.UPDATE_SKIPPED";
-    public static final String BROADCAST_UPDATE_FINISHED = "de.timbolender.fefereader.service.action.UPDATE_FINISHED";
-    public static final String EXTRA_UPDATE_SUCCESS = "update_success";
-    public static final int BROADCAST_PRIORITY_UI = 10;
-    public static final int BROADCAST_PRIORITY_SERVICE = 0;
     private static final String CHANNEL_ID = "default";
 
     BroadcastReceiver updateReceiver;
@@ -36,6 +35,7 @@ public class UpdateService extends Service {
         repository = new DataRepository(getApplication());
 
         // Register broadcast receiver for notifications
+        Log.i(TAG, "Register background broadcast receiver");
         updateReceiver = new NotificationReceiver(repository, EXTRA_UPDATE_SUCCESS, CHANNEL_ID);
         IntentFilter intentFilter = new IntentFilter(BROADCAST_UPDATE_FINISHED);
         intentFilter.setPriority(BROADCAST_PRIORITY_SERVICE);
@@ -51,6 +51,7 @@ public class UpdateService extends Service {
 
     @Override
     public void onDestroy() {
+        Log.i(TAG, "Unregister background broadcast receiver");
         unregisterReceiver(updateReceiver);
     }
 

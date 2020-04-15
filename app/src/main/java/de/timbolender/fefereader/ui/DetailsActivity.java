@@ -23,12 +23,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.db.Post;
-import de.timbolender.fefereader.service.UpdateService;
 import de.timbolender.fefereader.ui.view.PostView;
 import de.timbolender.fefereader.util.PreferenceHelper;
 import de.timbolender.fefereader.viewmodel.DetailsViewModel;
 import de.timbolender.fefereader.viewmodel.PostViewModel;
 
+import de.timbolender.fefereader.service.UpdateWorker;
 import static de.timbolender.fefereader.viewmodel.PostViewModelKt.toPostViewModel;
 
 public class DetailsActivity extends AppCompatActivity implements PostView.OnLinkClickedListener {
@@ -141,8 +141,8 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
         super.onResume();
 
         // Register broadcast receiver for notifications
-        IntentFilter intentFilter = new IntentFilter(UpdateService.BROADCAST_UPDATE_FINISHED);
-        intentFilter.setPriority(UpdateService.BROADCAST_PRIORITY_UI);
+        IntentFilter intentFilter = new IntentFilter(UpdateWorker.BROADCAST_UPDATE_FINISHED);
+        intentFilter.setPriority(UpdateWorker.BROADCAST_PRIORITY_UI);
         registerReceiver(updateReceiver, intentFilter);
     }
 
