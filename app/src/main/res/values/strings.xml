@@ -31,8 +31,8 @@
 
     <string name="about_general_head">Allgemein</string>
     <string name="about_general_details">
-        Dies ist eine inoffizielle App. Alle anzeigten Blog-Post stammen von Fefe\'s Blog, ich habe folglich keinerlei Kontrolle
-        über Inhalt und Ansichten.
+        Dies ist eine inoffizielle App. Alle angezeigten Blog-Posts stammen von Fefe\'s Blog, ich habe folglich keinerlei Kontrolle
+        über Inhalt und Ansichten.\n\nProudly made with Java, SQLite, Android, and libraries.
     </string>
 
     <string name="about_android_support_head" translatable="false">AndroidX Libraries</string>

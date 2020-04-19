@@ -1,9 +1,7 @@
 package de.timbolender.fefereader.ui;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +21,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.db.Post;
-import de.timbolender.fefereader.service.UpdateService;
+import de.timbolender.fefereader.ui.helper.SilentReceiver;
 import de.timbolender.fefereader.ui.view.PostView;
 import de.timbolender.fefereader.util.PreferenceHelper;
 import de.timbolender.fefereader.viewmodel.DetailsViewModel;
@@ -43,7 +41,7 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
     LiveData<Post> postVm;
     PostView postView;
 
-    BroadcastReceiver updateReceiver;
+    SilentReceiver updateReceiver;
     PreferenceHelper preferenceHelper;
 
     /**
@@ -89,14 +87,8 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
             invalidateOptionsMenu();
         });
 
-        // Create receiver for updates
-        updateReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "Received content update notification");
-                abortBroadcast();
-            }
-        };
+        // Create receiver to consume update notifications
+        updateReceiver = new SilentReceiver();
     }
 
     @Override
@@ -140,15 +132,12 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
     protected void onResume() {
         super.onResume();
 
-        // Register broadcast receiver for notifications
-        IntentFilter intentFilter = new IntentFilter(UpdateService.BROADCAST_UPDATE_FINISHED);
-        intentFilter.setPriority(UpdateService.BROADCAST_PRIORITY_UI);
-        registerReceiver(updateReceiver, intentFilter);
+        updateReceiver.register(this);
     }
 
     @Override
     protected void onPause() {
-        unregisterReceiver(updateReceiver);
+        updateReceiver.unregister(this);
 
         super.onPause();
     }

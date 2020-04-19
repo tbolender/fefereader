@@ -5,7 +5,7 @@
 
     <string name="about_general_head">Allgemein</string>
     <string name="about_general_details">
-        Dies ist eine inoffizielle App. Alle anzeigten Blog-Post stammen von Fefe\'s Blog, ich habe folglich keinerlei Kontrolle
-        über Inhalt und Ansichten.\n\nDies ist die Debug Version.
+        Dies ist eine inoffizielle App. Alle angezeigten Blog-Posts stammen von Fefe\'s Blog, ich habe folglich keinerlei Kontrolle
+        über Inhalt und Ansichten.\n\nProudly made with Java, SQLite, Android, and libraries.\n\nDies ist die Debug Version.
     </string>
 </resources>

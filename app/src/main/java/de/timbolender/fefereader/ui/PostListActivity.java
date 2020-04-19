@@ -1,12 +1,10 @@
 package de.timbolender.fefereader.ui;
 
 import android.app.NotificationManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,10 +14,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.databinding.ActivityPostListBinding;
 import de.timbolender.fefereader.db.Post;
-import de.timbolender.fefereader.service.UpdateService;
+import de.timbolender.fefereader.service.UpdateWorker;
+import de.timbolender.fefereader.ui.helper.SilentReceiver;
 import de.timbolender.fefereader.viewmodel.PostListViewModel;
 
 /**
@@ -33,7 +34,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
 
     boolean shouldPerformUpdate;
 
-    BroadcastReceiver updateReceiver;
+    SilentReceiver updateReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,19 +55,35 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
 
         // Handle swipe update gesture
         if(isRefreshGestureEnabled()) {
-            binding.refreshLayout.setOnRefreshListener(() -> UpdateService.startManualUpdate(PostListActivity.this));
+            binding.refreshLayout.setOnRefreshListener(() -> UpdateWorker.Companion.startManualUpdate(this));
             binding.refreshLayout.setColorSchemeResources(R.color.colorAccent);
         }
 
-        // Create receiver for updates
-        updateReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "Received content update notification");
+        // Create receiver to consume update notifications
+        updateReceiver = new SilentReceiver();
+
+        // Create receiver for manual updates
+        WorkManager.getInstance(this)
+            .getWorkInfosForUniqueWorkLiveData(UpdateWorker.Companion.getMANUAL_UPDATE_WORKER())
+            .observe(this, workInfo -> {
+                // Extract state
+                if(workInfo.isEmpty()) return;
+                WorkInfo.State state = workInfo.get(0).getState();
+
+                // Set correct refresh layout state
+                if(state == WorkInfo.State.RUNNING) {
+                    binding.refreshLayout.setRefreshing(true);
+                }
+
+                // Skip non-interesting info
+                if(state != WorkInfo.State.SUCCEEDED && state != WorkInfo.State.FAILED) return;
+
+                Log.d(TAG, "Received new update worker info");
+                if(state == WorkInfo.State.FAILED) {
+                    Toast.makeText(this, "Update failed", Toast.LENGTH_LONG).show();
+                }
                 binding.refreshLayout.setRefreshing(false);
-                abortBroadcast();
-            }
-        };
+            });
 
         // Trigger update if desired
         shouldPerformUpdate = isUpdateOnStartEnabled();
@@ -76,28 +93,23 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     protected void onResume() {
         super.onResume();
 
+        updateReceiver.register(this);
+
         // Drop all user notifications
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
 
-        // Register broadcast receiver for notifications
-        IntentFilter updateFilter = new IntentFilter(UpdateService.BROADCAST_UPDATE_FINISHED);
-        updateFilter.setPriority(UpdateService.BROADCAST_PRIORITY_UI);
-        registerReceiver(updateReceiver, updateFilter);
-        IntentFilter skippedFilter = new IntentFilter(UpdateService.BROADCAST_UPDATE_SKIPPED);
-        registerReceiver(updateReceiver, skippedFilter);
-
         // Trigger update if desired
         binding.refreshLayout.setRefreshing(false);
         if(shouldPerformUpdate) {
-            requestUpdate();
+            UpdateWorker.Companion.startManualUpdate(this);
             shouldPerformUpdate = false;
         }
     }
 
     @Override
     protected void onPause() {
-        unregisterReceiver(updateReceiver);
+        updateReceiver.unregister(this);
 
         super.onPause();
     }
@@ -111,15 +123,6 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     abstract boolean isUpdateOnStartEnabled();
 
     abstract boolean isRefreshGestureEnabled();
-
-    //
-    // General utility functions
-    //
-
-    void requestUpdate() {
-        binding.refreshLayout.setRefreshing(true);
-        UpdateService.startManualUpdate(this);
-    }
 
     //
     // Post entry handling

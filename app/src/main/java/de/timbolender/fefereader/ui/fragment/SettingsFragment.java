@@ -3,10 +3,10 @@ package de.timbolender.fefereader.ui.fragment;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.util.Log;
 
 import de.timbolender.fefereader.R;
-import de.timbolender.fefereader.service.UpdateService;
+import de.timbolender.fefereader.service.UpdateWorker;
+import de.timbolender.fefereader.util.PreferenceHelper;
 
 /**
  * Displays all settings of the app.
@@ -32,7 +32,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         String key = preference.getKey();
         if(automaticUpdatesKey.equals(key)) {
-            onAutomaticUpdatesToggle((Boolean) newValue);
+            onAutomaticUpdatesToggle();
         }
         else {
             throw new RuntimeException("Unknown preference change event received!");
@@ -41,14 +41,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         return true;
     }
 
-    private void onAutomaticUpdatesToggle(boolean isActivated) {
-        if(isActivated) {
-            Log.d(TAG, "Enabling automatic updates");
-            UpdateService.enableAutomaticUpdates(getActivity());
-        }
-        else {
-            Log.d(TAG, "Disabling automatic updates");
-            UpdateService.disableAutomaticUpdates(getActivity());
-        }
+    private void onAutomaticUpdatesToggle() {
+        PreferenceHelper preferenceHelper = new PreferenceHelper(getActivity());
+        UpdateWorker.Companion.configureAutomaticUpdates(getActivity(), preferenceHelper);
     }
 }

@@ -74,8 +74,8 @@ public class PreferenceHelper {
         pref.edit().putBoolean(PREF_UPDATES_ENABLED, updatesEnabled).apply();
     }
 
-    public int getUpdateInterval() {
-        return Integer.parseInt(pref.getString(PREF_UPDATE_INTERVAL, PREF_UPDATE_INTERVAL_DEFAULT));
+    public long getUpdateInterval() {
+        return Long.parseLong(pref.getString(PREF_UPDATE_INTERVAL, PREF_UPDATE_INTERVAL_DEFAULT));
     }
 
     public void setUpdateInterval(int updateInterval) {

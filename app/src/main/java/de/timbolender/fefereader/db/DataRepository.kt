@@ -1,11 +1,11 @@
 package de.timbolender.fefereader.db
 
-import android.app.Application
+import android.content.Context
 
 /**
  * Central data access class. Automatically triggers updates if required.
  */
-class DataRepository(application: Application) {
+class DataRepository(application: Context) {
     private val db = AppDatabase.getInstance(application)
     private val postDao = db.postDao()
 
