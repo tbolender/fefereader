@@ -97,7 +97,7 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-    testImplementation "androidx.arch.core:core-testing:$lifecycle_version"
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
 
     implementation "androidx.work:work-runtime-ktx:$work_version"
     androidTestImplementation "androidx.work:work-testing:$work_version"
