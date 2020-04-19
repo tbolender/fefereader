@@ -19,14 +19,14 @@ class SilentReceiver : BroadcastReceiver() {
     fun register(context: Context) {
         val intentFilter = IntentFilter(UpdateWorker.BROADCAST_UPDATE_FINISHED)
         intentFilter.priority = UpdateWorker.BROADCAST_PRIORITY_UI
-        context.registerReceiver(this, intentFilter)
+        context.applicationContext.registerReceiver(this, intentFilter)
     }
 
     /**
      * Unregister broadcast receiver.
      */
     fun unregister(context: Context) {
-        context.unregisterReceiver(this)
+        context.applicationContext.unregisterReceiver(this)
     }
 
     override fun onReceive(p0: Context?, p1: Intent?) {

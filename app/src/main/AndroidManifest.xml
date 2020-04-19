@@ -50,11 +50,6 @@
             android:parentActivityName=".ui.MainActivity">
         </activity>
 
-        <service
-            android:name=".service.UpdateService"
-            android:exported="false">
-        </service>
-
         <receiver android:name=".service.BootServiceStarter">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
