@@ -44,12 +44,7 @@ class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, 
          * @param context Context to use.
          */
         fun configureAutomaticUpdates(context: Context, preferenceHelper: PreferenceHelper) {
-            if(!preferenceHelper.isUpdatesEnabled) {
-                Log.d(TAG, "Disabling automatic updates")
-                WorkManager.getInstance(context)
-                        .cancelUniqueWork(AUTOMATIC_UPDATE_WORKER)
-            }
-            else {
+            if(preferenceHelper.isUpdatesEnabled) {
                 Log.d(TAG, "Enabling automatic updates")
                 val interval = preferenceHelper.updateInterval
                 val automaticConstraints = Constraints.Builder()
@@ -60,6 +55,11 @@ class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, 
                         .build()
                 WorkManager.getInstance(context)
                         .enqueueUniquePeriodicWork(AUTOMATIC_UPDATE_WORKER, ExistingPeriodicWorkPolicy.REPLACE, request)
+            }
+            else {
+                Log.d(TAG, "Disabling automatic updates")
+                WorkManager.getInstance(context)
+                        .cancelUniqueWork(AUTOMATIC_UPDATE_WORKER)
             }
         }
     }
