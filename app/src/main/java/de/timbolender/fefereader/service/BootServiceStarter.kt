@@ -3,7 +3,6 @@ package de.timbolender.fefereader.service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import de.timbolender.fefereader.util.PreferenceHelper
 
 /**
  * Broadcast receiver starting the notification service. Sets up automatic updates as well.
@@ -13,11 +12,6 @@ class BootServiceStarter : BroadcastReceiver() {
         val action = intent.action!!
         if (action != "android.intent.action.BOOT_COMPLETED" && action != "android.intent.action.MY_PACKAGE_REPLACED")
             return
-
-        val preferenceHelper = PreferenceHelper(context)
-        UpdateWorker.configureAutomaticUpdates(context, preferenceHelper)
-
-        val serviceIntent = Intent(context.applicationContext, NotificationService::class.java)
-        context.applicationContext.startService(serviceIntent)
+        // Do nothing here, notification service setup is via application
     }
 }

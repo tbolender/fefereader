@@ -47,11 +47,7 @@ class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, 
             if(preferenceHelper.isUpdatesEnabled) {
                 Log.d(TAG, "Enabling automatic updates")
                 val interval = preferenceHelper.updateInterval
-                val automaticConstraints = Constraints.Builder()
-                        .setRequiredNetworkType(NetworkType.CONNECTED)
-                        .build()
                 val request = PeriodicWorkRequestBuilder<UpdateWorker>(interval, TimeUnit.MILLISECONDS)
-                        .setConstraints(automaticConstraints)
                         .build()
                 WorkManager.getInstance(context)
                         .enqueueUniquePeriodicWork(AUTOMATIC_UPDATE_WORKER, ExistingPeriodicWorkPolicy.REPLACE, request)
@@ -83,7 +79,7 @@ class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, 
         return Result.failure()
     }
 
-    fun sendBroadcastIntent(success: Boolean) {
+    private fun sendBroadcastIntent(success: Boolean) {
         val finishedIntent = Intent(BROADCAST_UPDATE_FINISHED)
         finishedIntent.putExtra(EXTRA_UPDATE_SUCCESS, success)
         applicationContext.sendOrderedBroadcast(finishedIntent, null)
