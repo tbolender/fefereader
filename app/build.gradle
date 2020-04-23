@@ -108,6 +108,8 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.5.1'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
 
+    debugImplementation 'com.balsikandar.android:crashreporter:1.1.0'
+
     kaptAndroidTest 'androidx.test.espresso:espresso-core:3.2.0'
     kaptTest 'junit:junit:4.12'
 }
