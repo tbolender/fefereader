@@ -1,6 +1,5 @@
 package de.timbolender.fefereader.service
 
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -60,7 +59,7 @@ class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, 
         }
     }
 
-    val repository: DataRepository = DataRepository(context.applicationContext as Application)
+    val repository: DataRepository = DataRepository(context.applicationContext)
 
     override fun doWork(): Result {
         try {
