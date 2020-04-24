@@ -12,6 +12,8 @@ class BootServiceStarter : BroadcastReceiver() {
         val action = intent.action!!
         if (action != "android.intent.action.BOOT_COMPLETED" && action != "android.intent.action.MY_PACKAGE_REPLACED")
             return
-        // Do nothing here, notification service setup is via application
+
+        val serviceIntent = Intent(context.applicationContext, NotificationService::class.java)
+        context.applicationContext.startService(serviceIntent)
     }
 }
