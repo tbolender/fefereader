@@ -18,7 +18,7 @@ import java.util.Locale;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.db.Post;
 import de.timbolender.fefereader.ui.helper.SilentReceiver;
@@ -69,7 +69,7 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
         final Intent intent = getIntent();
         String postId = intent.getStringExtra(INTENT_EXTRA_POST_ID);
 
-        vm = ViewModelProviders.of(this).get(DetailsViewModel.class);
+        vm = new ViewModelProvider(this).get(DetailsViewModel.class);
         postVm = vm.getPost(postId);
         postVm.observe(this, dbPost -> {
             PostViewModel post = toPostViewModel(dbPost);

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.work.WorkInfo;
@@ -42,7 +42,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
 
         // Prepare ui
         binding = DataBindingUtil.setContentView(this, R.layout.activity_post_list);
-        vm = ViewModelProviders.of(this).get(PostListViewModel.class);
+        vm = new ViewModelProvider(this).get(PostListViewModel.class);
 
         // Prepare list view
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);

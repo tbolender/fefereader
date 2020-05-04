@@ -8,7 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagedList;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.db.Post;
@@ -23,7 +23,7 @@ public class MainActivity extends PostListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        vm = ViewModelProviders.of(this).get(MainViewModel.class);
+        vm = new ViewModelProvider(this).get(MainViewModel.class);
         super.onCreate(savedInstanceState);
     }
 
