@@ -4,7 +4,6 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import de.timbolender.fefereader.db.DataRepository
 import de.timbolender.fefereader.util.PreferenceHelper
 
 class NotificationService : Service() {
@@ -15,22 +14,14 @@ class NotificationService : Service() {
         }
     }
 
-    lateinit var notificationCreator: NotificationReceiver
-
     override fun onCreate() {
         super.onCreate()
-
-        val repository = DataRepository(this)
-        notificationCreator = NotificationReceiver(repository)
-        notificationCreator.register(this)
 
         val preferenceHelper = PreferenceHelper(this)
         UpdateWorker.configureAutomaticUpdates(this, preferenceHelper)
     }
 
     override fun onDestroy() {
-        notificationCreator.unregister(this)
-
         super.onDestroy()
     }
 
