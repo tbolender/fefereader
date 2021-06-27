@@ -16,8 +16,8 @@ android {
         applicationId "de.timbolender.fefereader"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
@@ -29,7 +29,7 @@ android {
     }
 
     signingConfigs {
-        defaultConfig {
+        create("release") {
             storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
 
@@ -39,13 +39,13 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.defaultConfig
+            signingConfig signingConfigs.getByName("release")
         }
 
-        debug {
+        getByName("debug") {
             applicationIdSuffix ".debug"
         }
     }
