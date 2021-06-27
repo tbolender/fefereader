@@ -5,16 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import de.timbolender.fefereader.db.migration.ManualToRoomMigration
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
-@Database(version = 1, entities = [Post::class])
+@Database(version = 2, entities = [Post::class])
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
+        const val DATABASE_NAME = "FefesBlogDatabase.db"
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -28,22 +28,16 @@ abstract class AppDatabase : RoomDatabase() {
             return INSTANCE!!
         }
 
-        private fun buildDatabase(context: Context): AppDatabase {
-            return Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "fefe-news")
-                .addCallback(object: Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                ManualToRoomMigration().migrate(database)
+            }
+        }
 
-                        // Migrate from old manual database version
-                        CoroutineScope(Dispatchers.IO).launch {
-                            val postDao = getInstance(context).postDao()
-                            val initialMigration = ManualToRoomMigration(context, postDao)
-                            if(initialMigration.isMigrationNecessary) {
-                                initialMigration.migrate()
-                            }
-                        }
-                    }
-                })
+
+        private fun buildDatabase(context: Context): AppDatabase {
+            return Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, DATABASE_NAME)
+                .addMigrations(MIGRATION_1_2)
                 .build()
         }
     }

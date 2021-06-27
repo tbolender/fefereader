@@ -1,20 +1,15 @@
 package de.timbolender.fefereader.db.migration
 
-import android.content.Context
+import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import de.timbolender.fefereader.db.Post
-import de.timbolender.fefereader.db.PostDao
+import androidx.sqlite.db.SupportSQLiteDatabase
 import java.util.*
 
-class ManualToRoomMigration(val context: Context, val postDao: PostDao) {
+class ManualToRoomMigration() {
     companion object {
         private val TAG: String = ManualToRoomMigration::class.simpleName!!
-
-        const val DATABASE_VERSION = 1
-        const val DATABASE_NAME = "FefesBlogDatabase.db"
 
         private const val TABLE_NAME = "post"
         private const val _ID = "id"
@@ -26,40 +21,42 @@ class ManualToRoomMigration(val context: Context, val postDao: PostDao) {
         private const val COLUMN_NAME_DATE = "date"
     }
 
-    private val databaseFile
-        get() = context.getDatabasePath(DATABASE_NAME)
+    fun migrate(database: SupportSQLiteDatabase) {
+        Log.d(TAG, "Prepare migration")
+        prepareMigration(database)
 
-    // Test if old database exists
-    val isMigrationNecessary: Boolean
-        get() = databaseFile.exists()
+        Log.d(TAG, "Migrating posts")
+        migratePosts(database)
 
-    fun migrate() {
-        Log.d(TAG, "Migrating manual database to Room")
-        val oldDatabase = openOldDatabase()
-        val cursor = oldDatabase.query(TABLE_NAME, null, null, null, null, null, null)
-
-        // Migrate all post we can find
-        while(cursor.moveToNext()) {
-            val post = getCurrentPost(cursor)
-            Log.d(TAG, "Migrate post ${post.id}")
-            postDao.insertPosts(post)
-        }
-
-        cursor.close()
-        databaseFile.delete()
+        Log.d(TAG, "Finalizing")
+        finalizeMigration(database)
 
         Log.d(TAG, "Migration complete")
     }
 
-    private fun openOldDatabase(): SQLiteDatabase {
-        val sqliteHelper = object: SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
-            override fun onCreate(p0: SQLiteDatabase?) {}
-            override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {}
-        }
-        return sqliteHelper.readableDatabase!!
+    private fun prepareMigration(database: SupportSQLiteDatabase) {
+        database.execSQL("CREATE TABLE IF NOT EXISTS `post_room` " +
+                "(`id` TEXT NOT NULL, `timestampId` INTEGER NOT NULL, `isRead` INTEGER NOT NULL, `isUpdated` INTEGER NOT NULL," +
+                "`isBookmarked` INTEGER NOT NULL, `contents` TEXT NOT NULL, `date` INTEGER NOT NULL, PRIMARY KEY(`id`))")
+        database.execSQL("DELETE FROM `post_room`")
+        database.execSQL("CREATE  INDEX `index_Post_id` ON `post_room` (`id`)")
+        database.execSQL("CREATE  INDEX `index_Post_timestampId` ON `post_room` (`timestampId`)")
     }
 
-    private fun getCurrentPost(cursor: Cursor): Post {
+    private fun migratePosts(database: SupportSQLiteDatabase) {
+        val cursor = database.query("select * from `${TABLE_NAME}`")
+
+        // Migrate all post we can find
+        while(cursor.moveToNext()) {
+            val postValues = loadPost(cursor)
+            Log.d(TAG, "Migrate post ${postValues.getAsString("id")}")
+            database.insert("post_room", SQLiteDatabase.CONFLICT_ABORT, postValues)
+        }
+
+        cursor.close()
+    }
+
+    private fun loadPost(cursor: Cursor): ContentValues {
         val id = cursor.getString(cursor.getColumnIndexOrThrow(_ID))
         val timestampId = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_TIMESTAMP_ID)).toLong()
         val isRead = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NAME_IS_READ)) == 1
@@ -67,6 +64,22 @@ class ManualToRoomMigration(val context: Context, val postDao: PostDao) {
         val isBookmarked = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_NAME_IS_BOOKMARKED)) == 1
         val contents = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_CONTENTS))
         val date = Date(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_DATE)).toLong())
-        return Post(id, timestampId, isRead, isUpdated, isBookmarked, contents, date)
+
+        val contentValues = ContentValues()
+        contentValues.put("id", id)
+        contentValues.put("timestampId", timestampId)
+        contentValues.put("isRead", isRead)
+        contentValues.put("isUpdated", isUpdated)
+        contentValues.put("isBookmarked", isBookmarked)
+        contentValues.put("contents", contents)
+        contentValues.put("date", date.time)
+        return contentValues
+    }
+
+
+    private fun finalizeMigration(database: SupportSQLiteDatabase) {
+        database.execSQL("alter table post rename to post_old")
+        database.execSQL("alter table post_room rename to Post")
+        database.execSQL("drop table post_old")
     }
 }

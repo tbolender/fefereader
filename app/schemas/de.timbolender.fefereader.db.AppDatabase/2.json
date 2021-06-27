@@ -1,7 +1,7 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
+    "version": 2,
     "identityHash": "e705eb36342c37f5cd267384bcca90c2",
     "entities": [
       {
@@ -64,7 +64,7 @@
             "columnNames": [
               "id"
             ],
-            "createSql": "CREATE  INDEX `index_Post_id` ON `${TABLE_NAME}` (`id`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Post_id` ON `${TABLE_NAME}` (`id`)"
           },
           {
             "name": "index_Post_timestampId",
@@ -72,15 +72,16 @@
             "columnNames": [
               "timestampId"
             ],
-            "createSql": "CREATE  INDEX `index_Post_timestampId` ON `${TABLE_NAME}` (`timestampId`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Post_timestampId` ON `${TABLE_NAME}` (`timestampId`)"
           }
         ],
         "foreignKeys": []
       }
     ],
+    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e705eb36342c37f5cd267384bcca90c2\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e705eb36342c37f5cd267384bcca90c2')"
     ]
   }
 }
