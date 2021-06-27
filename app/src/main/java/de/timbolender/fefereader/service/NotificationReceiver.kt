@@ -17,8 +17,7 @@ import kotlinx.coroutines.launch
 /**
  * Catches the successful update broadcast and creates a matching notification.
  */
-class NotificationReceiver(val repository: DataRepository,
-                           val updateSuccessExtra: String = UpdateWorker.EXTRA_UPDATE_SUCCESS,
+class NotificationReceiver(val updateSuccessExtra: String = UpdateWorker.EXTRA_UPDATE_SUCCESS,
                            val channelId: String = CHANNEL_ID): BroadcastReceiver() {
     companion object {
         val TAG: String = NotificationReceiver::class.simpleName!!
@@ -66,6 +65,7 @@ class NotificationReceiver(val repository: DataRepository,
 
             // Only show notification if there is something to report
             val success = intent.getBooleanExtra(updateSuccessExtra, false)
+            val repository = DataRepository(context)
             val builder = NotificationBuilder(context, repository)
 
             if (success && builder.isNotificationNecessary()) {
