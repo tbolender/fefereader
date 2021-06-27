@@ -12,8 +12,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.paging.PagedList;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.db.Post;
-import de.timbolender.fefereader.service.NotificationService;
 import de.timbolender.fefereader.service.UpdateWorker;
+import de.timbolender.fefereader.util.PreferenceHelper;
 import de.timbolender.fefereader.viewmodel.MainViewModel;
 
 /**
@@ -27,7 +27,8 @@ public class MainActivity extends PostListActivity {
         vm = new ViewModelProvider(this).get(MainViewModel.class);
         super.onCreate(savedInstanceState);
 
-        NotificationService.Companion.startService(this);
+        PreferenceHelper preferenceHelper = new PreferenceHelper(this);
+        UpdateWorker.Companion.configureAutomaticUpdates(this, preferenceHelper);
     }
 
     //
