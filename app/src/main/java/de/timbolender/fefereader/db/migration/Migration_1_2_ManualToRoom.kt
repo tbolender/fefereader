@@ -23,16 +23,16 @@ class Migration_1_2_ManualToRoom : Migration(1, 2) {
     }
 
     override fun migrate(database: SupportSQLiteDatabase) {
-        Log.d(TAG, "Prepare migration")
+        Log.i(TAG, "Prepare migration 1 to 2")
         prepareMigration(database)
 
-        Log.d(TAG, "Migrating posts")
+        Log.i(TAG, "Migrating posts")
         migratePosts(database)
 
-        Log.d(TAG, "Finalizing")
+        Log.i(TAG, "Finalizing")
         finalizeMigration(database)
 
-        Log.d(TAG, "Migration complete")
+        Log.i(TAG, "Migration complete")
     }
 
     private fun prepareMigration(database: SupportSQLiteDatabase) {
