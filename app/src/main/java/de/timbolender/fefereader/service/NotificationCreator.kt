@@ -17,10 +17,10 @@ import kotlinx.coroutines.launch
 /**
  * Catches the successful update broadcast and creates a matching notification.
  */
-class NotificationReceiver(val updateSuccessExtra: String = UpdateWorker.EXTRA_UPDATE_SUCCESS,
-                           val channelId: String = CHANNEL_ID): BroadcastReceiver() {
+class NotificationCreator(val updateSuccessExtra: String = UpdateWorker.EXTRA_UPDATE_SUCCESS,
+                          val channelId: String = CHANNEL_ID): BroadcastReceiver() {
     companion object {
-        val TAG: String = NotificationReceiver::class.simpleName!!
+        val TAG: String = NotificationCreator::class.simpleName!!
         const val NOTIFICATION_ID = 42 // What else?
 
         const val CHANNEL_ID = "default"

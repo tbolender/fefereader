@@ -62,7 +62,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".service.NotificationReceiver">
+        <receiver android:name=".service.NotificationCreator">
             <intent-filter>
                 <action android:name="de.timbolender.fefereader.service.action.UPDATE_FINISHED" />
             </intent-filter>
