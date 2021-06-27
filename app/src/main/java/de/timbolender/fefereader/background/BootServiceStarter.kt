@@ -14,7 +14,8 @@ class BootServiceStarter : BroadcastReceiver() {
         if (action != "android.intent.action.BOOT_COMPLETED" && action != "android.intent.action.MY_PACKAGE_REPLACED")
             return
 
-        val preferenceHelper = PreferenceHelper(context)
-        UpdateWorker.configureAutomaticUpdates(context, preferenceHelper)
+        val appContext = context.applicationContext
+        val preferenceHelper = PreferenceHelper(appContext)
+        UpdateWorker.configureAutomaticUpdates(appContext, preferenceHelper)
     }
 }
