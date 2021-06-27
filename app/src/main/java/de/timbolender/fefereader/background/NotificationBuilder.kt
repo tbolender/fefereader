@@ -1,4 +1,4 @@
-package de.timbolender.fefereader.service
+package de.timbolender.fefereader.background
 
 import android.app.Notification
 import android.app.PendingIntent

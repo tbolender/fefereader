@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
-import de.timbolender.fefereader.service.UpdateWorker
+import de.timbolender.fefereader.background.UpdateWorker
 
 class NotificationSilencer : BroadcastReceiver() {
     companion object {

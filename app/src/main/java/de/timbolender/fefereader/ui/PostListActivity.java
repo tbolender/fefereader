@@ -19,7 +19,7 @@ import androidx.work.WorkManager;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.databinding.ActivityPostListBinding;
 import de.timbolender.fefereader.db.Post;
-import de.timbolender.fefereader.service.UpdateWorker;
+import de.timbolender.fefereader.background.UpdateWorker;
 import de.timbolender.fefereader.ui.helper.NotificationSilencer;
 import de.timbolender.fefereader.viewmodel.PostListViewModel;
 

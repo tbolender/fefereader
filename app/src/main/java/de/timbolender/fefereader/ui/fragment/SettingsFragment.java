@@ -5,7 +5,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
 import de.timbolender.fefereader.R;
-import de.timbolender.fefereader.service.UpdateWorker;
+import de.timbolender.fefereader.background.UpdateWorker;
 import de.timbolender.fefereader.util.PreferenceHelper;
 
 /**

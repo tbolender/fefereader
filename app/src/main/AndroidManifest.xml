@@ -53,7 +53,7 @@
             android:label="@string/activity_about_title"
             android:parentActivityName=".ui.MainActivity"/>
 
-        <receiver android:name=".service.BootServiceStarter">
+        <receiver android:name=".background.BootServiceStarter">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -63,7 +63,7 @@
         </receiver>
 
         <receiver
-            android:name=".service.NotificationCreator"
+            android:name=".background.NotificationCreator"
             android:exported="false">
             <intent-filter>
                 <action android:name="de.timbolender.fefereader.service.action.UPDATE_FINISHED" />

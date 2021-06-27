@@ -1,4 +1,4 @@
-package de.timbolender.fefereader.service
+package de.timbolender.fefereader.background
 
 import android.content.BroadcastReceiver
 import android.content.Context
