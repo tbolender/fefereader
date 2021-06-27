@@ -27,8 +27,8 @@ public class MainActivity extends PostListActivity {
         vm = new ViewModelProvider(this).get(MainViewModel.class);
         super.onCreate(savedInstanceState);
 
-        PreferenceHelper preferenceHelper = new PreferenceHelper(getApplicationContext());
-        UpdateWorker.Companion.configureAutomaticUpdates(getApplicationContext(), preferenceHelper);
+        PreferenceHelper preferenceHelper = new PreferenceHelper(this);
+        UpdateWorker.Companion.configureAutomaticUpdates(this, preferenceHelper);
     }
 
     //
