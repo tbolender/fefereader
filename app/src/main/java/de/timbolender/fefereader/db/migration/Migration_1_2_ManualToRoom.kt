@@ -4,12 +4,13 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import java.util.*
 
-class ManualToRoomMigration() {
+class Migration_1_2_ManualToRoom : Migration(1, 2) {
     companion object {
-        private val TAG: String = ManualToRoomMigration::class.simpleName!!
+        private val TAG: String = Migration_1_2_ManualToRoom::class.simpleName!!
 
         private const val TABLE_NAME = "post"
         private const val _ID = "id"
@@ -21,7 +22,7 @@ class ManualToRoomMigration() {
         private const val COLUMN_NAME_DATE = "date"
     }
 
-    fun migrate(database: SupportSQLiteDatabase) {
+    override fun migrate(database: SupportSQLiteDatabase) {
         Log.d(TAG, "Prepare migration")
         prepareMigration(database)
 

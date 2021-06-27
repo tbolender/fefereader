@@ -5,9 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-import de.timbolender.fefereader.db.migration.ManualToRoomMigration
+import de.timbolender.fefereader.db.migration.Migration_1_2_ManualToRoom
 
 @Database(version = 2, entities = [Post::class])
 @TypeConverters(Converters::class)
@@ -28,16 +26,9 @@ abstract class AppDatabase : RoomDatabase() {
             return INSTANCE!!
         }
 
-        val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                ManualToRoomMigration().migrate(database)
-            }
-        }
-
-
         private fun buildDatabase(context: Context): AppDatabase {
             return Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, DATABASE_NAME)
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(Migration_1_2_ManualToRoom())
                 .build()
         }
     }
