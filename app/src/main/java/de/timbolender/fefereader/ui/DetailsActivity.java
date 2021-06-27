@@ -21,7 +21,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.db.Post;
-import de.timbolender.fefereader.ui.helper.SilentReceiver;
+import de.timbolender.fefereader.ui.helper.NotificationSilencer;
 import de.timbolender.fefereader.ui.view.PostView;
 import de.timbolender.fefereader.util.PreferenceHelper;
 import de.timbolender.fefereader.viewmodel.DetailsViewModel;
@@ -41,7 +41,7 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
     LiveData<Post> postVm;
     PostView postView;
 
-    SilentReceiver updateReceiver;
+    NotificationSilencer updateReceiver;
     PreferenceHelper preferenceHelper;
 
     /**
@@ -88,7 +88,7 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
         });
 
         // Create receiver to consume update notifications
-        updateReceiver = new SilentReceiver();
+        updateReceiver = new NotificationSilencer();
     }
 
     @Override

@@ -7,9 +7,9 @@ import android.content.IntentFilter
 import android.util.Log
 import de.timbolender.fefereader.service.UpdateWorker
 
-class SilentReceiver : BroadcastReceiver() {
+class NotificationSilencer : BroadcastReceiver() {
     companion object {
-        val TAG: String = SilentReceiver::class.simpleName!!
+        val TAG: String = NotificationSilencer::class.simpleName!!
     }
 
     /**

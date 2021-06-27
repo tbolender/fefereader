@@ -20,7 +20,7 @@ import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.databinding.ActivityPostListBinding;
 import de.timbolender.fefereader.db.Post;
 import de.timbolender.fefereader.service.UpdateWorker;
-import de.timbolender.fefereader.ui.helper.SilentReceiver;
+import de.timbolender.fefereader.ui.helper.NotificationSilencer;
 import de.timbolender.fefereader.viewmodel.PostListViewModel;
 
 /**
@@ -34,7 +34,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
 
     boolean shouldPerformUpdate;
 
-    SilentReceiver updateReceiver;
+    NotificationSilencer updateReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
         }
 
         // Create receiver to consume update notifications
-        updateReceiver = new SilentReceiver();
+        updateReceiver = new NotificationSilencer();
 
         // Create receiver for manual updates
         WorkManager.getInstance(this)
