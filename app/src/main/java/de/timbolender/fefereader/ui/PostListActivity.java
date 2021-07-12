@@ -83,6 +83,11 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
                     Toast.makeText(this, "Update failed", Toast.LENGTH_LONG).show();
                 }
                 binding.refreshLayout.setRefreshing(false);
+
+                // Scroll to top to show latest results
+                if(state == WorkInfo.State.SUCCEEDED) {
+                    binding.postList.scrollToPosition(0);
+                }
             });
 
         // Trigger update if desired
