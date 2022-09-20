@@ -10,6 +10,8 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
+    namespace 'de.timbolender.fefereader'
+
     compileSdkVersion 30
 
     defaultConfig {
