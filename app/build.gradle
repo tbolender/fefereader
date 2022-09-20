@@ -12,12 +12,12 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 android {
     namespace 'de.timbolender.fefereader'
 
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "de.timbolender.fefereader"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 6
         versionName "1.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
