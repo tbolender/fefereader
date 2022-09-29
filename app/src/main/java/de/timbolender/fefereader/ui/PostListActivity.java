@@ -64,7 +64,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
 
         // Create receiver for manual updates
         WorkManager.getInstance(this)
-            .getWorkInfosForUniqueWorkLiveData(UpdateWorker.Companion.getMANUAL_UPDATE_WORKER())
+            .getWorkInfosForUniqueWorkLiveData(UpdateWorker.MANUAL_UPDATE_WORKER)
             .observe(this, workInfo -> {
                 // Extract state
                 if(workInfo.isEmpty()) return;

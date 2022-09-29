@@ -72,6 +72,12 @@
         <item quantity="other">%d Updates</item>
     </plurals>
 
+    <!-- Notification -->
+    <string name="update_notification_channel_name">Aktualisierung</string>
+    <string name="update_notification_channel_description">Notwendig um die letzten Posts im Hintergrund abzufragen</string>
+    <string name="update_notification_title">Hole die aktuellsten Posts…</string>
+    <string name="update_notification_text">Dies kann einen Moment dauern</string>
+
     <!-- Preferences -->
     <string name="pref_automatic_updates">Automatische Updates</string>
 

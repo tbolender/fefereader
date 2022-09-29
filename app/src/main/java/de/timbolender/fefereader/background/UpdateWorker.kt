@@ -1,10 +1,16 @@
 package de.timbolender.fefereader.background
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.work.*
 import de.timbolender.fefereader.BuildConfig
+import de.timbolender.fefereader.R
 import de.timbolender.fefereader.db.DataRepository
 import de.timbolender.fefereader.network.Updater
 import de.timbolender.fefereader.util.PreferenceHelper
@@ -25,8 +31,11 @@ class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, 
         const val BROADCAST_PRIORITY_UI = 10
         const val BROADCAST_PRIORITY_SERVICE = 0
 
-        val MANUAL_UPDATE_WORKER = "update-manual"
-        val AUTOMATIC_UPDATE_WORKER = "update-automatic"
+        const val MANUAL_UPDATE_WORKER = "update-manual"
+        const val AUTOMATIC_UPDATE_WORKER = "update-automatic"
+
+        const val NOTIFICATION_CHANNEL_ID = "update-channel"
+        const val NOTIFICATION_ID = 37
 
         /**
          * Trigger one-time update in background service.
@@ -58,14 +67,33 @@ class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, 
                         .cancelUniqueWork(AUTOMATIC_UPDATE_WORKER)
             }
         }
+
+        private fun createNotificationChannel(context: Context) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Log.i(NotificationCreator.TAG, "Create update notification channel")
+                val name: String = context.getString(R.string.update_notification_channel_name)
+                val descriptionText: String = context.getString(R.string.update_notification_channel_description)
+                val importance = NotificationManager.IMPORTANCE_MIN
+                val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance).apply {
+                    description = descriptionText
+                }
+                // Register the channel with the system
+                val notificationManager: NotificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.createNotificationChannel(channel)
+            }
+        }
     }
 
     val repository: DataRepository = DataRepository(context.applicationContext)
 
     override fun doWork(): Result {
         try {
+            createNotification()
+
             Updater(repository).update()
             Log.d(TAG, "Update finished")
+
             sendBroadcastIntent(true)
             return Result.success()
         } catch (e: ParseException) {
@@ -75,8 +103,27 @@ class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, 
             return Result.retry()
         } finally {
             sendBroadcastIntent(false)
+            hideNotification()
         }
         return Result.failure()
+    }
+
+    private fun createNotification() {
+        createNotificationChannel(applicationContext)
+
+        Log.d(NotificationCreator.TAG, "Showing notification")
+        val builder = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(applicationContext.getString(R.string.update_notification_title))
+            .setContentText(applicationContext.getString(R.string.update_notification_text))
+
+        with(NotificationManagerCompat.from(applicationContext)) {
+            notify(NOTIFICATION_ID, builder.build())
+        }
+    }
+
+    private fun hideNotification() {
+        NotificationManagerCompat.from(applicationContext).cancel(NOTIFICATION_ID)
     }
 
     private fun sendBroadcastIntent(success: Boolean) {
