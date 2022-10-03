@@ -38,6 +38,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/about_author_value"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:text="@string/about_author_contact"/>
+
+        <TextView
+            style="@style/AboutHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_content_head"/>
+        <TextView
+            style="@style/AboutTextBig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_content_value"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:text="@string/about_content_contact"/>
 
         <TextView
             style="@style/AboutHeader"

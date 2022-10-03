@@ -28,10 +28,15 @@
     <!-- About activity -->
     <string name="about_author_head">Entwicklung</string>
     <string name="about_author_value">Tim Bolender</string>
+    <string name="about_author_contact">Kontakt: support@timbolender.de</string>
+
+    <string name="about_content_head">Verantwortlich für Inhalte</string>
+    <string name="about_content_value">Felix von Leitner (Fefe)</string>
+    <string name="about_content_contact">Kontakt: felix-bloginput@fefe.de\nWebseite: https://blog.fefe.de/impressum.html</string>
 
     <string name="about_general_head">Allgemein</string>
     <string name="about_general_details">
-        Dies ist eine inoffizielle App. Alle angezeigten Blog-Posts stammen von Fefe\'s Blog, ich habe folglich keinerlei Kontrolle
+        Dies ist eine inoffizielle App. Alle angezeigten Blog-Posts stammen von Fefes Blog, ich habe folglich keinerlei Kontrolle
         über Inhalt und Ansichten.\n\nProudly made with Java, SQLite, Android, and libraries.
     </string>
 
