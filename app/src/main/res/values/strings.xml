@@ -15,7 +15,8 @@
     <string name="menu_unread_filter">Ungelesene anzeigen</string>
     <string name="menu_feedback_mail">Feedback geben</string>
     <string name="menu_settings">Einstellungen</string>
-    <string name="menu_about">Infos</string>
+    <string name="menu_homepage">Webseite</string>
+    <string name="menu_contact">Info &amp; Kontakt</string>
 
     <string name="menu_bookmark_create">Merken</string>
     <string name="menu_bookmark_delete">Nicht mehr Merken</string>
@@ -28,7 +29,7 @@
     <!-- About activity -->
     <string name="about_author_head">Entwicklung</string>
     <string name="about_author_value">Tim Bolender</string>
-    <string name="about_author_contact">Kontakt: support@timbolender.de</string>
+    <string name="about_author_contact">Kontakt: support@timbolender.de\nWebseite: https://github.com/tbolender/fefereader</string>
 
     <string name="about_content_head">Verantwortlich für Inhalte</string>
     <string name="about_content_value">Felix von Leitner (Fefe)</string>

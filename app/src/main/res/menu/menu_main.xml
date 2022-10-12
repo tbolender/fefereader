@@ -36,7 +36,12 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/menu_about"
-        android:title="@string/menu_about"/>
+        android:id="@+id/menu_homepage"
+        android:title="@string/menu_homepage"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_contact"
+        android:title="@string/menu_contact"/>
 
 </menu>

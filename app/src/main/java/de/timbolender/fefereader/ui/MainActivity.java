@@ -88,7 +88,11 @@ public class MainActivity extends PostListActivity {
             onSettingsClick();
             return true;
         }
-        if(itemId == R.id.menu_about) {
+        if(itemId == R.id.menu_homepage) {
+            onHomepageClick();
+            return true;
+        }
+        if(itemId == R.id.menu_contact) {
             onAboutClick();
             return true;
         }
@@ -117,6 +121,13 @@ public class MainActivity extends PostListActivity {
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@timbolender.de"});
         intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback Fefe News");
         startActivity(intent);
+    }
+
+    private void onHomepageClick() {
+        String homepage = "https://github.com/tbolender/fefereader";
+        Intent openIntent = new Intent(Intent.ACTION_VIEW);
+        openIntent.setData(Uri.parse(homepage));
+        startActivity(openIntent);
     }
 
     private void onAboutClick() {
