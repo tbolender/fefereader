@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
+import androidx.core.content.ContextCompat
 import de.timbolender.fefereader.background.UpdateWorker
 
 class NotificationSilencer : BroadcastReceiver() {
@@ -19,7 +20,8 @@ class NotificationSilencer : BroadcastReceiver() {
     fun register(context: Context) {
         val intentFilter = IntentFilter(UpdateWorker.BROADCAST_UPDATE_FINISHED)
         intentFilter.priority = UpdateWorker.BROADCAST_PRIORITY_UI
-        context.applicationContext.registerReceiver(this, intentFilter)
+        ContextCompat.registerReceiver(context.applicationContext, this, intentFilter,
+            ContextCompat.RECEIVER_NOT_EXPORTED)
     }
 
     /**
