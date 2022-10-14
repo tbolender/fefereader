@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit
  * Worker fetching the latest post from Fefe and store it in the database.
  * Triggers a retry on connectivity issues. Issues a broadcast intent on finish.
  */
-class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, params) {
+class UpdateWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
     companion object {
         private var TAG: String = UpdateWorker::class.simpleName!!
 
@@ -43,9 +43,9 @@ class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, 
          */
         fun startManualUpdate(context: Context) {
             val request = OneTimeWorkRequestBuilder<UpdateWorker>()
-                    .build()
+                .build()
             WorkManager.getInstance(context)
-                    .enqueueUniqueWork(MANUAL_UPDATE_WORKER, ExistingWorkPolicy.KEEP, request)
+                .enqueueUniqueWork(MANUAL_UPDATE_WORKER, ExistingWorkPolicy.KEEP, request)
         }
 
         /**
@@ -53,18 +53,17 @@ class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, 
          * @param context Context to use.
          */
         fun configureAutomaticUpdates(context: Context, preferenceHelper: PreferenceHelper) {
-            if(preferenceHelper.isUpdatesEnabled) {
+            if (preferenceHelper.isUpdatesEnabled) {
                 Log.d(TAG, "Enabling automatic updates")
                 val interval = preferenceHelper.updateInterval
                 val request = PeriodicWorkRequestBuilder<UpdateWorker>(interval, TimeUnit.MILLISECONDS)
-                        .build()
+                    .build()
                 WorkManager.getInstance(context)
-                        .enqueueUniquePeriodicWork(AUTOMATIC_UPDATE_WORKER, ExistingPeriodicWorkPolicy.REPLACE, request)
-            }
-            else {
+                    .enqueueUniquePeriodicWork(AUTOMATIC_UPDATE_WORKER, ExistingPeriodicWorkPolicy.REPLACE, request)
+            } else {
                 Log.d(TAG, "Disabling automatic updates")
                 WorkManager.getInstance(context)
-                        .cancelUniqueWork(AUTOMATIC_UPDATE_WORKER)
+                    .cancelUniqueWork(AUTOMATIC_UPDATE_WORKER)
             }
         }
 
