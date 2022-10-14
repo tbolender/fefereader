@@ -15,7 +15,7 @@ object BindingConverters {
     @JvmStatic
     @BindingAdapter("android:html_text")
     fun setHtmlText(view: TextView, value: String?) {
-        view.text = Html.fromHtml(if (value != null) value else "").toString()
+        view.text = Html.fromHtml(value ?: "").toString()
     }
 
     @JvmStatic

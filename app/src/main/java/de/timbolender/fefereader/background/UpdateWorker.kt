@@ -129,7 +129,7 @@ class UpdateWorker(context: Context, params: WorkerParameters): Worker(context, 
     private fun sendBroadcastIntent(success: Boolean) {
         val finishedIntent = Intent(BROADCAST_UPDATE_FINISHED)
         finishedIntent.putExtra(EXTRA_UPDATE_SUCCESS, success)
-        finishedIntent.setPackage(BuildConfig.APPLICATION_ID);
+        finishedIntent.setPackage(BuildConfig.APPLICATION_ID)
         applicationContext.sendOrderedBroadcast(finishedIntent, null)
     }
 }

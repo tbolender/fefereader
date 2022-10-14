@@ -28,7 +28,13 @@ class Updater(private val repository: DataRepository) {
             val existingPost = repository.getPostSync(post.id)
             if(existingPost == null) {
                 Log.d(TAG, "Inserted new post ${post.id}")
-                val dbPost = Post(post.id, post.timestampId, false, false, false, post.contents, Date(post.date))
+                val dbPost = Post(post.id, post.timestampId,
+                    isRead = false,
+                    isUpdated = false,
+                    isBookmarked = false,
+                    contents = post.contents,
+                    date = Date(post.date)
+                )
                 repository.createOrUpdatePostSync(dbPost)
             }
             else if(existingPost.contents != post.contents) {
