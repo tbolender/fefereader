@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import de.timbolender.fefereader.R
 import de.timbolender.fefereader.db.DataRepository
@@ -39,8 +40,11 @@ class NotificationBuilder(private val context: Context, private val repository: 
     suspend fun createNotification(channelId: String): Notification {
         val message = createNotificationMessage()
         val startIntent = Intent(context, MainActivity::class.java)
-        val startPendingIntent = PendingIntent.getActivity(
-                context, 0, startIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        var flags = PendingIntent.FLAG_UPDATE_CURRENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            flags = PendingIntent.FLAG_IMMUTABLE or flags
+        }
+        val startPendingIntent = PendingIntent.getActivity(context, 0, startIntent, flags)
 
         return NotificationCompat.Builder(context, channelId)
             .setDefaults(Notification.DEFAULT_VIBRATE or Notification.DEFAULT_SOUND)
