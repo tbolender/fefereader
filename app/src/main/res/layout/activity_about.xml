@@ -84,6 +84,16 @@
             style="@style/AboutHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/about_okhttp_head"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_okhttp_details"/>
+
+        <TextView
+            style="@style/AboutHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/about_android_support_head"/>
         <TextView
             android:layout_width="match_parent"
