@@ -3,12 +3,12 @@ package de.timbolender.fefereader.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.preference.PreferenceManager;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.preference.PreferenceManager;
 import de.timbolender.fefereader.R;
 
 /**
