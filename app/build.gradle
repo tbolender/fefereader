@@ -77,7 +77,6 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation("androidx.core:core:$core_version")
     implementation("androidx.core:core-ktx:$core_version")
 
     implementation 'androidx.appcompat:appcompat:1.5.1'

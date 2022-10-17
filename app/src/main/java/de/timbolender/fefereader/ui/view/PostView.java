@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 
 import java.util.Objects;
 
-import androidx.annotation.RequiresApi;
 import de.timbolender.fefereader.R;
 import de.timbolender.fefereader.viewmodel.PostViewModel;
 
@@ -54,7 +53,6 @@ public class PostView extends LinearLayout {
         view.setBackgroundColor(Color.TRANSPARENT);
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             view.setWebViewClient(new LinkClickInterceptor() {
-                @SuppressWarnings("deprecation")
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     handleLink(url);
@@ -64,7 +62,6 @@ public class PostView extends LinearLayout {
         }
         else {
             view.setWebViewClient(new LinkClickInterceptor() {
-                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                     handleLink(request.getUrl().toString());
