@@ -1,27 +1,30 @@
 package de.timbolender.fefereader.ui.fragment
 
 import android.os.Bundle
-import android.preference.Preference
-import android.preference.PreferenceFragment
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import de.timbolender.fefereader.R
 import de.timbolender.fefereader.background.UpdateWorker.Companion.configureAutomaticUpdates
-import de.timbolender.fefereader.ui.fragment.SettingsFragment
 import de.timbolender.fefereader.util.PreferenceHelper
 
 /**
  * Displays all settings of the app.
  */
-class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceChangeListener {
-    var automaticUpdatesKey: String? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
+    companion object {
+        val TAG = SettingsFragment::class.simpleName!!
+    }
 
+    var automaticUpdatesKey: String? = null
+
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         // Load preferences from file
         addPreferencesFromResource(R.xml.preferences)
 
         // Register for changes
         automaticUpdatesKey = getString(R.string.pref_updates_enabled_key)
-        findPreference(automaticUpdatesKey).onPreferenceChangeListener = this
+        val preference : Preference? = findPreference(automaticUpdatesKey!!)
+        preference?.onPreferenceChangeListener = this
     }
 
     override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
@@ -36,10 +39,6 @@ class SettingsFragment : PreferenceFragment(), Preference.OnPreferenceChangeList
 
     private fun onAutomaticUpdatesToggle() {
         val preferenceHelper = PreferenceHelper(activity)
-        configureAutomaticUpdates(activity, preferenceHelper)
-    }
-
-    companion object {
-        val TAG = SettingsFragment::class.java.simpleName
+        configureAutomaticUpdates(requireActivity(), preferenceHelper)
     }
 }
