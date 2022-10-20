@@ -17,9 +17,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 import de.timbolender.fefereader.R;
+import de.timbolender.fefereader.background.UpdateWorker;
 import de.timbolender.fefereader.databinding.ActivityPostListBinding;
 import de.timbolender.fefereader.db.Post;
-import de.timbolender.fefereader.background.UpdateWorker;
 import de.timbolender.fefereader.ui.helper.NotificationSilencer;
 import de.timbolender.fefereader.viewmodel.PostListViewModel;
 
@@ -33,6 +33,7 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
     PostListViewModel vm;
 
     boolean shouldPerformUpdate;
+    boolean shouldScrollToTop;
 
     NotificationSilencer updateReceiver;
 
@@ -50,7 +51,16 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
 
         // Fill content
         PostPagedAdapter postAdapter = new PostPagedAdapter(this);
-        getPostPagedList().observe(this, postAdapter::submitList);
+        getPostPagedList().observe(this, list -> {
+            Log.d(TAG, "Post list updated");
+
+            postAdapter.submitList(list);
+
+            if(shouldScrollToTop) {
+                shouldScrollToTop = false;
+                binding.postList.scrollToPosition(0);
+            }
+        });
         binding.postList.setAdapter(postAdapter);
 
         // Handle swipe update gesture
@@ -92,6 +102,15 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
 
         // Trigger update if desired
         shouldPerformUpdate = isUpdateOnStartEnabled();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        // Since we prohibit more than one instances of our activity (launchmode),
+        // we have to catch a resume from notification here to scroll to the top
+        shouldScrollToTop = true;
     }
 
     @Override
