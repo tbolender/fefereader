@@ -16,7 +16,7 @@ import de.timbolender.fefereader.R;
  */
 public class PreferenceHelper {
     private static final Map<String, Integer> AVAILABLE_STYLES = Collections.unmodifiableMap(new HashMap<String, Integer>() {{
-        put("post_style_none", R.string.post_style_none);
+        put("post_style_none", R.string.post_style_base);
         put("post_style_default", R.string.post_style_default);
     }});
 
@@ -31,8 +31,6 @@ public class PreferenceHelper {
 
     private final String PREF_POST_STYLE;
     private final String PREF_POST_STYLE_DEFAULT;
-
-    private final String NONE_POST_STYLE;
 
     private final Resources resources;
     private final SharedPreferences pref;
@@ -54,12 +52,6 @@ public class PreferenceHelper {
         PREF_INSPECT_URL_DEFAULT = resources.getBoolean(R.bool.pref_inspect_url_default);
         PREF_POST_STYLE = resources.getString(R.string.pref_post_style_key);
         PREF_POST_STYLE_DEFAULT = resources.getString(R.string.pref_post_style_default);
-
-        // Construct none style
-        int defaultMargin = resources.getDimensionPixelSize(R.dimen.post_view_margin);
-        //noinspection ResourceType
-        String linkColor = resources.getString(R.color.colorAccent).replace("#ff", "#");
-        NONE_POST_STYLE = resources.getString(R.string.post_style_none, defaultMargin, linkColor);
     }
 
     public SharedPreferences getSharedPreferences() {
@@ -96,6 +88,18 @@ public class PreferenceHelper {
         if(!chosenStyle.equals("post_style_none")) {
             styleContent = resources.getString(AVAILABLE_STYLES.get(chosenStyle));
         }
-        return NONE_POST_STYLE + styleContent;
+        return getBaseStyle() + styleContent;
+    }
+
+    private String getBaseStyle() {
+        // Construct none style
+        int defaultMargin = resources.getDimensionPixelSize(R.dimen.post_view_margin);
+        // TODO: Get proper color of the current theme
+        // TODO: Make background of quoting for default style
+        //noinspection ResourceType
+        String textColor = resources.getString(android.R.color.secondary_text_light).replace("#ff", "#");
+        //noinspection ResourceType
+        String linkColor = resources.getString(R.color.colorAccent).replace("#ff", "#");
+        return resources.getString(R.string.post_style_base, defaultMargin, textColor, linkColor);
     }
 }

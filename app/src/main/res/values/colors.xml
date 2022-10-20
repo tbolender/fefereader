@@ -5,4 +5,5 @@
     <color name="colorAccent">#ff6d00</color>
 
     <color name="primaryTextDark">#de000000</color>
+    <color name="secondaryText">#737373</color>
 </resources>

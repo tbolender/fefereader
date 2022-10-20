@@ -114,16 +114,17 @@
     -->
 
     <!-- No style removes just some annoying default styles; EVERY STYLE WILL ALSO BE PREPENDED WITH THIS! -->
-    <string name="post_style_none">
+    <string name="post_style_base">
         body {
             margin: %1$dpx;
             overflow-wrap: break-word;
             hyphens: auto;
             word-wrap: break-word;
+            color: %2$s;
         }
 
         a {
-            color: %2$s;
+            color: %3$s;
         }
 
         ul, ol {
