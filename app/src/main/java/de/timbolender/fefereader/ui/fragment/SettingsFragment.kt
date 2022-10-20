@@ -38,7 +38,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChan
     }
 
     private fun onAutomaticUpdatesToggle() {
-        val preferenceHelper = PreferenceHelper(activity)
+        val preferenceHelper = PreferenceHelper(requireActivity())
         configureAutomaticUpdates(requireActivity(), preferenceHelper)
     }
 }
