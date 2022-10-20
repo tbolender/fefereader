@@ -67,11 +67,14 @@ class PreferenceHelper(context: Context) {
         }
 
     val postStyle: String
+        @SuppressLint("ResourceType")
         get() {
             val chosenStyle = sharedPreferences.getString(PREF_POST_STYLE, PREF_POST_STYLE_DEFAULT)
             var styleContent = ""
             if (chosenStyle != "post_style_none") {
-                styleContent = resources.getString(AVAILABLE_STYLES[chosenStyle]!!)
+                val quoteBackgroundColor = resources.getString(R.color.quoteBackgroundColor).replace("#ff", "#")
+                val quoteBorderColor = resources.getString(R.color.quoteBorderColor).replace("#ff", "#")
+                styleContent = resources.getString(AVAILABLE_STYLES[chosenStyle]!!, quoteBackgroundColor, quoteBorderColor)
             }
             return baseStyle + styleContent
         }
@@ -80,11 +83,9 @@ class PreferenceHelper(context: Context) {
     private val baseStyle: String
         @SuppressLint("ResourceType")
         get() {
-            // TODO: Get proper color of the current theme
-            // TODO: Make background of quoting for default style
             // Construct none style
             val defaultMargin = resources.getDimensionPixelSize(R.dimen.post_view_margin)
-            val textColor = resources.getString(android.R.color.secondary_text_light).replace("#ff", "#")
+            val textColor = resources.getString(R.color.secondaryText).replace("#ff", "#")
             val linkColor = resources.getString(R.color.colorAccent).replace("#ff", "#")
             return resources.getString(R.string.post_style_base, defaultMargin, textColor, linkColor)
         }

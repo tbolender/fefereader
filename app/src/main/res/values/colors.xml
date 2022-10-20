@@ -5,5 +5,7 @@
     <color name="colorAccent">#ff6d00</color>
 
     <color name="primaryTextDark">#de000000</color>
-    <color name="secondaryText">#737373</color>
+    <color name="secondaryText">#757575</color>
+    <color name="quoteBackgroundColor">#f0f0f0</color>
+    <color name="quoteBorderColor">#000000</color>
 </resources>

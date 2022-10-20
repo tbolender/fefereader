@@ -144,8 +144,8 @@
     <!-- Default style, inspired by https://blog.fefe.de/typo.css -->
     <string name="post_style_default">
         blockquote {
-            border: 1px dashed black;
-            background-color: #f0f0f0;
+            background-color: %1$s;
+            border: 1px dashed %2$s;
             padding: 0.5em;
             margin: 1em 0.5em;
         }
