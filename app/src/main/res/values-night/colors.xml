@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryTextDark">#deffffff</color>
+    <color name="secondaryText">#b3b3b3</color>
+    <color name="quoteBackgroundColor">#0f0f0f</color>
+    <color name="quoteBorderColor">#ffffff</color>
+</resources>

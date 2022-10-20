@@ -21,9 +21,9 @@ class NotificationBuilder(private val context: Context, private val repository: 
         return withContext(Dispatchers.IO) {
             val numNew = repository.newPostsCount.toInt()
             val numUpdated = repository.updatedPostsCount.toInt()
-            val newString = context.getResources()
+            val newString = context.resources
                     .getQuantityString(R.plurals.notification_new_posts, numNew, numNew)
-            val updatedString = context.getResources()
+            val updatedString = context.resources
                     .getQuantityString(R.plurals.notification_updated_posts, numUpdated, numUpdated)
 
             when {

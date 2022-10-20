@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -159,12 +158,7 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
         urlIntent.setData(Uri.parse(url));
         if(preferenceHelper.isUrlInspectionEnabled()) {
             Snackbar snackbar = Snackbar.make(postView, url, Snackbar.LENGTH_INDEFINITE);
-            snackbar.setAction(R.string.button_open_link, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startActivity(urlIntent);
-                }
-            });
+            snackbar.setAction(R.string.button_open_link, view -> startActivity(urlIntent));
             snackbar.show();
         }
         else {

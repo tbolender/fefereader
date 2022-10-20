@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:title="@string/pref_automatic_updates">
+        app:title="@string/pref_automatic_updates">
 
-        <SwitchPreference
-            android:key="@string/pref_updates_enabled_key"
-            android:title="@string/pref_updates_enabled_title"
-            android:summary="@string/pref_updates_enabled_summary"
-            android:defaultValue="@bool/pref_updates_enabled_default"/>
+        <SwitchPreferenceCompat
+            app:key="@string/pref_updates_enabled_key"
+            app:title="@string/pref_updates_enabled_title"
+            app:summary="@string/pref_updates_enabled_summary"
+            app:defaultValue="@bool/pref_updates_enabled_default"/>
 
         <ListPreference
-            android:key="@string/pref_update_interval_key"
-            android:title="@string/pref_update_interval_title"
-            android:dialogTitle="@string/pref_update_interval_title"
-            android:summary="@string/pref_update_interval_summary"
-            android:entries="@array/pref_update_interval_entries"
-            android:entryValues="@array/pref_update_interval_values"
-            android:defaultValue="@string/pref_update_interval_default"/>
+            app:key="@string/pref_update_interval_key"
+            app:title="@string/pref_update_interval_title"
+            app:dialogTitle="@string/pref_update_interval_title"
+            app:summary="@string/pref_update_interval_summary"
+            app:entries="@array/pref_update_interval_entries"
+            app:entryValues="@array/pref_update_interval_values"
+            app:defaultValue="@string/pref_update_interval_default"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/pref_display">
+        app:title="@string/pref_display">
 
-        <SwitchPreference
-            android:key="@string/pref_inspect_url_key"
-            android:title="@string/pref_inspect_url_title"
-            android:summary="@string/pref_inspect_url_summary"
-            android:defaultValue="@bool/pref_inspect_url_default"/>
+        <SwitchPreferenceCompat
+            app:key="@string/pref_inspect_url_key"
+            app:title="@string/pref_inspect_url_title"
+            app:summary="@string/pref_inspect_url_summary"
+            app:defaultValue="@bool/pref_inspect_url_default"/>
 
         <ListPreference
-            android:key="@string/pref_post_style_key"
-            android:title="@string/pref_post_style_title"
-            android:dialogTitle="@string/pref_post_style_title"
-            android:summary="@string/pref_post_style_summary"
-            android:entries="@array/pref_post_style_entries"
-            android:entryValues="@array/pref_post_style_values"
-            android:defaultValue="@string/pref_post_style_default"/>
+            app:key="@string/pref_post_style_key"
+            app:title="@string/pref_post_style_title"
+            app:dialogTitle="@string/pref_post_style_title"
+            app:summary="@string/pref_post_style_summary"
+            app:entries="@array/pref_post_style_entries"
+            app:entryValues="@array/pref_post_style_values"
+            app:defaultValue="@string/pref_post_style_default"/>
 
     </PreferenceCategory>
 

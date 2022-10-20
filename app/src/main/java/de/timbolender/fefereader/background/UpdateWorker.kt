@@ -55,7 +55,7 @@ class UpdateWorker(context: Context, params: WorkerParameters) : Worker(context,
         fun configureAutomaticUpdates(context: Context, preferenceHelper: PreferenceHelper) {
             if (preferenceHelper.isUpdatesEnabled) {
                 Log.d(TAG, "Enabling automatic updates")
-                val interval = preferenceHelper.updateInterval
+                val interval = preferenceHelper.updateInterval.toLong()
                 val request = PeriodicWorkRequestBuilder<UpdateWorker>(interval, TimeUnit.MILLISECONDS)
                     .build()
                 WorkManager.getInstance(context)
