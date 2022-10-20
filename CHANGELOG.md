@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Dark mode support
+- Scroll to top when opening app from notification
 
 ## [1.2.1] - 2022-10-15
 ### Fixed
