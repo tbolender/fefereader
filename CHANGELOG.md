@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.1] - 2022-10-24
+### Added
+- Occasional crash when viewing a post
+
 ## [1.3.0] - 2022-10-24
 ### Added
 - Dark mode support
