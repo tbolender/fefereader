@@ -71,6 +71,9 @@ public class DetailsActivity extends AppCompatActivity implements PostView.OnLin
         vm = new ViewModelProvider(this).get(DetailsViewModel.class);
         postVm = vm.getPost(postId);
         postVm.observe(this, dbPost -> {
+            if(dbPost == null)
+                return;
+
             PostViewModel post = toPostViewModel(dbPost);
 
             // Set title
