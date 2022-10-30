@@ -107,6 +107,11 @@
     <string name="pref_post_style_summary">Wähle einen Style der bei der Anzeige der Posts verwendet wird.</string>
     <string name="pref_post_style_default">post_style_default</string>
 
+    <string name="pref_post_font_size_key">post_font_size</string>
+    <string name="pref_post_font_size_title">Schriftgröße</string>
+    <string name="pref_post_font_size_summary">Legt die Schriftgröße fest.</string>
+    <string name="pref_post_font_size_default">1</string>
+
     <!--
         Available post styles;
 
@@ -121,6 +126,7 @@
             hyphens: auto;
             word-wrap: break-word;
             color: %2$s;
+            font-size: %4$sem;
         }
 
         a {
