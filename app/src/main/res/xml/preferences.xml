@@ -40,6 +40,15 @@
             app:entryValues="@array/pref_post_style_values"
             app:defaultValue="@string/pref_post_style_default"/>
 
+        <ListPreference
+            app:key="@string/pref_post_font_size_key"
+            app:title="@string/pref_post_font_size_title"
+            app:dialogTitle="@string/pref_post_font_size_title"
+            app:summary="@string/pref_post_font_size_summary"
+            app:entries="@array/pref_font_size_entries"
+            app:entryValues="@array/pref_font_size_values"
+            app:defaultValue="@string/pref_post_font_size_default"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

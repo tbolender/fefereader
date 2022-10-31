@@ -23,4 +23,18 @@
         <item>post_style_none</item>
         <item>post_style_default</item>
     </string-array>
+
+    <string-array name="pref_font_size_entries">
+        <item>Klein</item>
+        <item>Standard</item>
+        <item>Groß</item>
+        <item>Extragroß</item>
+    </string-array>
+
+    <string-array name="pref_font_size_values">
+        <item>0.8</item>
+        <item>1</item>
+        <item>1.5</item>
+        <item>2</item>
+    </string-array>
 </resources>

@@ -29,6 +29,8 @@ class PreferenceHelper(context: Context) {
     private val PREF_INSPECT_URL_DEFAULT: Boolean
     private val PREF_POST_STYLE: String
     private val PREF_POST_STYLE_DEFAULT: String
+    private val PREF_FONT_SIZE: String
+    private val PREF_FONT_SIZE_DEFAULT: String
     private val resources: Resources
     val sharedPreferences: SharedPreferences
 
@@ -48,6 +50,8 @@ class PreferenceHelper(context: Context) {
         PREF_INSPECT_URL_DEFAULT = resources.getBoolean(R.bool.pref_inspect_url_default)
         PREF_POST_STYLE = resources.getString(R.string.pref_post_style_key)
         PREF_POST_STYLE_DEFAULT = resources.getString(R.string.pref_post_style_default)
+        PREF_FONT_SIZE = resources.getString(R.string.pref_post_font_size_key)
+        PREF_FONT_SIZE_DEFAULT = resources.getString(R.string.pref_post_font_size_default)
     }
 
     var isUpdatesEnabled: Boolean
@@ -65,6 +69,10 @@ class PreferenceHelper(context: Context) {
         set(inspectionEnabled) {
             sharedPreferences.edit().putBoolean(PREF_INSPECT_URL, inspectionEnabled).apply()
         }
+
+    var fontSize: String?
+        get() = sharedPreferences.getString(PREF_FONT_SIZE, PREF_FONT_SIZE_DEFAULT)
+        set(fontSize) = sharedPreferences.edit().putString(PREF_FONT_SIZE, fontSize).apply()
 
     val postStyle: String
         @SuppressLint("ResourceType")
@@ -87,6 +95,6 @@ class PreferenceHelper(context: Context) {
             val defaultMargin = resources.getDimensionPixelSize(R.dimen.post_view_margin)
             val textColor = resources.getString(R.color.secondaryText).replace("#ff", "#")
             val linkColor = resources.getString(R.color.colorAccent).replace("#ff", "#")
-            return resources.getString(R.string.post_style_base, defaultMargin, textColor, linkColor)
+            return resources.getString(R.string.post_style_base, defaultMargin, textColor, linkColor, fontSize)
         }
 }
