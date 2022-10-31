@@ -109,7 +109,7 @@
 
     <string name="pref_post_font_size_key">post_font_size</string>
     <string name="pref_post_font_size_title">Schriftgröße</string>
-    <string name="pref_post_font_size_summary">Legt die Schriftgröße fest.</string>
+    <string name="pref_post_font_size_summary">Legt die Schriftgröße bei der Anzeige eines Posts fest.</string>
     <string name="pref_post_font_size_default">1</string>
 
     <!--
