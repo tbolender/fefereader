@@ -30,7 +30,7 @@ class Parser {
         val postList = ArrayList<RawPost>()
 
         val baseTime = System.currentTimeMillis() * 1000
-        var indexCounter: Long = 999
+        var indexCounter = 999
 
         for (element in document.select("body > h3, body > ul")) {
             if (element.tagName() == "h3") {
@@ -54,7 +54,7 @@ class Parser {
                     postList.add(post)
 
                     // Decrement index counter
-                    if (indexCounter == 0L) {
+                    if (indexCounter == 0) {
                         throw IllegalArgumentException("Parser supports only 999 posts per parsing")
                     }
 

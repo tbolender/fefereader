@@ -14,35 +14,48 @@ class Updater(private val repository: DataRepository) {
         private var TAG: String = Updater::class.simpleName!!
     }
 
+    private val client = OkHttpClient.Builder()
+        .addNetworkInterceptor(StethoInterceptor())
+        .build()
+    private val parser = Parser()
+    private val fetcher = Fetcher(client)
+
     @Throws(ParseException::class, IOException::class)
     fun update() {
-        val client = OkHttpClient.Builder()
-                .addNetworkInterceptor(StethoInterceptor())
-                .build()
-
-        val parser = Parser()
-        val fetcher = Fetcher(client, parser)
-        val posts = fetcher.fetch()
-
+        val postSoup = fetcher.fetch()
+        val posts = parser.parse(postSoup)
         for (post in posts) {
-            val existingPost = repository.getPostSync(post.id)
-            if(existingPost == null) {
-                Log.d(TAG, "Inserted new post ${post.id}")
-                val dbPost = Post(post.id, post.timestampId,
-                    isRead = false,
-                    isUpdated = false,
-                    isBookmarked = false,
-                    contents = post.contents,
-                    date = Date(post.date)
-                )
-                repository.createOrUpdatePostSync(dbPost)
-            }
-            else if(existingPost.contents != post.contents) {
-                Log.d(TAG, "Updated post ${post.id}")
-                val dbPost = existingPost.copy(contents = post.contents, isRead = false, isUpdated = true)
-                repository.createOrUpdatePostSync(dbPost)
-            }
+            createOrUpdate(post)
+        }
+    }
 
+    @Throws(ParseException::class, IOException::class)
+    fun update(query: String) {
+        val postSoup = fetcher.fetch(query)
+        val rawPosts = parser.parse(postSoup)
+        Log.d(TAG, "Found ${rawPosts.size} Posts")
+        for (rawPost in rawPosts) {
+            createOrUpdate(rawPost)
+        }
+    }
+
+    private fun createOrUpdate(post: RawPost) {
+        val existingPost = repository.getPostSync(post.id)
+        if(existingPost == null) {
+            Log.d(TAG, "Inserted new post ${post.id}")
+            val dbPost = Post(post.id, post.timestampId,
+                isRead = false,
+                isUpdated = false,
+                isBookmarked = false,
+                contents = post.contents,
+                date = Date(post.date)
+            )
+            repository.createOrUpdatePostSync(dbPost)
+        }
+        else if(existingPost.contents != post.contents) {
+            Log.d(TAG, "Updated post ${post.id}")
+            val dbPost = existingPost.copy(contents = post.contents, isRead = false, isUpdated = true)
+            repository.createOrUpdatePostSync(dbPost)
         }
     }
 }

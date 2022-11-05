@@ -4,22 +4,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_search"
+        android:title="@string/menu_search"
+        android:icon="@drawable/ic_baseline_search_24"
+        app:showAsAction="ifRoom"
+        app:actionViewClass="android.widget.SearchView"/>
+
+    <item
         android:id="@+id/menu_unread_filter"
         android:title="@string/menu_unread_filter"
         android:icon="@drawable/ic_unread"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/menu_bookmark_filter"
         android:title="@string/menu_bookmark_filter"
         android:icon="@drawable/ic_bookmark"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/menu_mark_read"
         android:title="@string/menu_mark_read"
         android:icon="@drawable/ic_mark_read"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
     <item
         android:id="@+id/menu_refresh"

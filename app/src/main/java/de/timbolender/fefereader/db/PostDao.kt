@@ -6,15 +6,17 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 
 @Dao
 interface PostDao {
     companion object {
-        const val POSTS_QUERY: String = "SELECT * FROM post ORDER BY timestampId DESC"
-        const val UNREAD_POSTS_QUERY: String = "SELECT * FROM post WHERE isRead = 0 ORDER BY timestampId DESC"
-        const val BOOKMARK_POSTS_QUERY: String = "SELECT * FROM post WHERE isBookmarked = 1 ORDER BY timestampId DESC"
-
+        const val POSTS_QUERY: String = "SELECT * FROM post ORDER BY date DESC, timestampId DESC"
+        const val UNREAD_POSTS_QUERY: String = "SELECT * FROM post WHERE isRead = 0 ORDER BY date DESC, timestampId DESC"
+        const val BOOKMARK_POSTS_QUERY: String = "SELECT * FROM post WHERE isBookmarked = 1 ORDER BY date DESC, timestampId DESC"
         const val SINGLE_POST_QUERY: String = "SELECT * FROM post WHERE id = :postId"
+        const val SEARCH_POSTS_QUERY: String = "SELECT * FROM post WHERE contents LIKE :query ORDER BY date DESC, timestampId DESC"
     }
 
     // Full data
@@ -59,4 +61,13 @@ interface PostDao {
 
     @Query("UPDATE post SET isBookmarked = (1 - isBookmarked) WHERE id = :postId")
     fun toggleBookmarkSync(postId: String)
+
+    // Search data
+
+    @Query(SEARCH_POSTS_QUERY)
+    fun findPostsPaged(query: String): DataSource.Factory<Int, Post>
+
+    @RawQuery(observedEntities = [Post::class])
+    fun findPostsPaged(query: SupportSQLiteQuery): DataSource.Factory<Int, Post>
+
 }
