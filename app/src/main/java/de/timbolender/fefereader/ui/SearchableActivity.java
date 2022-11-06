@@ -29,7 +29,7 @@ public class SearchableActivity extends PostListActivity {
             throw new RuntimeException();
         }
         String query = intent.getStringExtra(SearchManager.QUERY);
-        Log.d(TAG, query);
+        setTitle(String.format("Suchergebnisse: %s", query));
         DataRepository repository = new DataRepository(this);
         Updater updater = new Updater(repository);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
