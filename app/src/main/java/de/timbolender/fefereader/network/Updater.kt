@@ -23,10 +23,8 @@ class Updater(private val repository: DataRepository) {
     @Throws(ParseException::class, IOException::class)
     fun update() {
         val postSoup = fetcher.fetch()
-        val posts = parser.parse(postSoup)
-        for (post in posts) {
-            createOrUpdate(post)
-        }
+        val rawPosts = parser.parse(postSoup)
+        rawPosts.forEach {  createOrUpdate(it) }
     }
 
     @Throws(ParseException::class, IOException::class)
@@ -34,9 +32,7 @@ class Updater(private val repository: DataRepository) {
         val postSoup = fetcher.fetch(query)
         val rawPosts = parser.parse(postSoup)
         Log.d(TAG, "Found ${rawPosts.size} posts matching '$query'")
-        for (rawPost in rawPosts) {
-            createOrUpdate(rawPost)
-        }
+        rawPosts.forEach {  createOrUpdate(it) }
     }
 
     private fun createOrUpdate(post: RawPost) {

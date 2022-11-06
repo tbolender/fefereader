@@ -12,8 +12,9 @@ import java.util.*
 class Parser {
     companion object {
         private val TAG: String = Parser::class.simpleName!!
-
         private val DATE_FORMAT = SimpleDateFormat("EEE MMM d yyyy", Locale.US)
+
+        private const val MAX_POSTS = 9999
     }
 
     /**
@@ -26,17 +27,17 @@ class Parser {
     fun parse(content: String): List<RawPost> {
         val document = Jsoup.parse(content)
 
-        var currentDate: Date? = null
+        var dateOfCurrentSection: Date? = null
         val postList = ArrayList<RawPost>()
 
         val baseTime = System.currentTimeMillis() * 1000
-        var indexCounter = 999
+        var postIndexCounter = MAX_POSTS
 
         for (element in document.select("body > h3, body > ul")) {
             if (element.tagName() == "h3") {
-                currentDate = DATE_FORMAT.parse(element.text())
+                dateOfCurrentSection = DATE_FORMAT.parse(element.text())
             } else {
-                if (currentDate == null) {
+                if (dateOfCurrentSection == null) {
                     throw ParseException("No date available for first post!", -1)
                 }
 
@@ -45,20 +46,21 @@ class Parser {
                     if (entry.parent() != element)
                         continue
 
-                    val entryContent = entry.children()
-                    val idElement = entryContent[0]
-                    val id = idElement.attr("href").replace("?ts=", "")
-                    val postContent = entry.html().replace(idElement.outerHtml(), "")
-                    val post = RawPost(id, baseTime + indexCounter, postContent, currentDate.time)
-                    Log.v(TAG, "Parsed $post")
-                    postList.add(post)
+                    val idElement = entry.children()[0]
+                    postList.add(RawPost(
+                        id = idElement.attr("href").replace("?ts=", ""),
+                        timestampId = baseTime + postIndexCounter,
+                        contents = entry.html().replace(idElement.outerHtml(), ""),
+                        date = dateOfCurrentSection.time)
+                    )
+                    Log.v(TAG, "Parsed ${postList.last()}")
 
                     // Decrement index counter
-                    if (indexCounter == 0) {
-                        throw IllegalArgumentException("Parser supports only 999 posts per parsing")
+                    if (postIndexCounter == 0) {
+                        throw IllegalArgumentException("Parser supports only $MAX_POSTS posts per parsing")
                     }
 
-                    indexCounter--
+                    postIndexCounter--
                 }
             }
         }
