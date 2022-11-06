@@ -16,7 +16,7 @@ interface PostDao {
         const val UNREAD_POSTS_QUERY: String = "SELECT * FROM post WHERE isRead = 0 ORDER BY date DESC, timestampId DESC"
         const val BOOKMARK_POSTS_QUERY: String = "SELECT * FROM post WHERE isBookmarked = 1 ORDER BY date DESC, timestampId DESC"
         const val SINGLE_POST_QUERY: String = "SELECT * FROM post WHERE id = :postId"
-        const val SEARCH_POSTS_QUERY: String = "SELECT * FROM post WHERE contents LIKE :query ORDER BY date DESC, timestampId DESC"
+        const val SEARCH_POSTS_QUERY: String = "SELECT * FROM post WHERE contents GLOB :query ORDER BY date DESC, timestampId DESC"
     }
 
     // Full data

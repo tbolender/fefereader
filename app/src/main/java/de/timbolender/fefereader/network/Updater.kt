@@ -33,7 +33,7 @@ class Updater(private val repository: DataRepository) {
     fun update(query: String) {
         val postSoup = fetcher.fetch(query)
         val rawPosts = parser.parse(postSoup)
-        Log.d(TAG, "Found ${rawPosts.size} Posts")
+        Log.d(TAG, "Found ${rawPosts.size} posts matching '$query'")
         for (rawPost in rawPosts) {
             createOrUpdate(rawPost)
         }

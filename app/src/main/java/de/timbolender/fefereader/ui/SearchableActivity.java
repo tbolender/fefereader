@@ -19,7 +19,6 @@ import de.timbolender.fefereader.db.Post;
 import de.timbolender.fefereader.network.Updater;
 import de.timbolender.fefereader.viewmodel.SearchViewModel;
 
-// https://developer.android.com/develop/ui/views/search/search-dialog
 public class SearchableActivity extends PostListActivity {
 
     @Override

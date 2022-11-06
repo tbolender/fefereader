@@ -39,13 +39,13 @@ class DataRepository(application: Context) {
     //   1. Search is case sensitive
     //   2. Space equals AND: All words must be contained anywhere in the result.
     fun findPostsByContent(sentence: String): DataSource.Factory<Int, Post> {
-        val words = sentence.split(" ").map { "%$it%" }
+        val words = sentence.split(" ").map { "*$it*" }
         if(words.size == 1) {
             return postDao.findPostsPaged(words.first())
         }
-        var sqlStatement = "SELECT * FROM post WHERE contents LIKE ?"
+        var sqlStatement = "SELECT * FROM post WHERE contents GLOB ?"
         for (word in words.drop(1)) {
-            sqlStatement += " AND contents LIKE ?"
+            sqlStatement += " AND contents GLOB ?"
         }
         sqlStatement += " ORDER BY date DESC, timestampId DESC"
         return postDao.findPostsPaged(SimpleSQLiteQuery(sqlStatement, words.toTypedArray()))
