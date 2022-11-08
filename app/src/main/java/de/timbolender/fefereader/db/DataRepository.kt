@@ -35,7 +35,7 @@ class DataRepository(application: Context) {
 
     fun togglePostBookmarkSync(postId: String) = postDao.toggleBookmarkSync(postId)
 
-    // Tries yield the same results as /?q= on fefes blog:
+    // Tries to yield the same results as /?q= on fefes blog:
     //   1. Search is case sensitive
     //   2. Space equals AND: All words must be contained anywhere in the result.
     fun findPostsByContent(sentence: String): DataSource.Factory<Int, Post> {
@@ -44,9 +44,7 @@ class DataRepository(application: Context) {
             return postDao.findPostsPaged(words.first())
         }
         var sqlStatement = "SELECT * FROM post WHERE contents GLOB ?"
-        for (word in words.drop(1)) {
-            sqlStatement += " AND contents GLOB ?"
-        }
+        words.drop(1).forEach { _ -> sqlStatement += " AND contents GLOB ?" }
         sqlStatement += " ORDER BY date DESC, timestampId DESC"
         return postDao.findPostsPaged(SimpleSQLiteQuery(sqlStatement, words.toTypedArray()))
     }
