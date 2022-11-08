@@ -31,6 +31,19 @@
         </activity>
 
         <activity
+            android:name=".ui.SearchableActivity"
+            android:label="@string/activity_search_title"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
+        <activity
             android:name=".ui.BookmarkActivity"
             android:label="@string/activity_bookmark_title"
             android:parentActivityName=".ui.MainActivity"/>

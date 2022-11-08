@@ -67,6 +67,8 @@ public abstract class PostListActivity extends AppCompatActivity implements Post
         if(isRefreshGestureEnabled()) {
             binding.refreshLayout.setOnRefreshListener(() -> UpdateWorker.Companion.startManualUpdate(this));
             binding.refreshLayout.setColorSchemeResources(R.color.colorAccent);
+        } else {
+            binding.refreshLayout.setEnabled(false);
         }
 
         // Create receiver to consume update notifications

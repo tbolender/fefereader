@@ -1,6 +1,8 @@
 package de.timbolender.fefereader.db
 
 import android.content.Context
+import androidx.paging.DataSource
+import androidx.sqlite.db.SimpleSQLiteQuery
 
 /**
  * Central data access class. Automatically triggers updates if required.
@@ -32,4 +34,19 @@ class DataRepository(application: Context) {
     fun markPostAsReadSync(postId: String) = postDao.markAsReadSync(postId)
 
     fun togglePostBookmarkSync(postId: String) = postDao.toggleBookmarkSync(postId)
+
+    // Tries to yield the same results as /?q= on fefes blog:
+    //   1. Search is case sensitive
+    //   2. Space equals AND: All words must be contained anywhere in the result.
+    fun findPostsByContent(sentence: String): DataSource.Factory<Int, Post> {
+        val words = sentence.split(" ").map { "*$it*" }
+        if(words.size == 1) {
+            return postDao.findPostsPaged(words.first())
+        }
+        var sqlStatement = "SELECT * FROM post WHERE contents GLOB ?"
+        words.drop(1).forEach { _ -> sqlStatement += " AND contents GLOB ?" }
+        sqlStatement += " ORDER BY date DESC, timestampId DESC"
+        return postDao.findPostsPaged(SimpleSQLiteQuery(sqlStatement, words.toTypedArray()))
+    }
+
 }

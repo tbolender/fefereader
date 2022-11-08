@@ -1,11 +1,14 @@
 package de.timbolender.fefereader.ui;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -58,7 +61,15 @@ public class MainActivity extends PostListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
+        setUpSearch(menu);
         return true;
+    }
+
+    private void setUpSearch(Menu menu) {
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        ComponentName searchComponent = new ComponentName(this, SearchableActivity.class);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(searchComponent));
     }
 
     @Override
